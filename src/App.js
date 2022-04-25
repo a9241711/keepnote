@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useLayoutEffect, useState,createContext } from "react";
+import "./App.css";
+import rough from "roughjs/bundled/rough.esm";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import Board from "./components/Board";
+import BoardTry from "./components/BoardTry";
+import Home from "./pages/Home";
+import  ThemeProvider  from "./store";
+import BoardIndex from "./components/BoardIndex";
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/board" element={<Board />} />
+        <Route path="/try" element={<BoardTry />} />
+        <Route path="/boarding" element={<BoardIndex />} />
+      </Routes>   
+    </BrowserRouter>
+    
   );
 }
 
