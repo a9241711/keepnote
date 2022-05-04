@@ -1,7 +1,5 @@
 import styled from "styled-components";
-import { saveBoardData,getBoardData } from "../store/HandleDb";
-import { db } from "../store/firebase";
-import { collection,setDoc,doc ,addDoc} from "firebase/firestore";
+import { saveBoardData,getBoardData } from "../../store/HandleDb";
 // import {getDatabase,ref,set,push,} from "firebase/database";
 
 
@@ -14,16 +12,16 @@ bottom:0;
 `
 
 const BoardSaveBtn=styled.button`
-    width:100px
+    width:100px;
 `
 const BoardShowBtn=styled.button`
-    width:100px
+    width:100px;
 `
 const BoardDownloadBtn=styled.button`
-    width:100px
+    width:100px;
 `
 const BoardGetDataBtn=styled.button`
-width:100px
+    width:100px;
 `
 const BoardToDbTool=({elements,setIsData,setElements})=>{
     const show=()=>{

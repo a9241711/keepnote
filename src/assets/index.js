@@ -17,6 +17,8 @@ import DeleteCheck from "./img/boardTool/deleteCheck.png";
 import Menu from "./img/boardTool/menu.png";
 import MenuCheck from "./img/boardTool/menuCheck.png";
 import Banned from "./img/boardTool/ban.png";
+import EditBoard from "./img/editTool/paintbrush.png"
+import Loading from "./img/loading/loading.gif";
 
 export {
   Pencil,
@@ -37,5 +39,7 @@ export {
   DeleteCheck,
   Menu,
   MenuCheck,
-  Banned
+  Banned,
+  EditBoard,
+  Loading
 };

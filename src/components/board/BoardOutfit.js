@@ -10,7 +10,6 @@ const ToolDiv=styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    }
 `
 const SelectOutfitBtn=styled.input`
     width:32px;

@@ -1,25 +1,32 @@
 import { useEffect, useLayoutEffect, useState,createContext } from "react";
-import "./App.css";
 import rough from "roughjs/bundled/rough.esm";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import Board from "./components/Board";
-import BoardTry from "./components/BoardTry";
-import Home from "./pages/Home";
-import  ThemeProvider  from "./store";
-import BoardIndex from "./components/BoardIndex";
 
+import Home from "./pages/Home";
+import BoardIndex from "./components/board/BoardIndex";
+import Member from "./pages/Member";
+import AuthState from "./store/AuthState";
+import AuthRequired from "./store/AuthRequired";
+import HeadLoadState from "./header/HeaderLoadState";
 
 
 function App() {
   return (
   
     <BrowserRouter>
+      <AuthState>
+      <HeadLoadState>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/board" element={<Board />} />
-        <Route path="/try" element={<BoardTry />} />
+        {/* <Route path="/board" element={<Board />} />
+        <Route path="/try" element={<BoardTry />} /> */}
+        <Route path="/login" element={<Member />} />
+        <Route element={<AuthRequired />}>
         <Route path="/boarding" element={<BoardIndex />} />
+        </Route>
       </Routes>   
+      </HeadLoadState>
+      </AuthState>
     </BrowserRouter>
     
   );

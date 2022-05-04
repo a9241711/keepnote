@@ -5,9 +5,10 @@ import BoardStep from "./BoardStep";
 import styled from "styled-components";
 import BoardOutfit from "./BoardOutfit";
 import BoardCanvas from "./BoardCanvas";
-import { saveBoardData,getBoardData,saveNoteData } from "../store/HandleDb";
-import {useLocation} from "react-router-dom";
-import { v4 } from "uuid";
+import { saveBoardData,getBoardData,updateBoardData } from "../../store/HandleDb";
+import {useLocation, useNavigate} from "react-router-dom";
+import { async } from "@firebase/util";
+
 // import { BoardContext } from "./BoardContext";
 
 export const BoardContext=createContext({name:"guest"})
@@ -43,10 +44,6 @@ const useHistoryPosition = (initialState) => {
       historyCopy[index] = newState;
       setHistory(historyCopy);
     } else {
-      // if(index===0 && newState.length>1){//原來就存在db的資料
-      //   setHistory([...newState.map((item)=> item)]);
-      //   setIndex(newState.length)
-      //   console.log(history.length)
       const updateState = [...history].slice(0, index + 1); //取0~最新狀態
       setHistory([...updateState, newState]); //
       setIndex((prev) => prev + 1);
@@ -70,9 +67,9 @@ const useHistoryPosition = (initialState) => {
 };
 
 const BoardIndex =()=>{
-    const location=useLocation();
-    const{noteText,noteTitle,id}=location["state"]//取得noteTitle 跟noteText
-    console.log({noteText,noteTitle,id})
+
+    const location=useLocation();//從CanvasTool或NoteItem傳text/title/board data過來
+    const{noteText,noteTitle,id,board,uid}=location["state"]//取得noteTitle 跟noteText
     const [elements,currentIndex, setElements, undo, redo, clear]=useHistoryPosition([]); //使用customHook
     //設定action動作
     const [action, setAction] = useState("none");
@@ -89,53 +86,69 @@ const BoardIndex =()=>{
     const [range, setRange] = useState(1);
     //設定檢查是否MouseUp
     const[isMouseUp,setIsMouseUp]=useState(false);
-    //設定取得指定board的資料
+    //設定取得已存在的board的資料
     const[boardData,setBoardData]=useState("");
-    // const getLastElement=()=>{
-    //   // const index =elements.length-1;//最後一個位置
-    //   const elementsCopoy=[...elements,]
-    //   return elementsCopoy
-    // }
+    //navigate
+    const navigate = useNavigate();
 
 
-    // useEffect(()=>{//檢查是否已有Board資料，取得指定board資料
-    //   async function getBoardDataFromDb(){   
-    //     const getBoardElements = await getBoardData();
-    //     console.log(getBoardElements);
-    //     setBoardData(getBoardElements);
-    //     console.log(getBoardElements);
-    //   }
-    //   getBoardDataFromDb();
-    // },[])
+    useEffect(()=>{//檢查是否已有Board資料，取得指定board資料
+      async function getBoardDataFromDb(){   
+        const getBoardElements = await getBoardData(id,uid);
+        setBoardData(getBoardElements);
+      }
+      getBoardDataFromDb();
+    },[])
+
 
     useEffect(()=>{//檢查mouseUp Event，並傳入DB
-      async function getBoardElements (elements,noteTitle,noteText){
+      async function getBoardElements (elements,noteTitle,noteText,uid){
         const index=elements.length-1;
         console.log(elements,noteTitle,noteText)
-        await saveBoardData(elements[index],id,noteTitle,noteText);
+        await saveBoardData(elements[index],id,noteTitle,noteText,uid);
       }
       if(elements.length ===0) return
       else{
         if(isMouseUp){
           console.log(elements,isMouseUp);
-          getBoardElements (elements,noteTitle,noteText)
+          getBoardElements (elements,noteTitle,noteText,uid)
         }else return;
       }
     },[action])
 
+    useEffect(() => {
+      const saveBoardToDb= async()=>{
+        // await updateBoardData()
+        const canvas = document.getElementById("canvas");
+        const url=canvas.toDataURL();
+        await updateBoardData(id,url,uid);//存入base64
+      }
+      const handler = (e) => {
+        e.preventDefault();
+        e.returnValue=true;
+        console.log(e.returnValue,e)
+        saveBoardToDb();
+        setTimeout(() => {
+          navigate("/",{ replace: true })
+        }, 500)
+      };
+  
+      window.addEventListener("beforeunload", handler);
+      return () => window.removeEventListener("beforeunload", handler);
+    }, []);
+
     return(
-        <BoardContext.Provider value={[elements,setElements]} >
+        <>
             <BoardDiv>
             <ToolNav>
-            <BoardDrawingTool  tool={tool} setTool={setTool} />
+            <BoardDrawingTool id={id} tool={tool} setTool={setTool} elements={elements} uid={uid}/>
             <BoardOutfit color={color} setColor={setColor} range={range} setRange={setRange}/>
-            <BoardStep undo={undo} redo={redo} clear={clear} elements={elements} currentIndex={currentIndex}/>
+            <BoardStep undo={undo} redo={redo} clear={clear} id={id} currentIndex={currentIndex} uid={uid}/>
             </ToolNav>
             <BoardCanvas elements={elements} setElements={setElements} tool={tool} color={color} range={range} selectedElement={selectedElement} setSelectedElement={setSelectedElement}action={action} setAction={setAction} setIsMouseUp={setIsMouseUp} boardData={boardData}/>
             <BoardToDbTool  elements={elements}/>
             </BoardDiv>
-        </BoardContext.Provider>
-
+        </>
     )
 }
 

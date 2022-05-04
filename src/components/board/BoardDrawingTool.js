@@ -1,9 +1,10 @@
 import styled, { keyframes } from "styled-components";
 import { useEffect, useState } from "react";
-import rough from "roughjs/bundled/rough.esm";
 import { BoardContext } from "./BoardIndex";
-import { Pencil,PencilCheck,Line,LineCheck,Rectangle,RectangleCheck,Selection,SelectionCheck, Arrow, ArrowCheck } from "../assets";
-
+import { Pencil,PencilCheck,Line,LineCheck,Rectangle,RectangleCheck,Selection,SelectionCheck, Arrow, ArrowCheck } from "../../assets";
+import { Link } from "react-router-dom";
+import { updateBoardData } from "../../store/HandleDb";
+import { async } from "@firebase/util";
 
 const backgoundColor=keyframes`
 from{
@@ -48,63 +49,59 @@ const ToolLabel = styled.label`
     }
 `;
 const ToolBtn=styled.input`
-opacity: 0;
-position: absolute;
-&:checked + ${ToolLabel}{
-  animation:${backgoundColor} 0.3s linear;
-  :before{
-  background-image:url(${PencilCheck}) 
-  }
-  }
-}
+    opacity: 0;
+    position: absolute;
+    &:checked + ${ToolLabel}{
+      animation:${backgoundColor} 0.3s linear;
+      :before{
+      background-image:url(${PencilCheck}) 
+        }
+      }
 `
 
 const RectLabel=styled(ToolLabel)`
-&::before{
-  background-image:url(${Rectangle})}
-&:hover:before{
-  background-image:url(${RectangleCheck}) 
-  }
+    &::before{
+      background-image:url(${Rectangle})}
+    &:hover:before{
+      background-image:url(${RectangleCheck}) 
+      }
 `
 const RectangleToolBtn=styled(ToolBtn)`
-&:checked + ${RectLabel}{
-:before{
-  background-image:url(${RectangleCheck}) 
-  }
-  }
-}
+    &:checked + ${RectLabel}{
+    :before{
+      background-image:url(${RectangleCheck}) 
+      }
+      }
+
 `
 
 const LineLabel=styled(ToolLabel)`
-&::before{
-  background-image:url(${Line})}
-&:hover:before{
-  background-image:url(${LineCheck}) 
-  }
+    &::before{
+      background-image:url(${Line})}
+    &:hover:before{
+      background-image:url(${LineCheck}) 
+      }
 `
 const LineToolBtn=styled(ToolBtn)`
-&:checked + ${ToolLabel}{
-:before{
-  background-image:url(${LineCheck}) 
-  }
-  }
-}
+    &:checked + ${ToolLabel}{
+    :before{
+      background-image:url(${LineCheck}) 
+      }
+      }
 `
 const SelectionLabel=styled(ToolLabel)`
-&::before{
-  background-image:url(${Selection})}
-&:hover:before{
-  background-image:url(${SelectionCheck}) 
-  }
-
+    &::before{
+      background-image:url(${Selection})}
+    &:hover:before{
+      background-image:url(${SelectionCheck}) 
+      }
 `
 const SelectToolBtn=styled(ToolBtn)`
-&:checked + ${SelectionLabel}{
-  :before{
-    background-image:url(${SelectionCheck}) 
-    }
-    }
-}
+    &:checked + ${SelectionLabel}{
+      :before{
+        background-image:url(${SelectionCheck}) 
+        }
+        }
 `
 const GoBackPrePageBtn=styled.button`
   width: 52px;
@@ -131,13 +128,27 @@ const GoBackPrePageBtn=styled.button`
     }
 `
 
-const BoardDrawingTool = ({tool,setTool }) => {
+
+const BoardDrawingTool = ({tool,setTool,id ,elements,uid}) => {
+  const saveBoardToDb= async()=>{
+    // await updateBoardData()
+    const canvas = document.getElementById("canvas");
+    const url=canvas.toDataURL();
+    await updateBoardData(id,url,uid);//存入base64
+  }
+
+ function refreshPage(){
+   setTimeout(()=>{
+    window.location.reload();
+   },500)
+   console.log('reload page');
+  }
 
   return (
     <>
-      <a href="/">
-      <GoBackPrePageBtn />
-        </a>
+      <Link to={"/"} onClick={refreshPage}>
+      <GoBackPrePageBtn  onClick={saveBoardToDb}/>
+        </Link>
       <ToolDiv>
         <SelectToolBtn
           type="radio"

@@ -3,19 +3,6 @@ import styled from "styled-components";
 import deletePng from "./img/x.png";
 import searchPng from "./img/search-interface-symbol.png";
 
-const Search = () => {
-  return (
-    <SearchBar>
-      <SearchInput></SearchInput>
-      <SearchIcon>
-        <SearchIconPng src={`${searchPng}`}></SearchIconPng>
-      </SearchIcon>
-      <DeleteIcon>
-        <DeleteIconPng src={`${deletePng}`} id="deleteBtn"></DeleteIconPng>
-      </DeleteIcon>
-    </SearchBar>
-  );
-};
 const SearchBar = styled.form`
   background-color: #f1f3f4;
   border: 1px solid transparent;
@@ -26,7 +13,6 @@ const SearchBar = styled.form`
   height: 46px;
   position: relative;
   padding: 0;
-  margin: auto;
   box-sizing: border-box;
 `;
 
@@ -76,4 +62,20 @@ const DeleteIcon = styled.div.attrs({
 const DeleteIconPng = styled.img`
   width: 100%;
 `;
+
+
+const Search = () => {
+  return (
+    <SearchBar>
+      <SearchInput></SearchInput>
+      <SearchIcon>
+        <SearchIconPng src={`${searchPng}`}></SearchIconPng>
+      </SearchIcon>
+      <DeleteIcon>
+        <DeleteIconPng src={`${deletePng}`} id="deleteBtn"></DeleteIconPng>
+      </DeleteIcon>
+    </SearchBar>
+  );
+};
+
 export default Search;

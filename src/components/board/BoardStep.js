@@ -1,55 +1,54 @@
 import { useEffect } from "react";
 import { useState,useRef } from "react";
-import styled,{keyframes} from "styled-components";
-import { Undo,UndoCheck,Redo,RedoCheck, Menu, MenuCheck,Banned } from "../assets";
+import styled from "styled-components";
+import { Undo,UndoCheck,Redo,RedoCheck, Menu, MenuCheck,Banned } from "../../assets";
+import { deleteBoard } from "../../store/HandleDb";
+import { ClickIconAnimate } from "../constant";
 
-const backgoundColor=keyframes`
-  from{
-    background-color:#999999;
-  }
-  to{
-    background-color:white;
-  }
-`;
+
 
 const BoardSetpDiv=styled.div`
-    position:fixed;
-    right:0;
+    display: flex;
+    position: fixed;
+    right: 0;
+    box-sizing: border-box;
 `
-const UndoBtn=styled.button`
+const UndoBtn=styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 52px;
   height: 52px;
   box-sizing: border-box;
   margin: 10px 20px;
   background:none;
   border:none;
-  &:hover{
-    border:(${props=> {return props.minLength==="false"? "1px solid #ccc": "none"}});;
-  }
   &::before{
     content:'';
     display:inline-block;
     width: 32px;
     height: 32px;
-    background-image:url(${props=> {return props.minLength==="false"?UndoCheck: Undo}});
+    background-image:url(${props=> { return props.minLength=== false? UndoCheck: Undo}});
     background-repeat: no-repeat;
     background-size: auto;
   }
   &:hover:before{
-    cursor:pointer;
-    background-image:url(${props=> {return props.minLength==="false"?UndoCheck: Banned}});
+    cursor:${props=> {return props.minLength===false?"pointer": "not-allowed"}};
     }
   &:active{
-      animation:${backgoundColor} 0.3s linear;
+    ${props=> {return props.minLength===false?ClickIconAnimate: "none"}} 0.3s linear;
     }
 `
 const RedoBtn=styled(UndoBtn)`
-&::before{
-    background-image:url(${props=> {return props.maxLength==="false"?RedoCheck:Redo}});
+  &::before{
+    background-image:url(${props=> {return props.maxLength===false?RedoCheck:Redo}});
   } 
   &:hover:before{
-    background-image:url(${props=> {return props.maxLength==="false"?RedoCheck: Banned}}) 
+    cursor:${props=> {return props.maxLength===false?"pointer": "not-allowed"}};
     }
+  &:active{
+    animation:${props=> {return props.maxLength===false?ClickIconAnimate: "none"}} 0.3s linear;
+  }
 `
 const MenuBtn=styled(UndoBtn)`
   position:relative;
@@ -71,7 +70,8 @@ const MenuDropDown=styled.div`
     display:flex;
     flex-direction:column;
     margin-top:5px;
-    display:${props=>(props.menu!=="menu"? "none" :"block" )};
+    top: 65px;
+    display:${props=>(props.menu ==true? "block" :"none" )};
 `
 const MenuDropDowndBtn=styled.button`
     font-size: 14px;
@@ -89,22 +89,15 @@ const MenuDropDowndBtn=styled.button`
     }
 `
 
-const BoardStep=({undo,redo,clear,elements,currentIndex})=>{
-    const[menu,setMunu]=useState("");
-    const[maxLength,setMaxLength]=useState("false");
-    const[minLength,setMinLength]=useState("false");
-    const MunuBtnRef=useRef();
-    useEffect(()=>{//設定MenuBtn的顯示與消失動作
-      document.addEventListener("click",(e)=>{
-        if(!MunuBtnRef.current.contains(e.target)){
-          setMunu("")
-      }})
-    },[menu])
+const BoardStep=({undo,redo,clear,id,currentIndex,uid})=>{
+    const[menu,setMenu]=useState(false);//handle menu
+    const[maxLength,setMaxLength]=useState(false);
+    const[minLength,setMinLength]=useState(false);
+    const[maxIndex,setMaxIndex]=useState(0)
 
     useEffect(()=>{
-   
-    },[maxLength,minLength])
-
+      setMaxIndex(currentIndex);
+    },[currentIndex])
     const download=()=>{
       const canvas = document.getElementById("canvas");
       let image=canvas.toDataURL("image/png");
@@ -117,17 +110,26 @@ const BoardStep=({undo,redo,clear,elements,currentIndex})=>{
     const handleUndo=()=>{//設定undo跟redo的按鈕顯示
       undo();
       if(currentIndex<=1){
-        setMinLength("true");
-        setMaxLength("false");
+        setMinLength(true);
+        setMaxLength(false);
+      }else{
+        setMinLength(false);
       }
     }
     const handleRedo=()=>{//設定undo跟redo的按鈕顯示
       redo();
-      const maxIndex=elements.length
-      if(currentIndex>= maxIndex){
-        setMinLength("false");
-        setMaxLength("true");
+      setMaxIndex(currentIndex);
+      console.log(maxIndex)
+      if(maxIndex>=currentIndex ){
+        setMinLength(false);
+        setMaxLength(true);
+      }else{
+        setMaxLength(false);
       }
+    }
+    const handleClear=async()=>{
+      clear();
+      await deleteBoard(id,uid);
     }
 
     return(
@@ -135,10 +137,10 @@ const BoardStep=({undo,redo,clear,elements,currentIndex})=>{
         <BoardSetpDiv >
         <UndoBtn onClick={handleUndo} minLength={minLength}></UndoBtn>
         <RedoBtn onClick={handleRedo} maxLength={maxLength}></RedoBtn>
-        <MenuBtn id="menuBtn" ref={MunuBtnRef} onClick={()=>{setMunu("menu")}} >
+        <MenuBtn id="menuBtn" onClick={()=>setMenu(!menu)} >
             <MenuDropDown menu={menu} >
                 <MenuDropDowndBtn  onClick={download}>下載圖片</MenuDropDowndBtn>
-                <MenuDropDowndBtn  onClick={clear}>清除頁面</MenuDropDowndBtn>
+                <MenuDropDowndBtn  onClick={handleClear}>清除頁面</MenuDropDowndBtn>
             </MenuDropDown>
         </MenuBtn>
         </BoardSetpDiv>

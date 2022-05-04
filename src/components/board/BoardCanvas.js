@@ -1,7 +1,7 @@
 import rough from "roughjs/bundled/rough.esm";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { saveBoardData } from "../store/HandleDb";
+import { saveBoardData } from "../../store/HandleDb";
 
 
 const BoardCanvasDiv=styled.canvas`
@@ -104,13 +104,12 @@ const adjustElementCoordinates = (element) => {
 
 const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSelectedElement,action,setAction,setIsMouseUp,boardData})=>{
 
-    useEffect(() => {
+    useEffect(() => {//畫圖
         const canvas = document.getElementById("canvas");
         const context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
     
         const roughCanvas = rough.canvas(canvas);
-        console.log(elements,"element")
         elements.forEach((element) => {
           if(element.type!=="pencil"){
             roughCanvas.draw(element.roughElement)
@@ -119,11 +118,11 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
               stroke:element.color.strokeColor,
               strokeWidth: element.range,
             });
-            console.log("linearPathElement",linearPathElement);
+            // console.log("linearPathElement",linearPathElement);
             roughCanvas.draw(linearPathElement)
           }
         }); 
-      },);
+    },);
 
       useEffect(()=>{
         if(!boardData) return
@@ -152,7 +151,6 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
             array.push({...item});
           }
         })
-        console.log(array)
         setElements(array);
       }
     
