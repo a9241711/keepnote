@@ -69,7 +69,7 @@ const useHistoryPosition = (initialState) => {
 const BoardIndex =()=>{
 
     const location=useLocation();//從CanvasTool或NoteItem傳text/title/board data過來
-    const{noteText,noteTitle,id,board,uid}=location["state"]//取得noteTitle 跟noteText
+    const{noteText,noteTitle,id,board,uid,noteColor,notification}=location["state"]//取得noteTitle 跟noteText跟color
     const [elements,currentIndex, setElements, undo, redo, clear]=useHistoryPosition([]); //使用customHook
     //設定action動作
     const [action, setAction] = useState("none");
@@ -102,16 +102,17 @@ const BoardIndex =()=>{
 
 
     useEffect(()=>{//檢查mouseUp Event，並傳入DB
-      async function getBoardElements (elements,noteTitle,noteText,uid){
+      async function getBoardElements (elements,noteTitle,noteText,uid,noteColor,notification){
         const index=elements.length-1;
-        console.log(elements,noteTitle,noteText)
-        await saveBoardData(elements[index],id,noteTitle,noteText,uid);
+        const{timer="",currentToken=""}=notification;
+        console.log(elements[index],id,noteTitle,noteText,uid,noteColor,timer,currentToken)
+        await saveBoardData(elements[index],id,noteTitle,noteText,uid,noteColor,timer,currentToken);
       }
       if(elements.length ===0) return
       else{
         if(isMouseUp){
           console.log(elements,isMouseUp);
-          getBoardElements (elements,noteTitle,noteText,uid)
+          getBoardElements (elements,noteTitle,noteText,uid,noteColor,notification)
         }else return;
       }
     },[action])
@@ -146,7 +147,6 @@ const BoardIndex =()=>{
             <BoardStep undo={undo} redo={redo} clear={clear} id={id} currentIndex={currentIndex} uid={uid}/>
             </ToolNav>
             <BoardCanvas elements={elements} setElements={setElements} tool={tool} color={color} range={range} selectedElement={selectedElement} setSelectedElement={setSelectedElement}action={action} setAction={setAction} setIsMouseUp={setIsMouseUp} boardData={boardData}/>
-            <BoardToDbTool  elements={elements}/>
             </BoardDiv>
         </>
     )

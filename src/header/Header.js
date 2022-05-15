@@ -6,7 +6,7 @@ import LogOut from "./LogOut";
 import LogIn from "./LogIn";
 import User from "./User";
 import { Link } from "react-router-dom";
-import { Loading } from "../assets";
+import { KeepLogo, Loading } from "../assets";
 import HeaderLoadContext from "./HeaderLoadContext";
 
 
@@ -24,27 +24,47 @@ const Header = styled.div`
 `;
 
 const HeaderToolDiv=styled.div`
-display: flex;
-align-items: center;
-justify-content: space-around;
-width: 100px;
-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100px;
+  height: 65px;
 `
 const LoadingDiv=styled.div`
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    background-image: url(${Loading});
-    background-position: center;
-    background-size: contain;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background-image: url(${Loading});
+  background-position: center;
+  background-size: contain;
+`
+const LogoDiv=styled.div`
+  width: 130px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+`
+const LogoImg=styled.img`
+  width: 65px;
+  object-fit: cover;
+`
+const LogoText=styled(H3)`
+  color:#5F6368;
+  font-size:20px;
 `
 
 const HeaderDiv = ({isLoggin}) => {
-  const {isLoading} =useContext(HeaderLoadContext);
+  const {isLoading,setIsLoading} =useContext(HeaderLoadContext);
+  useEffect(()=>{
+    setIsLoading(false);
+  },[])
   return (
     <Header>
-      <Text>測試</Text>
+      <LogoDiv>
+        <LogoImg src={KeepLogo}></LogoImg>
+        <LogoText>KeepNote</LogoText>
+      </LogoDiv>
       <Search></Search>
       {isLoading 
       ? <LoadingDiv></LoadingDiv> 
@@ -53,9 +73,7 @@ const HeaderDiv = ({isLoggin}) => {
       {isLoggin?
       <>
       <LogOut /><User isLoggin={isLoggin}/></>
-      :<Link to={"/login"}>
-        <LogIn />
-      </Link>
+      :<LogIn />
       }
       </HeaderToolDiv>
     </Header>

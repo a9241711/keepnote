@@ -1,13 +1,11 @@
-import { useEffect, useLayoutEffect, useState,createContext } from "react";
-import rough from "roughjs/bundled/rough.esm";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-
 import Home from "./pages/Home";
 import BoardIndex from "./components/board/BoardIndex";
 import Member from "./pages/Member";
 import AuthState from "./store/AuthState";
 import AuthRequired from "./store/AuthRequired";
 import HeadLoadState from "./header/HeaderLoadState";
+import NoteContext from "./note/context/NoteContext";
 
 
 function App() {

@@ -28,26 +28,26 @@ const UndoBtn=styled.div`
     display:inline-block;
     width: 32px;
     height: 32px;
-    background-image:url(${props=> { return props.minLength=== false? UndoCheck: Undo}});
+    background-image:url(${UndoCheck});
     background-repeat: no-repeat;
     background-size: auto;
   }
-  &:hover:before{
-    cursor:${props=> {return props.minLength===false?"pointer": "not-allowed"}};
+  &:hover{
+    cursor:pointer;
     }
   &:active{
-    ${props=> {return props.minLength===false?ClickIconAnimate: "none"}} 0.3s linear;
+    animation:${ClickIconAnimate} 0.3s linear;
     }
 `
 const RedoBtn=styled(UndoBtn)`
   &::before{
-    background-image:url(${props=> {return props.maxLength===false?RedoCheck:Redo}});
+    background-image:url(${RedoCheck});
   } 
   &:hover:before{
-    cursor:${props=> {return props.maxLength===false?"pointer": "not-allowed"}};
+    cursor:pointer;
     }
   &:active{
-    animation:${props=> {return props.maxLength===false?ClickIconAnimate: "none"}} 0.3s linear;
+    animation:${ClickIconAnimate} 0.3s linear;
   }
 `
 const MenuBtn=styled(UndoBtn)`
@@ -91,13 +91,7 @@ const MenuDropDowndBtn=styled.button`
 
 const BoardStep=({undo,redo,clear,id,currentIndex,uid})=>{
     const[menu,setMenu]=useState(false);//handle menu
-    const[maxLength,setMaxLength]=useState(false);
-    const[minLength,setMinLength]=useState(false);
-    const[maxIndex,setMaxIndex]=useState(0)
 
-    useEffect(()=>{
-      setMaxIndex(currentIndex);
-    },[currentIndex])
     const download=()=>{
       const canvas = document.getElementById("canvas");
       let image=canvas.toDataURL("image/png");
@@ -109,23 +103,9 @@ const BoardStep=({undo,redo,clear,id,currentIndex,uid})=>{
 
     const handleUndo=()=>{//設定undo跟redo的按鈕顯示
       undo();
-      if(currentIndex<=1){
-        setMinLength(true);
-        setMaxLength(false);
-      }else{
-        setMinLength(false);
-      }
     }
     const handleRedo=()=>{//設定undo跟redo的按鈕顯示
       redo();
-      setMaxIndex(currentIndex);
-      console.log(maxIndex)
-      if(maxIndex>=currentIndex ){
-        setMinLength(false);
-        setMaxLength(true);
-      }else{
-        setMaxLength(false);
-      }
     }
     const handleClear=async()=>{
       clear();
@@ -135,8 +115,8 @@ const BoardStep=({undo,redo,clear,id,currentIndex,uid})=>{
     return(
         <>
         <BoardSetpDiv >
-        <UndoBtn onClick={handleUndo} minLength={minLength}></UndoBtn>
-        <RedoBtn onClick={handleRedo} maxLength={maxLength}></RedoBtn>
+        <UndoBtn onClick={handleUndo} ></UndoBtn>
+        <RedoBtn onClick={handleRedo} ></RedoBtn>
         <MenuBtn id="menuBtn" onClick={()=>setMenu(!menu)} >
             <MenuDropDown menu={menu} >
                 <MenuDropDowndBtn  onClick={download}>下載圖片</MenuDropDowndBtn>

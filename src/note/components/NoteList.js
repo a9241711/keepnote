@@ -1,14 +1,24 @@
-import { useState,useRef,useEffect } from "react";
+import { useState,useRef,useEffect, useContext } from "react";
 import styled from "styled-components";
 import NoteItem from "./NoteItem";
-import { DragDropContext,Droppable,Draggable } from "react-beautiful-dnd";
 import { v4 } from "uuid";
 import { updateListsPosition } from "../../store/HandleDb";
-import { Media_Query_MD, Media_Query_SM } from "../../components/constant";
+import { Media_Query_MD, Media_Query_SM,LargerAnimate,IconDiv } from "../../components/constant";
+import NoteTool from "./NoteTool";
+import NoteBgColor from "./color/NoteBgColor";
+import NotificationPop from "./notification/NotificationPop";
+import { getMessaging,onMessage } from "firebase/messaging";
+import NoteInput from "./NoteInput";
+import NoteColor from "./color/NoteColor";
+import NoteModiBtn from "./modify/NoteModiBtn";
+import { EditBoard } from "../../assets";
+import NotificationDelete from "./notification/NotificationDelete";
+import { Link } from "react-router-dom";
+import NotificationIndex from "./notification/NotificationIndex";
+import NoteContext from "../context/NoteContext";
+import NoteModifyArea from "./modify/NoteModifyArea";
 
-
-
-const NoteListsDiv=styled.div`
+const NoteListsDiv=styled.div`//List Content Div
     width: 100%;
     display: grid;
     grid-template-columns: repeat(4,1fr);
@@ -21,28 +31,51 @@ const NoteListsDiv=styled.div`
         grid-template-columns: 1fr;
     }
 `
-const NoteLists=styled.div`//NoteItem
-    width:100%;
-    border-radius: 8px;
+const NoteIconDiv=styled.div`//Tool Div
+    width: 100%;
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+    visibility: ${props=>{return props.isClickTool? "visible":"hidden"}};
+    position:relative;
+    padding: 10px;
     box-sizing: border-box;
-    border: 1px solid #e0e0e0;
-    background: "#ffffff";
+`
+const NoteLists=styled.div`//draggable的Div
+    width:100%;
+    box-sizing: border-box;
     height:auto;
     margin: 20px 0;
-    padding: 5px;
+    transition: all ease-in 0.2s;
+    position: relative;
+    border-radius: 8px;
+    &:hover{
+        box-shadow: 0 1px 2px 0 rgb(60 64 67/50%), 0 2px 6px 2px rgb(60 64 67 /30%);
+    }
+    &:hover ${NoteIconDiv}{
+        opacity: 1;
+        visibility: visible;
+    }
+    &:active ${NoteIconDiv}{
+        visibility: hidden;
+    }
 `
+
 const NoteListCol=styled.div`
     background: #ffffff;
 `
 
-
-const NoteList=({setDataChanged,setList,addData,deleteData,updateData,uid})=>{
-            const[isDragged,setIsDragged]=useState(false);
-            // const[draggedItem,setDraggedItem]=useState(false);
-            const dragItem=useRef();//被拖曳的item
+const NoteList=({setDataChanged,setList,uid,updateData})=>{
+            const[isDragged,setIsDragged]=useState(false);//拖曳
+            const[isClickTool,setIsClickTool]=useState(false);//是否點擊Tool div
+            const [selected, setSelected] = useState(false);//是否點擊特定貼文
             const dragOverItem=useRef();//拖曳進入的位置
-            const draggedItem=useRef();
-            
+            const dragItem=useRef();//設定被拖曳的position位置
+            const draggedItem=useRef();//用來觀察被拖曳的item
+            const[popValue,setPopValue]=useState("");//notificaiton通知value設定
+            const[isNotification,setIsNotification]=useState(false);//檢查是否有通知，onMessage使用
+
+
 //    async function handleDragEnd(result){
 //         if(!result.destination) return;
 //         const sourceIndex=result.source.index;
@@ -97,6 +130,7 @@ const NoteList=({setDataChanged,setList,addData,deleteData,updateData,uid})=>{
         dragOverItem.current=null;
         e.currentTarget.style.board="none";
     }
+
     useEffect(()=>{
         if(!isDragged)return//若無拖曳移動則不執行
         async function upDateListToDb(setList,uid){
@@ -105,18 +139,32 @@ const NoteList=({setDataChanged,setList,addData,deleteData,updateData,uid})=>{
         upDateListToDb(setList,uid)
         setIsDragged(false);//執行後設定回初始狀態
     },[isDragged])
-
+    //處理pop up notification message
+    const messaging = getMessaging();//前端取得push nitification通知，監聽messsaging，傳入nitificationPop
+    onMessage(messaging, (payload) => {
+    const {title,body,time,id}=payload.data;
+    captureNotif(time,id,title,body);
+    });
+    const captureNotif =(time,id,title,body)=>{
+    setIsNotification(true);
+    setPopValue({title,body,time,id});
+    }
     return(
         <NoteListsDiv>
             <NoteListCol className="status" onDrop={dragDrop}>
             { 
             setList.map((item,index)=>{
                 if(index %4 ===0){
-                    const{id,noteText,noteTitle,image}=item;
+                    const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
+                    console.log(whenToNotify)
                     const board=item.board;
                     const key=v4();
-                    return( <NoteLists key={key} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
-                            <NoteItem setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList} addData={addData} deleteData={deleteData} updateData={updateData} uid={uid}/> 
+                    return( <NoteLists  key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
+                            <NoteBgColor id={id}  color={color}/>
+                            <NoteItem whenToNotify={whenToNotify}  setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid}/>                             
+                            <NoteIconDiv isClickTool={isClickTool}>
+                            <NoteTool  setList={setList} setIsClickTool={setIsClickTool} id={id} uid={uid} setDataChanged={setDataChanged} noteText={noteText} noteTitle={noteTitle}  />
+                            </NoteIconDiv>
                             </NoteLists>
                             )
                 }
@@ -125,11 +173,15 @@ const NoteList=({setDataChanged,setList,addData,deleteData,updateData,uid})=>{
             { 
             setList.map((item,index)=>{
                 if(index %4 ===1){
-                    const{id,noteText,noteTitle,image}=item;
+                    const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
                     const board=item.board;
                     const key=v4();
-                    return( <NoteLists key={key} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDrag={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
-                            <NoteItem   setDataChanged={setDataChanged} board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList} addData={addData} deleteData={deleteData} updateData={updateData} uid={uid}/> 
+                    return( <NoteLists  key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
+                            <NoteBgColor id={id}  color={color}/>
+                            <NoteItem whenToNotify={whenToNotify}   setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid}/>                             
+                            <NoteIconDiv isClickTool={isClickTool}>
+                            <NoteTool setList={setList} setIsClickTool={setIsClickTool} id={id} uid={uid} setDataChanged={setDataChanged} noteText={noteText} noteTitle={noteTitle}  />
+                            </NoteIconDiv>
                             </NoteLists>
                             )
                 }
@@ -139,11 +191,15 @@ const NoteList=({setDataChanged,setList,addData,deleteData,updateData,uid})=>{
             { 
             setList.map((item,index)=>{
                 if(index %4 ===2){
-                    const{id,noteText,noteTitle,image}=item;
+                    const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
                     const board=item.board;
                     const key=v4();
-                    return( <NoteLists key={key} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver}  onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDrag={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
-                            <NoteItem   setDataChanged={setDataChanged} board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList} addData={addData} deleteData={deleteData} updateData={updateData} uid={uid}/> 
+                    return( <NoteLists  key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
+                            <NoteBgColor id={id}  color={color}/>
+                            <NoteItem whenToNotify={whenToNotify}   setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid}/>                             
+                            <NoteIconDiv isClickTool={isClickTool}>
+                            <NoteTool  setList={setList} setIsClickTool={setIsClickTool} id={id} uid={uid} setDataChanged={setDataChanged} noteText={noteText} noteTitle={noteTitle}  />
+                            </NoteIconDiv>
                             </NoteLists>
                             )
                 }
@@ -153,18 +209,26 @@ const NoteList=({setDataChanged,setList,addData,deleteData,updateData,uid})=>{
             { 
             setList.map((item,index)=>{
                 if(index %4 ===3){
-                    const{id,noteText,noteTitle,image}=item;
+                    const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
                     const board=item.board;
                     const key=v4();
-                    return( <NoteLists key={key} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDrag={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
-                            <NoteItem   setDataChanged={setDataChanged} board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList} addData={addData} deleteData={deleteData} updateData={updateData} uid={uid}/> 
+                    return( <NoteLists  key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
+                            <NoteBgColor id={id}  color={color}/>
+                            <NoteItem whenToNotify={whenToNotify}   setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid}/> 
+                            <NoteIconDiv isClickTool={isClickTool}>
+                            <NoteTool  setList={setList} setIsClickTool={setIsClickTool} id={id} uid={uid} setDataChanged={setDataChanged} noteText={noteText} noteTitle={noteTitle}  />
+                            </NoteIconDiv>
                             </NoteLists>
                             )
                 }
             })}
             </NoteListCol>
-        </NoteListsDiv>
-    )
+
+            {selected ? <NoteModifyArea uid={uid} selected={selected} setSelected={setSelected}  setDataChanged={setDataChanged} />
+                 : null}
+                {isNotification?<NotificationPop  setSelected={setSelected}  popValue={popValue} setList={setList} setIsNotification={setIsNotification}/>:null}
+            </NoteListsDiv>
+            )
 }       
 // {
 //     setList.map((item)=>{

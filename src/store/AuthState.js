@@ -32,9 +32,15 @@ const AuthState=(props)=>{
     }
     //登出
     const getLogOut=()=>{
-        console.log();
         disAuthPatch({
             type:"SIGNUP",
+        })
+    }
+    //重設密碼 
+    const getResetPassword=(email)=>{
+        disAuthPatch({
+            type:"RESET",
+            payload:email
         })
     }
     //取得erroMessage
@@ -43,7 +49,7 @@ const AuthState=(props)=>{
         disErrorPatch({type:errorCode})
     }
     return(
-        <AuthContext.Provider value={{user:authstate.user,isAuthented:authstate.isAuthented,error:error.error,getSignIn,getSignUp,getLogOut,getErrorMessage}} >
+        <AuthContext.Provider value={{user:authstate.user,isAuthented:authstate.isAuthented,error:error.error,getSignIn,getSignUp,getLogOut,getErrorMessage,getResetPassword,reset:authstate.reset}} >
             {props.children}
         </AuthContext.Provider>
         )

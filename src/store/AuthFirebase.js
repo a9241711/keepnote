@@ -1,5 +1,5 @@
 import { auth} from "./firebase";
-import {createUserWithEmailAndPassword,onAuthStateChanged,signInWithEmailAndPassword, signOut} from "firebase/auth"
+import {createUserWithEmailAndPassword,onAuthStateChanged,signInWithEmailAndPassword,sendPasswordResetEmail, signOut} from "firebase/auth"
 import { useEffect, useState } from "react";
 
 export function signIn(email,password){
@@ -7,14 +7,16 @@ export function signIn(email,password){
 }
 
 export function signUp(email,password){
-
     return createUserWithEmailAndPassword(auth,email,password);
 }
 
 
 export function logOutUser(){
-
     return signOut(auth);
+}
+//忘記密碼
+export function resetPassword(email){
+    return sendPasswordResetEmail(auth,email);
 }
 
 export function useAuth(){
@@ -25,3 +27,4 @@ export function useAuth(){
     },[])
     return currentUser;
 }
+

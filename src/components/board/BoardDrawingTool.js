@@ -4,7 +4,6 @@ import { BoardContext } from "./BoardIndex";
 import { Pencil,PencilCheck,Line,LineCheck,Rectangle,RectangleCheck,Selection,SelectionCheck, Arrow, ArrowCheck } from "../../assets";
 import { Link } from "react-router-dom";
 import { updateBoardData } from "../../store/HandleDb";
-import { async } from "@firebase/util";
 
 const backgoundColor=keyframes`
 from{

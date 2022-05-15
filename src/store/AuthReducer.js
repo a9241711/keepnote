@@ -1,4 +1,3 @@
-
 export const AuthReducer=(state,action)=>{
     switch(action.type){
         case "LOGIN":
@@ -10,8 +9,9 @@ export const AuthReducer=(state,action)=>{
         case "SIGNUP":
             console.log("action")
             return {user:action.payload,isAuthented:true}
-        case "Error":
-            return {}
+        case "RESET":
+            console.log("reset")
+            return {user:action.payload, isAuthented:false,reset:`密碼重設信件已寄出，請至${action.payload}收取重設信件`}
         default:
             return state
     }
@@ -19,7 +19,6 @@ export const AuthReducer=(state,action)=>{
 
 
 export const mapAuthCodeToMessage=(state,action)=>{
-    console.log(action.type);
     switch(action.type){
         case "auth/wrong-password":
             return {error:"帳號密碼錯誤，請重新輸入"}
@@ -31,6 +30,8 @@ export const mapAuthCodeToMessage=(state,action)=>{
             return {error:"帳號已被使用，請重新註冊"}
         case "auth/weak-password":
             return {error:"weak-password"}
+        case "auth/user-not-found":
+            return {error:"不存在此帳號"}
         default:
             return state
     }

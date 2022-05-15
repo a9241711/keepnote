@@ -16,7 +16,6 @@ const UserDiv=styled.div`
 function User({isLoggin}) {
     const email=isLoggin["email"]
     const userName= email.toUpperCase().slice(0,1);
-    console.log(userName)
   return (
     <UserDiv>
         {userName}

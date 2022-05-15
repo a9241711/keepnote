@@ -2,38 +2,54 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { v4 } from "uuid";
 import { EditBoard } from "../../assets";
+import { IconDiv,IconTipText } from "../../components/constant";
+import NoteColor from "./color/NoteColor";
+import NotificationIndex from "./notification/NotificationIndex";
 
-const CanvasTools=styled.div`
-    width:32px;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    &:hover{
-        background-color: rgba(95,99,104,0.157);
-        border-radius: 50%;
-        cursor:pointer;
-}
-`
-const CanvasToolIcon=styled.div`
-    width: 24px;
-    height: 24px;
+const CanvasTools=styled(IconDiv)`//Edit上點擊前的Icon
+    position:absolute;
+    top: 50%;
+    right: 0;
+    left:${props=> {return props.titleClick?"10%":"unset"}};
+    transform: translate(-50%, -50%);
     background-repeat: no-repeat;
     background-position: center;
     background-image: url(${EditBoard}) ;
 `
+const NodeToolDiv=styled.div`//彈出框的tool div
+  display: flex;
+  justify-content: space-between;
+  padding:0 10px;
+  position: relative;
+`
+const BoardAdd=styled(IconDiv)` //新增畫板的Icon
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(${EditBoard}) ;
+`
 
-const CanvasTool=({noteTitle ,noteText,uid} )=>{//上方輸入框的icon，把文字跟board畫板帶入到下一個頁面並儲存
+const CanvasTool=({noteTitle ,noteText,uid,titleClick,setNoteColor,noteColor,setIsFromEdit,isFromEdit,setNotification,notification} )=>{//上方輸入框的icon，把文字跟board畫板帶入到下一個頁面並儲存
     const id =v4()
 
     return(
-        <CanvasTools >
-            <Link  to={"/boarding"} state={{id,noteTitle,noteText,uid}}>
-            <CanvasToolIcon > 
-            </CanvasToolIcon>
-            </Link>
-        </CanvasTools>
+        <>
+        {titleClick
+        ?
+        <NodeToolDiv>
+        <Link  to={"/boarding"} state={{id,noteTitle,noteText,uid,noteColor,notification}}>
+        <BoardAdd></BoardAdd>
+        </Link>
+        <NoteColor isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} setNoteColor={setNoteColor}/>
+        <NotificationIndex isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} setNotification={setNotification}/>
+        </NodeToolDiv>
+        :<Link to={"/boarding"} state={{id,noteTitle,noteText,uid,noteColor,notification}}>
+        <CanvasTools titleClick={titleClick}><IconTipText>新增繪圖記事</IconTipText></CanvasTools>
+        </Link>
+        }
+
+ 
+
+        </>
     )
 }
 
