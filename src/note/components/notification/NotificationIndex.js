@@ -14,6 +14,9 @@ const NotificationIcon=styled(IconDiv)`
   background-repeat: no-repeat;
   background-position: center;
   background-image: url(${Notification}) ;
+  &:hover{
+    cursor: pointer;
+  }
 `      
 
 const NotificationInputDiv=styled(IconDiv)`

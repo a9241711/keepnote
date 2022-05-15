@@ -135,7 +135,6 @@ export const IconDiv=styled.div`
         background-color: rgba(95,99,104,0.157);
         opacity: 0.87;
         border-radius: 50%;
-        cursor:pointer;
     }
     &:hover ${IconTipText}{
       visibility: visible;

@@ -37,6 +37,7 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
     const[isInput,setIsInput]=useState(false);//檢查是否仍在輸入
     const[titleClick,setTitleClick] =useState(false);//檢查是否點擊title
     const[debouncedText,setDebouncedText]=useState("");//控制取得typying title text資料
+    const[isClose,setIsClose]=useState(false);//檢查是否按關閉
     const typingTitleRef=useRef();
     const typingTextRef=useRef();
 
@@ -112,13 +113,22 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
         setIsInput(true);
     },[noteTitle,noteText])
 
+    useEffect(()=>{//是否按下關閉，是則清空內容
+        if(!isClose)return 
+        setNoteTitle("");
+        setNoteText("");
+        setNoteColor("#FFFFFF");
+        setNotification("");
+        setIsClose(false);
+    },[isClose])
+
     return(
         <NoteDiv style={{backgroundColor: noteColor}} noteColor={noteColor} ref={typingTitleRef}>
         <NoteTitleInputDiv style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue} onClick={()=> setTitleClick(true)} ></NoteTitleInputDiv>
         {titleClick
         ? <NoteTextInputDiv style={{backgroundColor: noteColor}} ref={typingTextRef} value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv> :null}
         <NotificationDeleteEdit isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} notification={notification} setNotification={setNotification} />
-        <CanvasTool setNotification={setNotification} setIsFromEdit={setIsFromEdit} isFromEdit={isFromEdit} setNoteColor={setNoteColor} noteColor={noteColor} titleClick={titleClick} noteTitle={noteTitle} noteText={noteText} uid={uid} notification={notification}/>
+        <CanvasTool setIsClose={setIsClose} setNotification={setNotification} setIsFromEdit={setIsFromEdit} isFromEdit={isFromEdit} setNoteColor={setNoteColor} noteColor={noteColor} titleClick={titleClick} noteTitle={noteTitle} noteText={noteText} uid={uid} notification={notification}/>
         </NoteDiv>
         
     )

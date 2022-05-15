@@ -50,4 +50,16 @@ const NoteModiBtn=({uid,setSelected,setDataChanged})=>{
     )
 }
 
-export default NoteModiBtn
+export default NoteModiBtn;
+
+
+export const NoteModiEditBtn=({setIsClose})=>{
+  
+    return(
+        <NoteModifyDiv>
+        <NoteModifySubmmit  onClick={() => setIsClose(true)}>
+          關閉
+        </NoteModifySubmmit>
+        </NoteModifyDiv>
+    )
+}
