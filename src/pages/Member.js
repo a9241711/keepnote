@@ -4,9 +4,8 @@ import AuthContext from "../store/AuthContext";
 import { signIn, signUp, logOut, useAuth,resetPassword } from "../store/AuthFirebase";
 import { saveSignUpdData } from "../store/HandleDb";
 import { Button,Text } from "../components/constant";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import styled from "styled-components";
-import { async } from "@firebase/util";
 
 
 const MemberDiv=styled.div`
@@ -60,14 +59,13 @@ const SignUpBtn=styled(Button)`
   background: #FBBC04;
   border-radius: 8px;
   margin-top: 0;
-  display:${props=> props.isSignUp==true? "block": "none"};
   &:hover{
     border: 1px solid #FBBC04 ;
     background-color: #FFFFFF;
   }
 `
 const LoginBtn=styled(SignUpBtn)`
-  display: ${props=> props.isSignUp==true? "none": "block"};
+  
 `
 const Plink=styled(Text)`
   pointer-events:unset ;
@@ -78,25 +76,36 @@ const Plink=styled(Text)`
       text-decoration: underline;
     }
 `
-
-const Member = () => {
+const LoginLink=styled(Link)`
+    text-decoration: none;
+    text-decoration: underline;
+    display: block;
+    transition: all ease-in .2s;
+    color: #202124;
+    font-weight: 400;
+    font-family: Roboto, Arial, sans-serif;
+    margin: 10px 0;
+    &:hover{
+        cursor:pointer;
+          color: #FBBC04;
+          text-decoration: underline;
+    }
+`
+const MemberSignIn = () => {
   const {
     getSignIn,
-    isAuthented,
-    getSignUp,
-    getLogOut,
     getErrorMessage,
     error,getResetPassword,reset
   } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);//防止使用者重複點擊
-  const [isSignUp,setIsSignUp]=useState(false);//是否註冊
+  // const [isSignUp,setIsSignUp]=useState(false);//是否註冊
   const [isResetPassword,setIsResetPassword]=useState(false);//是否重設密碼
   const navigation=useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
   const currentUser = useAuth();
 
-  const handleLogin = async () => {
+  const handleLogin = async () => {//登入
     setLoading(true);
     try {
       let response = await signIn(
@@ -118,29 +127,7 @@ const Member = () => {
     setLoading(false);
   };
 
-  const handleSignUp = async () => {
-    setLoading(true);
-    try {
-      let response = await signUp(
-        emailRef.current.value,
-        passwordRef.current.value
-      );
-      let user = {
-        email: response["user"]["email"],
-        token: response["user"]["accessToken"],
-        uid: response["user"]["uid"],
-      };
-      await saveSignUpdData(user);//存入DB
-      getSignUp(user);////回呼disAutoPatch
-      localStorage.setItem("token",response["user"]["uid"]);//存入uid到local storage
-    } catch (error) {
-      let errorMessage = error.code;
-      getErrorMessage(errorMessage);
-    }
-    setLoading(false);
-  };
-
-  const handleReset=async()=>{
+  const handleReset=async()=>{//重設密碼
     setLoading(true);
     try{
       await  resetPassword( emailRef.current.value);
@@ -168,43 +155,120 @@ const Member = () => {
       {/* 顯示錯誤文字 */}
       {error ? <Text>{error}</Text> : null}
       {/* 顯示重設密碼文字 */}
-      {reset ? <><Text>{reset}</Text> <Plink  onClick={(e)=> {e.preventDefault();setIsSignUp(false);;setIsResetPassword(false)}}> 點此登入帳號密碼</Plink> </>: null}
+      {reset ? <><Text>{reset}</Text> <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(false)}}> 點此登入帳號密碼</Plink> </>: null}
       <BtnDiv>
       {reset ?null
-      :<SignUpBtn isSignUp={isSignUp} disabled={loading} onClick={handleReset}>
+      :<SignUpBtn  disabled={loading} onClick={handleReset}>
       重設密碼
       </SignUpBtn>}
-      <Plink  onClick={(e)=> {e.preventDefault();setIsSignUp(true);setIsResetPassword(false)}}> 沒有帳戶？請點此註冊帳號</Plink>
+      <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(false)}}> 沒有帳戶？請點此註冊帳號</Plink>
       </BtnDiv>
     </>
     :
     <>
-    {/* 註冊登入區 */}
-      <H3>{isSignUp?"註冊" :"登入"} {currentUser ? currentUser.email : null}</H3>
+    {/* 登入區 */}
+      <H3> {currentUser ?currentUser.email +" 已登入": "登入"}</H3>
+      {currentUser ?<>
+      <LoginLink  to={"/"}>回到首頁</LoginLink> 
+      </>
+      : 
+      <>
       <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
-      {isSignUp?null:<Plink style={{alignSelf:"flex-end"}} onClick={(e)=> {e.preventDefault();setIsSignUp(true);setIsResetPassword(true)}}> 忘記密碼？</Plink>}
+      <Plink style={{alignSelf:"flex-end"}} onClick={(e)=> {e.preventDefault();setIsResetPassword(true)}}> 忘記密碼？</Plink>
       <InputDiv type="password" placeholder="輸入密碼" ref={passwordRef} />
       {/* 顯示錯誤文字 */}
       {error ? <Text>{error}</Text> : null}
       <BtnDiv>
-      <SignUpBtn isSignUp={isSignUp} disabled={loading} onClick={handleSignUp}>
-        註冊
-      </SignUpBtn>
-      <LoginBtn isSignUp={isSignUp} disabled={loading} onClick={handleLogin }>
+      <LoginBtn disabled={loading} onClick={handleLogin }>
         登入
       </LoginBtn>
-      {isSignUp
-      ?<Plink  onClick={(e)=> {e.preventDefault();setIsSignUp(false);}}> 已有帳號？點此登入</Plink> 
-      :<Plink  onClick={(e)=> {e.preventDefault();setIsSignUp(true);}}> 沒有帳戶？請點此註冊帳號</Plink>
-      }
+      <LoginLink  to={"/signup"}>沒有帳戶？請點此註冊帳號</LoginLink> 
       </BtnDiv>
+      </>
+      }
+
     </>
     }
       </MemberInputDiv>
       </MemberDiv>
-      
     </>
   );
 };
 
-export default Member;
+export default MemberSignIn;
+
+
+
+
+export const MemberSignUp = () => {
+    const {
+      getSignUp,
+      getErrorMessage,
+      error,
+    } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);//防止使用者重複點擊
+    const navigation=useNavigate();
+    const emailRef = useRef();
+    const passwordRef = useRef();
+    const currentUser = useAuth();
+  
+  
+    const handleSignUp = async () => {//註冊
+      setLoading(true);
+      try {
+        let response = await signUp(
+          emailRef.current.value,
+          passwordRef.current.value
+        );
+        let user = {
+          email: response["user"]["email"],
+          token: response["user"]["accessToken"],
+          uid: response["user"]["uid"],
+        };
+        await saveSignUpdData(user);//存入DB
+        getSignUp(user);////回呼disAutoPatch
+        localStorage.setItem("token",JSON.stringify(user));//存入uid到local storage
+        // navigation("/login", { replace: true });
+      } catch (error) {
+        let errorMessage = error.code;
+        getErrorMessage(errorMessage);
+      }
+      setLoading(false);
+    };
+  
+  
+    return (
+      <>
+      
+      <MemberDiv>
+      <H1> KeepNote </H1>
+      <MemberInputDiv>
+      
+      {/* 註冊登入區 */}
+        <H3> {currentUser ?"註冊成功"+ currentUser.email : "註冊"}</H3>
+        {currentUser
+        ?<LoginLink  to={"/"}>回到首頁</LoginLink>
+        :<>
+        <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
+        <InputDiv type="password" placeholder="輸入密碼" ref={passwordRef} />
+        {/* 顯示錯誤文字 */}
+        {error ? <Text>{error}</Text> : null}
+        <BtnDiv>
+        <SignUpBtn  disabled={loading} onClick={handleSignUp}>
+          註冊
+        </SignUpBtn>
+        <LoginLink  to={"/login"}>已有帳號？點此登入</LoginLink>
+        {/* <Plink  onClick={(e)=> {e.preventDefault();setIsSignUp(false);}}> </Plink> 
+        <Plink  onClick={(e)=> {e.preventDefault();setIsSignUp(true);}}> 沒有帳戶？請點此註冊帳號</Plink> */}
+        </BtnDiv>
+        </>
+        }
+        
+  
+        </MemberInputDiv>
+        </MemberDiv>
+        
+      </>
+    );
+  };
+

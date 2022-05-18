@@ -1,23 +1,27 @@
 import styled from "styled-components";
 import { useState,useRef, useEffect, useContext } from "react";
-import { IconDiv,IconTipText } from "../../../components/constant";
+import { IconDiv,IconTipText,scaleUp } from "../../../components/constant";
 import { ColorPalette } from "../../../assets";
 import { updateNoteData } from "../../../store/HandleDb";
 import NoteContext from "../../context/NoteContext";
 
 const ColorDiv=styled.div`
+
 `     
 const ColorIcon=styled(IconDiv)`
   background-repeat: no-repeat;
   background-position: center;
   background-image: url(${ColorPalette}) ;
+  &:hover{
+    cursor: pointer;
+  }
 `      
 const ColorInputDiv=styled(IconDiv)`
     width: fit-content;
     height:50px;
     background-color: #FFFFFF;
     position: absolute;
-    top: 35px;
+    top: 45px;
     left:0;
     z-index: 0;
     border-radius: 8px;
@@ -86,21 +90,17 @@ const NoteColor=({uid,id, selected,setList,setDataChanged,setNoteColor,isFromEdi
     const[clickColor,setClickColor]=useState(false);
     const currentRef=useRef();//用來判斷是否為該物件
     const colorIconRef=useRef();
-    const{getColorUpdate,selectedItem}=useContext(NoteContext);
+    const{getColorUpdate}=useContext(NoteContext);
 
     const handelClickColor= async(e)=>{
         if(isFromEdit){ return setNoteColor(e.target.value)}//判斷是從note Edit來的，不是從List來的
-
-            getColorUpdate(e.target.value);
-            if(selected){//PopUp修改視窗
-                return
-            }else{//List修改視窗
-                const updateColorElements = {
-                    color:e.target.value,
-                  };
-                await updateNoteData(id, updateColorElements,uid);
-            }
-            setDataChanged(true);
+        getColorUpdate(e.target.value);
+        //List修改視窗
+        const updateColorElements = {
+            color:e.target.value,
+          };
+        await updateNoteData(id, updateColorElements,uid);//回傳DB
+        setDataChanged(true);
       }
 
     useEffect(()=>{//觀察是否click到非color icon
@@ -140,7 +140,7 @@ const NoteColor=({uid,id, selected,setList,setDataChanged,setNoteColor,isFromEdi
 }
 export default NoteColor;
 
-//Color PopUp div
+//Color PopUp Icon div
 export const NoteColorElement=({setClickColor,clickColor})=>{
 
     return(
@@ -151,14 +151,21 @@ export const NoteColorElement=({setClickColor,clickColor})=>{
 }
 
 const ColorInputPopDiv=styled(ColorInputDiv)`
-    left:10%;
+    border-radius: 8px;
+    left: 20%;
+    top: 37px;
 `
 
-export const NoteColorPop=({clickColor,setClickColor,setDataChanged})=>{//彈出視窗PopUp Color
-    const{getColorUpdate,selectedItem}=useContext(NoteContext);
+export const NoteColorPop=({id,uid,clickColor,setDataChanged})=>{//彈出視窗PopUp Color
+    const{getColorUpdate,selcetedItem}=useContext(NoteContext);
     const handelClickColor= async(e)=>{
-            getColorUpdate(e.target.value);
-            setDataChanged(true);
+        const updateColorElements = {
+            color:e.target.value,
+          };
+        await updateNoteData(id, updateColorElements,uid);//回傳DB
+        setDataChanged(true);
+        getColorUpdate(e.target.value);
+        setDataChanged(true);
       }
 
     return(

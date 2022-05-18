@@ -3,36 +3,50 @@ import styled from "styled-components";
 import NoteEdit from "./components/NoteEdit";
 import NoteList from "./components/NoteList";
 import { getAllLists, getTextData } from "../store/HandleDb";
-import { Media_Query_SM,Media_Query_MD } from "../components/constant";
+import { Media_Query_SM,Media_Query_MD,Media_Query_SMD } from "../components/constant";
 import HeaderLoadContext from "../header/HeaderLoadContext";
 import NoteReducer from "./context/NoteReducer";
+import SearchContext from "../header/components/SearchContext";
 
 
 
 
 const NoteContent=styled.div`
-    width:1200px;
+    max-width:1200px;
+    width:95%;
     display:flex;
     flex-direction: column;
     align-items: center;
+    ${Media_Query_MD}{
+        width:95%;
+    }
+    ${Media_Query_SMD}{
+        width:95%;
+    }
+    ${Media_Query_SM}{
+        width:95%;
+    }
 `
 const NotePage=({isLoggin})=>{
     const uid=isLoggin["uid"]
     const[textData,setTextData]=useState([]);
     const[isDataChange,setDataChanged]=useState(false);
-    const{setIsLoading}=useContext(HeaderLoadContext);
+    const{setIsLoading,isRefresh,setIsRefresh}=useContext(HeaderLoadContext);
+    const{getOriginData,filterData,clearFilterData,getFilterButDataChange}=useContext(SearchContext);
+    const{isFilter}=filterData;
 
-    // const[uid,setUid]=useState(localStorage.getItem("token"))
+
     useEffect(()=>{
         setIsLoading(true);
         async function getListData(){
-            await getAllLists(setTextData,uid);
+            await getAllLists(getFilterButDataChange,isFilter,getOriginData,setTextData,uid);
         }
         console.log("index")
         getListData();
         setDataChanged(false);
-        setTimeout(()=>setIsLoading(false),1000)
-    },[isDataChange])
+        setTimeout(()=>setIsLoading(false),1000);
+        setIsRefresh(false);
+    },[isDataChange,isRefresh])
 
 
     return(
@@ -40,8 +54,8 @@ const NotePage=({isLoggin})=>{
         <NoteContent>   
             <NoteReducer>
             <NoteEdit setDataChanged={setDataChanged} addData={setTextData} setList={textData} uid={uid} />
-            {textData.length>0 || isDataChange
-            ?<NoteList setDataChanged={setDataChanged} setList={textData} addData={setTextData} deleteData={setTextData} updateData={setTextData} uid={uid}/>
+            {textData || isDataChange
+            ?<NoteList isDataChange={isDataChange} setDataChanged={setDataChanged} setList={textData} addData={setTextData} deleteData={setTextData} updateData={setTextData} uid={uid}/>
             :<p>Show something</p>}
             </NoteReducer>
         </NoteContent>

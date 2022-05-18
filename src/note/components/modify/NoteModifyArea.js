@@ -5,12 +5,13 @@ import NotificationDelete, { NotificationPopUpDelete } from "../notification/Not
 import NoteColor, { NoteColorElement, NoteColorPop } from "../color/NoteColor";
 import NotificationIndex, { NotificationEdit, NotificationElement } from "../notification/NotificationIndex";
 import NoteModiBtn from "./NoteModiBtn";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import NoteContext from "../../context/NoteContext";
-import { LargerAnimate,IconDiv } from "../../../components/constant";
-import { EditBoard } from "../../../assets";
+import { LargerAnimate,IconDiv,IconTipText } from "../../../components/constant";
+import { EditBoard,DeleteCheck } from "../../../assets";
 import { useState } from "react";
-
+import { updateNoteData,deleteBoard,queryImageData } from "../../../store/HandleDb";
+import HeaderLoadContext from "../../../header/HeaderLoadContext";
 
 const NoteListModifyDiv = styled.div`//修改文字的Fixed背景
   position: fixed;
@@ -19,9 +20,6 @@ const NoteListModifyDiv = styled.div`//修改文字的Fixed背景
   width: 100%;
   height: 100%;
   background-color: rgba(121, 122, 124, 0.6);
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
   z-index: 999;
 `;
 const NoteListModifyBg=styled.div`
@@ -54,7 +52,6 @@ const NoteListModify = styled.div`//修改內容的Div
   background-color: #ffffff;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: height .2s ease;
   &::-webkit-scrollbar {
         width: 12px;
     }
@@ -101,22 +98,66 @@ const BoardAdd=styled(IconDiv)` //新增畫板的Icon
 const BoardList=styled.div` //board img的DIV
     width:100%;
     background:#f9f6f6;
+    position: relative;
+    opacity: ${props=>props.image?1:0};
+    visibility: ${props=>props.image?"visible":"hidden"};
+    transition:visibility 0.3s linear,opacity 0.3s linear;
+
+`
+const BoardDiv=styled.div`
+    width: 100%;
 `
 const BoardImg=styled.img`//board img
     width:100%;
     pointer-events:none;
+
+`
+const DeleteIcon=styled(IconDiv)`
+  background-image: url(${DeleteCheck}) ;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 5%;
 `
 
-
-const NoteModifyArea =({uid,setSelected,selected,setDataChanged})=>{
-  const[clickNotificate,setClickNotificate]=useState(false);//是否點擊NotificationIcon;
-  const[clickColor,setClickColor]=useState(false);
-  const[notificationChange,setNotificationChange]=useState(false);//是否更新NotificationIcon;
-
+const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>{
+    const[clickNotificate,setClickNotificate]=useState(false);//是否點擊NotificationIcon;
+    const[clickColor,setClickColor]=useState(false);
+    const[notificationChange,setNotificationChange]=useState(false);//是否更新NotificationIcon;
+    const[image,setImage]=useState("");
+    const{isLoading,setIsLoading}=useContext(HeaderLoadContext);
     const {selectedItem,updateColor,updateTitle,updateText,updateNotification} =useContext(NoteContext);
-    console.log("updateNotification",updateNotification)
-    const{id, noteText, noteTitle, index,image,time,color,board=null}=selectedItem;
+    const{id, noteText, noteTitle, index,time,color,board=null}=selectedItem;
     
+    const handleUpdateSubmmit =async  () => {
+      const { id } = selectedItem;
+      const updateTextElements = {
+        id,
+        noteTitle: updateTitle,
+        noteText: updateText,
+        color:updateColor
+      };
+      await updateNoteData(id, updateTextElements,uid);
+      setSelected(false);
+    };
+
+    const handleDeleteImg=async()=>{
+      const { id } = selectedItem;
+      await deleteBoard(id,uid);
+      setDataChanged(true);
+    }
+
+    useEffect(()=>{
+      async function handleImgeQuery(){
+        const { id } = selectedItem;
+       const res=await queryImageData(id,uid);
+       if(!res.error){setImage(res["image"])}
+       else{setImage("") }
+      }
+      setIsLoading(true);
+      handleImgeQuery();
+      setTimeout(()=>setIsLoading(false),1000); 
+    },[isDataChange])
 
     return(
       <>
@@ -124,31 +165,36 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged})=>{
         </NoteListModifyDiv>
         <NoteListModifyBg>
             <NoteListModify  style={{background:updateColor}}  id={id}     >
-              { image ?
-              <Link  to={"/boarding"} state={{id:id,noteTitle:updateTitle,noteText:updateText,noteColor:updateColor,board:board,uid,notification:updateNotification}}>
-              <BoardList>
-              <BoardImg src={image}></BoardImg>
-              </BoardList>
+              {/* { image ? */}
+              <BoardList image={image}>
+              <Link  to={"/boarding"} state={{id:id,board:board,uid}}>
+              <BoardDiv >
+              <BoardImg onClick={() => handleUpdateSubmmit()} src={image}></BoardImg>
+              </BoardDiv>
               </Link>
-                : null }
+              <DeleteIcon onClick={handleDeleteImg}>
+              <IconTipText >刪除</IconTipText>
+              </DeleteIcon>
+              </BoardList>
+                {/* : null } */}
               <NoteInput  />
               <NotificationPopUpDelete notificationChange={notificationChange} setNotificationChange={setNotificationChange}  setDataChanged={setDataChanged} selected={selected}  uid={uid} />
             </NoteListModify>
             <NodeToolDiv style={{background:updateColor}}>
               { image ? null
-              :<Link  to={"/boarding"} state={{id:id,noteTitle:updateTitle,noteText:updateText,noteColor:updateColor,board:board,uid,notification:updateNotification}}>
-              <BoardAdd></BoardAdd>
+              :<Link  to={"/boarding"} state={{id:id,board:board,uid}}>
+              <BoardAdd onClick={() => handleUpdateSubmmit()} ><IconTipText>新增畫板</IconTipText></BoardAdd>
               </Link>}
               <NotificationElement  clickNotificate={clickNotificate} setClickNotificate={setClickNotificate}/>
               <NoteColorElement  setClickColor={setClickColor} clickColor={clickColor}/>
               <NoteModiBtn uid={uid} setSelected={setSelected} setDataChanged={setDataChanged}/>
-              {clickNotificate?<NotificationEdit setNotificationChange={setNotificationChange} uid={uid} selected={selected} setDataChanged={setDataChanged}/> :null}    
-              {clickColor? <NoteColorPop clickColor={clickColor} setClickColor={setClickColor} setDataChanged={setDataChanged}/> :null}
+              {clickNotificate?<NotificationEdit setClickNotificate={setClickNotificate} setNotificationChange={setNotificationChange} uid={uid} selected={selected} setDataChanged={setDataChanged}/> :null}    
+              {clickColor? <NoteColorPop id={id} uid={uid} clickColor={clickColor} setClickColor={setClickColor} setDataChanged={setDataChanged}/> :null}
               </NodeToolDiv>
               
         </NoteListModifyBg> 
-        
-    </>      
+           </>    
+ 
                 // : null}
     )
 

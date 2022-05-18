@@ -3,69 +3,88 @@ import styled from "styled-components";
 import NoteItem from "./NoteItem";
 import { v4 } from "uuid";
 import { updateListsPosition } from "../../store/HandleDb";
-import { Media_Query_MD, Media_Query_SM,LargerAnimate,IconDiv } from "../../components/constant";
+import { Media_Query_MD, Media_Query_SM,Media_Query_SMD,LargerAnimate,IconDiv,fadeIn,fadeOut } from "../../components/constant";
 import NoteTool from "./NoteTool";
 import NoteBgColor from "./color/NoteBgColor";
 import NotificationPop from "./notification/NotificationPop";
 import { getMessaging,onMessage } from "firebase/messaging";
-import NoteInput from "./NoteInput";
-import NoteColor from "./color/NoteColor";
-import NoteModiBtn from "./modify/NoteModiBtn";
-import { EditBoard } from "../../assets";
-import NotificationDelete from "./notification/NotificationDelete";
-import { Link } from "react-router-dom";
-import NotificationIndex from "./notification/NotificationIndex";
-import NoteContext from "../context/NoteContext";
 import NoteModifyArea from "./modify/NoteModifyArea";
+import Masonry from 'react-masonry-css';
+import SearchContext from "../../header/components/SearchContext";
 
 const NoteListsDiv=styled.div`//List Content Div
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    column-gap:10px;
-    align-items: start;
+    max-width: 1200px;
+
+`
+const NoteListCol=styled(Masonry)`
+    &.my-masonry-grid{  
+    display: flex;
+    margin: 20px auto;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    }            
+    &.my-masonry-grid >div{
+    margin: 0 10px;
+    /* background-clip: padding-box; */
     ${Media_Query_MD}{
-        grid-template-columns: repeat(2,1fr);
+        width: 30%;
+    }
+    ${Media_Query_SMD}{
+        width:45%;
     }
     ${Media_Query_SM}{
-        grid-template-columns: 1fr;
+        width:45%;
     }
+    }       
 `
 const NoteIconDiv=styled.div`//Tool Div
     width: 100%;
     display:flex;
     align-items: center;
     justify-content: flex-start;
-    visibility: ${props=>{return props.isClickTool? "visible":"hidden"}};
+    opacity:0;
+    visibility:"hidden";
+    transition:visibility 0.3s linear,opacity 0.3s linear;
     position:relative;
     padding: 10px;
     box-sizing: border-box;
 `
+
 const NoteLists=styled.div`//draggable的Div
-    width:100%;
+    width: 250px;
+    /* width: 100%; */
     box-sizing: border-box;
     height:auto;
-    margin: 20px 0;
+    margin: 10px 0;
     transition: all ease-in 0.2s;
     position: relative;
     border-radius: 8px;
+    ${Media_Query_MD}{
+      width: 100%;
+    }
+    ${Media_Query_SMD}{
+        width:100%;
+    }
+    ${Media_Query_SM}{
+        width: 100%;
+    }
     &:hover{
+        transition: all ease-in-out .3s ;
         box-shadow: 0 1px 2px 0 rgb(60 64 67/50%), 0 2px 6px 2px rgb(60 64 67 /30%);
     }
     &:hover ${NoteIconDiv}{
-        opacity: 1;
-        visibility: visible;
+        opacity:1;
+        visibility:"visible";
     }
     &:active ${NoteIconDiv}{
         visibility: hidden;
     }
 `
 
-const NoteListCol=styled.div`
-    background: #ffffff;
-`
 
-const NoteList=({setDataChanged,setList,uid,updateData})=>{
+
+const NoteList=({isDataChange,setDataChanged,setList,uid,updateData})=>{
             const[isDragged,setIsDragged]=useState(false);//拖曳
             const[isClickTool,setIsClickTool]=useState(false);//是否點擊Tool div
             const [selected, setSelected] = useState(false);//是否點擊特定貼文
@@ -74,7 +93,9 @@ const NoteList=({setDataChanged,setList,uid,updateData})=>{
             const draggedItem=useRef();//用來觀察被拖曳的item
             const[popValue,setPopValue]=useState("");//notificaiton通知value設定
             const[isNotification,setIsNotification]=useState(false);//檢查是否有通知，onMessage使用
-
+            const{filterData,dataList,filterButDataChange}=useContext(SearchContext);
+            const{filterDataList,isFilter}=filterData;
+            const originDataList= dataList["dataList"];//取得原資料
 
 //    async function handleDragEnd(result){
 //         if(!result.destination) return;
@@ -138,7 +159,17 @@ const NoteList=({setDataChanged,setList,uid,updateData})=>{
         }
         upDateListToDb(setList,uid)
         setIsDragged(false);//執行後設定回初始狀態
-    },[isDragged])
+    },[isDragged]);
+
+    useEffect(()=>{
+        if(isFilter){
+        updateData(filterDataList);
+        }else{
+        updateData(originDataList);
+        }
+    },[isFilter,filterButDataChange])
+    console.log("isDataChange",isDataChange)
+
     //處理pop up notification message
     const messaging = getMessaging();//前端取得push nitification通知，監聽messsaging，傳入nitificationPop
     onMessage(messaging, (payload) => {
@@ -149,14 +180,20 @@ const NoteList=({setDataChanged,setList,uid,updateData})=>{
     setIsNotification(true);
     setPopValue({title,body,time,id});
     }
+    const breakPoints={
+        default:4,
+        1023:3,
+        850:2,
+        610:1
+    }
+
     return(
         <NoteListsDiv>
-            <NoteListCol className="status" onDrop={dragDrop}>
+            <NoteListCol breakpointCols={breakPoints} className="my-masonry-grid" columnClassName="my-masonry-grid_column" onDrop={dragDrop}>
             { 
             setList.map((item,index)=>{
-                if(index %4 ===0){
+                // if(index %4 ===0){
                     const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
-                    console.log(whenToNotify)
                     const board=item.board;
                     const key=v4();
                     return( <NoteLists  key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
@@ -167,9 +204,12 @@ const NoteList=({setDataChanged,setList,uid,updateData})=>{
                             </NoteIconDiv>
                             </NoteLists>
                             )
-                }
-            })}</NoteListCol>
-            <NoteListCol className="status"   onDrop={dragDrop}>
+                // }
+            })}
+            
+            
+            </NoteListCol>
+            {/* <NoteListCol className="status"   onDrop={dragDrop}>
             { 
             setList.map((item,index)=>{
                 if(index %4 ===1){
@@ -222,9 +262,9 @@ const NoteList=({setDataChanged,setList,uid,updateData})=>{
                             )
                 }
             })}
-            </NoteListCol>
+            </NoteListCol> */}
 
-            {selected ? <NoteModifyArea uid={uid} selected={selected} setSelected={setSelected}  setDataChanged={setDataChanged} />
+            {selected ? <NoteModifyArea isDataChange={isDataChange} setDataChanged={setDataChanged} uid={uid} selected={selected} setSelected={setSelected}   />
                  : null}
                 {isNotification?<NotificationPop  setSelected={setSelected}  popValue={popValue} setList={setList} setIsNotification={setIsNotification}/>:null}
             </NoteListsDiv>

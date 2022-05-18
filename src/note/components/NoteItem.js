@@ -1,8 +1,6 @@
 import React,{ useState, useEffect, useRef, useContext, useLayoutEffect } from "react";
 import styled from "styled-components";
 import { Text, Button, LargerAnimate, IconDiv } from "../../components/constant";
-import { Link } from "react-router-dom";
-import NoteInput from "./NoteInput";
 import NotificationDelete from "./notification/NotificationDelete";
 import NoteContext from "../context/NoteContext";
 
@@ -26,6 +24,7 @@ const NoteLists = styled.div`
   padding: 5px 10px;
   transition: all ease-in-out .2s; 
   position: relative;
+  cursor: pointer;
 `;
 
 const NoteDiv=styled.div`
@@ -70,7 +69,7 @@ const NoteItem = ({
       (pre) => pre.id === e.target.id ||pre.id===clickImgId
     );
     console.log(whenToNotify)
-    getSelectedItem(id, noteText, noteTitle, index,image,time,color,whenToNotify.seconds,board );
+    getSelectedItem(id, noteText, noteTitle, index,image,time,color,whenToNotify,board );
     getColorUpdate(color);
     getNoteUpdateTitle(noteTitle);
     getNoteUpdateText(noteText);
@@ -106,7 +105,7 @@ const NoteItem = ({
         <NoteTitle ref={heightTitleRef}>{noteTitle}</NoteTitle>
         <NoteText ref={heightTextRef}>{noteText}</NoteText>
         </NoteDiv>  }
-      </NoteLists>
+        </NoteLists>
       <NotificationDelete setDataChanged={setDataChanged} whenToNotify={whenToNotify}  id={id} uid={uid} />
     </>
   );

@@ -22,43 +22,48 @@ export const saveNoteData=async(id,noteTitle,noteText,uid,noteColor,timer,curren
     let noteCollection=query(collection(db,"user",uid,"notelist"));//
     let noteCollectionDocs=await getDocs(noteCollection);
     let noteDocsLength=noteCollectionDocs.docs.length +1; //自訂index number
-    const whenToNotify=new Date(timer)
-    await setDoc(refBoard,{id,noteTitle,noteText,index:noteDocsLength,time,color:noteColor,
-        token:currentToken,
-        whenToNotify,
-        notificationSent:false});
-    //儲存Notifications
-    const q=query(collection(db,"user",uid,"notifications"),where("id","==",id));
-    const docShop=await getDocs(q);
-    if(!docShop.empty){
-        docShop.forEach(item=> {
-            updateDoc(item.ref,{
-                    id,
-                    title:noteTitle,
-                    text:noteText,
-                    uid,
-                    token:currentToken,
-                    whenToNotify:time,
-                    notificationSent:false
-                })
-            })     
+    console.log("DB",id,noteTitle,noteText,uid,noteColor,timer,currentToken)
+    if(timer!==""){
+        console.log("timer")
+        const whenToNotify=new Date(timer);
+        await setDoc(refBoard,{id,noteTitle,noteText,time,color:noteColor,
+            token:currentToken,
+            whenToNotify,
+            notificationSent:false});
+        //儲存Notifications
+        const q=query(collection(db,"user",uid,"notifications"),where("id","==",id));
+        const docShop=await getDocs(q);
+        if(!docShop.empty){
+            docShop.forEach(item=> {
+                updateDoc(item.ref,{
+                        id,
+                        title:noteTitle,
+                        text:noteText,
+                        uid,
+                        token:currentToken,
+                        whenToNotify:time,
+                        notificationSent:false
+                    })
+                })     
+        }else{
+            const notificationRef=collection(db,"user",uid,"notifications");
+            addDoc(notificationRef,{
+                     id,
+                     title:noteTitle,
+                     text:noteText,
+                     uid,
+                     token:currentToken,
+                     whenToNotify:time,
+                     notificationSent:false
+                 });
+        }
     }else{
-        const notificationRef=collection(db,"user",uid,"notifications");
-        addDoc(notificationRef,{
-                 id,
-                 title:noteTitle,
-                 text:noteText,
-                 uid,
-                 token:currentToken,
-                 whenToNotify:time,
-                 notificationSent:false
-             });
+        await setDoc(refBoard,{id,noteTitle,noteText,time,color:noteColor});
     }
     //存入notelists，方便做listpage的排序跟顯示
     let refNotelists=doc(db,"notelists",uid);
     let notelistSnap=await getDoc(refNotelists);
     if(notelistSnap.exists()){
-        console.log("notelistSnap",notelistSnap.data());
         await updateDoc(refNotelists,{orderlists:arrayUnion(refBoard)});
     }else{
     await setDoc(refNotelists,{orderlists:arrayUnion(refBoard)});
@@ -66,7 +71,7 @@ export const saveNoteData=async(id,noteTitle,noteText,uid,noteColor,timer,curren
 }
 
 //getALl noteList 
-export const getAllLists=async(setData,uid)=>{
+export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,setData,uid)=>{
     //取得noteLists
     let refNotelists=doc(db,"notelists",uid);
     let notelistSnap=await getDoc(refNotelists);
@@ -112,8 +117,13 @@ export const getAllLists=async(setData,uid)=>{
         return noteLists
     }
     const noteResults= await noteAllElements();//把Board資料跟noteList結合
-    console.log("noteResults",noteResults)
     setData(noteResults);
+    if(isFilter){//已有篩選search
+        getFilterButDataChange(true);
+        getOriginData(noteResults);
+    }else{//沒有篩選search
+        getOriginData(noteResults);
+    }
 }
 
 //要根據Drag and drop結果，更新位置update array from firestore
@@ -142,16 +152,32 @@ export const updateBoardData=async(id,url,uid)=>{
     }else{
     await setDoc(refNotelists,{orderlists:arrayUnion(updateRef)});
     }
-
 }
 
-//update note Title and text
+//query for image
+export const queryImageData=async(id,uid)=>{
+    console.log("queryFor imge",id,uid)
+    const q=query(collection(db,"user",uid,"notelist"),where("id","==",id));//
+    const docShop =await getDocs(q);
+    const array=[]
+     docShop.forEach((doc) => {
+      const data=doc.data();
+      array.push(data);
+    });
+    const res=array.map((item)=> {
+        if(!item.image){return {error:null}}
+        else{
+            return {image:item["image"]};
+        }
+        })
+    return res[0]
+}
+//update note Title and text and color
 export const updateNoteData = async(id,updateTextElements,uid)=>{
     const time=Timestamp.now();
     const updateToDb = doc(db, "user", uid,"notelist",id);
     updateTextElements.time=time;
     await updateDoc(updateToDb, updateTextElements,time);
-
 }
 
 //deleteNoteData+ deleteBoard subcollection
@@ -172,7 +198,7 @@ export const deleteDbNote = async(id,uid)=>{
     await setDoc(refNotelists, {orderlists:setListDocs});//用刪除後的array覆蓋掉原本的資料
 }
 
-//delete Board
+//delete Board and Image
 export const deleteBoard = async(id,uid)=>{
     const deleteDbImage = doc(db,"user",uid,"notelist",id);//刪除image路徑
     const deleteBoardRef=collection(db,`user/${uid}/notelist/${id}/board`);//刪除board路徑
@@ -184,45 +210,7 @@ export const deleteBoard = async(id,uid)=>{
 
 //Board Datas
 //save Board+note data
-export const saveBoardData= async (elements,id,noteTitle,noteText,uid,noteColor,timer,currentToken)=>{//存放物件用
-    const time=Timestamp.now();
-    const refBoard=doc(db,"user",uid,"notelist",id);//創造自訂義的id並存入obj，未來可更新board資料用
-    let noteCollection=query(collection(db,"user",uid,"notelist"));//
-    let noteCollectionDocs=await getDocs(noteCollection);
-    let noteDocsLength=noteCollectionDocs.docs.length +1; //自訂index number
-    const whenToNotify=new Date(timer);
-    await setDoc(refBoard,{id,noteTitle,noteText,index:noteDocsLength,
-        time,color:noteColor,                    
-        token:currentToken,
-        whenToNotify,
-        notificationSent:false});
-     //儲存Notifications
-     const q=query(collection(db,"user",uid,"notifications"),where("id","==",id));
-     const docShop=await getDocs(q);
-     if(!docShop.empty){
-         docShop.forEach(item=> {
-             updateDoc(item.ref,{
-                     id,
-                     title:noteTitle,
-                     text:noteText,
-                     uid,
-                     token:currentToken,
-                     whenToNotify:time,
-                     notificationSent:false
-                 })
-             })     
-     }else{
-         const notificationRef=collection(db,"user",uid,"notifications");
-         addDoc(notificationRef,{
-                  id,
-                  title:noteTitle,
-                  text:noteText,
-                  uid,
-                  token:currentToken,
-                  whenToNotify:time,
-                  notificationSent:false
-              });
-     }
+export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件用
     const drawElement=async (element)=>{
         // const boardRef=db.collection("user").doc("one").collection("board").doc();
         const ref=collection(db,"user",uid,"notelist",id,"board")//board的儲存位置
@@ -235,7 +223,20 @@ export const saveBoardData= async (elements,id,noteTitle,noteText,uid,noteColor,
             const docRef2=await addDoc(ref,{id,type,color,range,points:pointsCopy })
         }
     }
-    drawElement( elements);
+    const time=Timestamp.now();
+    // let refBoard=doc(db,"user",uid,"notelist",id);//創造自訂義的id並存入obj，未來可更新board資料用
+    // let q=query(collection(db,"user",uid,"notelist"));//
+    const refBoard=doc(db,"user",uid,"notelist",id)
+    let snapShot=await getDoc(refBoard)
+    console.log(snapShot)
+    if(snapShot.exists()){//若已有文字記事，則更新圖片記事
+        drawElement( elements);
+        await updateDoc(refBoard, {time});
+    }else{//若沒有建立文字記事，則直接建立圖片記事
+        
+        await setDoc(refBoard,{id,noteTitle:"",noteText:"",time,color:"#FFFFFF"});
+    }
+
     //存入notelists，方便做listpage的排序跟顯示
     let refNotelists=doc(db,"notelists",uid);
     let notelistSnap=await getDoc(refNotelists);
@@ -295,7 +296,7 @@ export const requestForToken=async(uid,noteTitle,noteText,timer,id)=>{//取得to
         });
   }
 
-//save data to db
+//save notitfication data to db
 const saveNotification= async(uid,id,time,currentToken,noteTitle,noteText)=>{
     console.log(uid,id,time,currentToken,noteTitle,noteText)
     const q=query(collection(db,"user",uid,"notifications"),where("id","==",id));
@@ -333,14 +334,19 @@ const saveNotification= async(uid,id,time,currentToken,noteTitle,noteText)=>{
 
 //Search if notification reservation 查詢指定ID的預定notification
 export const queryNotification=async(uid,id)=>{
-    const q=query(collection(db,"user",uid,"notelist"),where("id","==",id)) ;//
+    const q=query(collection(db,"user",uid,"notelist"),where("id","==",id),orderBy("whenToNotify","desc"));//
     const docShop =await getDocs(q);
     const response=[];
     if(!docShop.empty){
         docShop.forEach(item=> {
             const data=item.data();
             const timeStampDate = data["whenToNotify"]["seconds"];
-            console.log("timeStampDate",timeStampDate,data)
+            console.log(typeof timeStampDate =="undefined",timeStampDate,data)
+            if(typeof timeStampDate =="undefined") {
+                response.push( {error:"no data"})
+                return
+            }
+            console.log(typeof timeStampDate =="undefined",timeStampDate,data)
             // const dateInMillis  = timeStampDate * 1000;
             // const whenToNotify =new Date(dateInMillis).toLocaleDateString(undefined,{month:"short",day:"numeric"})+" " +  new Date(dateInMillis).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
             response.push( {whenToNotify:timeStampDate,uid,id})

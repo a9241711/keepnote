@@ -69,7 +69,7 @@ const useHistoryPosition = (initialState) => {
 const BoardIndex =()=>{
 
     const location=useLocation();//從CanvasTool或NoteItem傳text/title/board data過來
-    const{noteText,noteTitle,id,board,uid,noteColor,notification}=location["state"]//取得noteTitle 跟noteText跟color
+    const{id,board,uid}=location["state"]//取得noteTitle 跟noteText跟color
     const [elements,currentIndex, setElements, undo, redo, clear]=useHistoryPosition([]); //使用customHook
     //設定action動作
     const [action, setAction] = useState("none");
@@ -102,24 +102,21 @@ const BoardIndex =()=>{
 
 
     useEffect(()=>{//檢查mouseUp Event，並傳入DB
-      async function getBoardElements (elements,noteTitle,noteText,uid,noteColor,notification){
+      async function getBoardElements (elements,id,uid){
         const index=elements.length-1;
-        const{timer="",currentToken=""}=notification;
-        console.log(elements[index],id,noteTitle,noteText,uid,noteColor,timer,currentToken)
-        await saveBoardData(elements[index],id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+        await saveBoardData(elements[index],id,uid);
       }
       if(elements.length ===0) return
       else{
         if(isMouseUp){
           console.log(elements,isMouseUp);
-          getBoardElements (elements,noteTitle,noteText,uid,noteColor,notification)
+          getBoardElements (elements,id,uid)
         }else return;
       }
     },[action])
 
     useEffect(() => {
       const saveBoardToDb= async()=>{
-        // await updateBoardData()
         const canvas = document.getElementById("canvas");
         const url=canvas.toDataURL();
         await updateBoardData(id,url,uid);//存入base64

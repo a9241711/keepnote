@@ -24,13 +24,12 @@ const NoteInput=()=>{
   const[updateTitle,setUpdateTitle]=useState(noteTitle);
   const[updateText,setUpdateText]=useState(noteText);
   const{titleHeight, textHeight}=noteHeight;//取得輸入框高度
-  console.log(noteHeight)
   // updateTextList(updateTitleRef.current.value,updateTextRef.currentvalue);
     //控制修改文字框的height
   const handleAutoHeight=(e)=>{
     if(!e.target.value){e.target.style.height= "auto"}
     else{e.target.style.height=e.target.scrollHeight + "px";
-  console.log(e.target.scrollHeight)}
+    }
   }
   //控制修改文字
   const handleUpdateTitle = (e) => {

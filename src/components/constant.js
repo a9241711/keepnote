@@ -1,8 +1,9 @@
 import styled,{createGlobalStyle,keyframes} from "styled-components";
 
 
-export const Media_Query_SM='@media screen and (max-width:767px)';
-export const Media_Query_MD='@media screen and (max-width:1023px)';
+export const Media_Query_SM='@media screen and (min-width: 320px) and (max-width: 610.99px) ';
+export const Media_Query_SMD='@media screen and (min-width: 611px) and (max-width: 849.99px) ';
+export const Media_Query_MD='@media screen and (min-width:850px) and (max-width: 1023.99px)';
 export const Media_Query_LG='@media screen and (min-width:1024px)';
 
 
@@ -12,7 +13,12 @@ export const GlobalStyle=createGlobalStyle`
     margin:0;
     padding:0;
   }
+  html {
+  min-width: 100%;
+  min-height: 100%;
+}
   body{
+    height:100%;
     margin:0;
     padding:0;
     font-size:16px;
@@ -238,4 +244,47 @@ export const SmallAnimate=keyframes`
             transform: scale(1);
     opacity: 1;
   }
+`
+
+//Hover fadeIn
+export const fadeIn= keyframes` 
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+ `
+//由上至下展開
+export const scaleUp= keyframes`
+  0% {
+    -webkit-transform: scaleY(0.4);
+            transform: scaleY(0.4);
+    -webkit-transform-origin: 100% 0%;
+            transform-origin: 100% 0%;
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+    -webkit-transform-origin: 100% 0%;
+            transform-origin: 100% 0%;
+  }
+`
+
+export const scaleRight=keyframes`
+  0% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0);
+    -webkit-transform-origin: 100% 100%;
+            transform-origin: 100% 100%;
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scaleX(1);
+            transform: scaleX(1);
+    -webkit-transform-origin: 100% 100%;
+            transform-origin: 100% 100%;
+    opacity: 1;
+}
+
 `

@@ -96,18 +96,13 @@ const BtnSummit=styled(Button)`
 const messaging=getMessaging();
 const publicVapidKey=process.env.REACT_APP_VAPID_KEY;
 
-const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setNotification,isFromEdit})=>{
+const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setNotification,isFromEdit})=>{//From edit and list section
     const[date,setDate]=useState("");
     const[time,setTime]=useState("");
     const[clickNotificate,setClickNotificate]=useState(false);//是否點擊到該icon;
     const notificationIconRef=useRef();
     const{updateTitle,updateText,selectedItem}=useContext(NoteContext);
     
-    getToken(messaging,{vapidKey:publicVapidKey})
-    .then((currentToken) => {
-      console.log(currentToken)
-    })
-
     const handleSave=async ()=>{
       const dateTime=date+"T"+time;
       const timer=new Date(dateTime).getTime() //取得時間戳
@@ -122,6 +117,7 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
         console.log("handleSave",response);
         setDataChanged(true);
       }
+      setClickNotificate(false)
     }
 
     const disablePastDate=()=>{//只能選擇當下時間點以後的時間
@@ -172,7 +168,7 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
 
 export default NotificationIndex;
 
-export const NotificationElement=({setClickNotificate,clickNotificate})=>{
+export const NotificationElement=({setClickNotificate,clickNotificate})=>{//單純Icon element
   const notificationIconRef=useRef();
   return(
     <NotificationDiv ref={notificationIconRef}>
@@ -189,8 +185,8 @@ const NotificationPopUpInputDiv=styled.div`
     height: fit-content;
     background-color: #FFFFFF;
     position: absolute;
-    left: 15%;
-    bottom: 35px;
+    left: 10%;
+    bottom: 37px;
     z-index: 0;
     border-radius: 8px;
     border: none;
@@ -208,7 +204,7 @@ const NotificationPopUpInputDiv=styled.div`
 
 `
 
-export const NotificationEdit=({uid, selected, setDataChanged,notificationChange,setNotificationChange})=>{//forPopUp
+export const NotificationEdit=({uid, selected, setDataChanged,notificationChange,setNotificationChange,setClickNotificate})=>{//forPopUp
     const[date,setDate]=useState("");
     const[time,setTime]=useState("");
     const{updateTitle,updateText,selectedItem,getNotificationUpdate}=useContext(NoteContext);
@@ -226,6 +222,7 @@ export const NotificationEdit=({uid, selected, setDataChanged,notificationChange
       console.log("handleSave",response);
       setDataChanged(true);
       setNotificationChange(true);
+      setClickNotificate(false);
     }
 
     const disablePastDate=()=>{//只能選擇當下時間點以後的時間

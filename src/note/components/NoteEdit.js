@@ -1,10 +1,11 @@
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState,useRef,useContext } from "react";
 import styled from "styled-components";
-import {NoteTitleInput,NoteTextInput} from "../../components/constant"
+import {NoteTitleInput,NoteTextInput,Media_Query_MD,Media_Query_SM,Media_Query_SMD} from "../../components/constant"
 import { v4 } from "uuid";
 import { requestForToken, saveNoteData } from "../../store/HandleDb";
 import CanvasTool from "./CanvasTool";
 import  { NotificationDeleteEdit } from "./notification/NotificationDelete";
+import SearchContext from "../../header/components/SearchContext";
 
 const NoteDiv=styled.div`
     width:600px;
@@ -16,8 +17,17 @@ const NoteDiv=styled.div`
     margin-top:33px;
     padding: 10px;
     background-color: #ffffff;
-    display: flex;
     flex-direction: column;
+    display: ${props=> props.isFilter?"none":"flex"};
+    ${Media_Query_SMD}{
+        width: 80%;
+    }
+  ${Media_Query_MD}{
+        width: 80%;
+    }
+    ${Media_Query_SM}{
+        width: 80%;
+    }
 `
 const NoteTitleInputDiv=styled(NoteTitleInput)`
     height: 22px;
@@ -40,6 +50,8 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
     const[isClose,setIsClose]=useState(false);//檢查是否按關閉
     const typingTitleRef=useRef();
     const typingTextRef=useRef();
+    const{filterData}=useContext(SearchContext);//取得所有filter data
+    const{isFilter}=filterData;
 
     //auto height 輸入框
     //控制修改文字框的height
@@ -66,19 +78,30 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
 
     const handleSaveNoteToDb=async ()=>{
         const id =v4();
-        // const index=setList.length;
         const{noteTitle,noteText}=debouncedText;
-        // addData((prev)=>[{id,noteTitle,noteText},...prev]);
         setDebouncedText("");
-        const{timer="",currentToken=""}=notification
-        await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
-        // if(notification){
-        //     await requestForToken(uid,noteTitle,noteText,notification,id);
-        //     setNotification("");
-        // }
-        setDataChanged(true);
-        setNoteColor("#FFFFFF");
-        setNotification("")
+        console.log(typeof notification!="undefined")
+        if(typeof notification!="undefined" && notification===null){
+            const{timer,currentToken}=notification;
+            console.log(timer,currentToken)
+            await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+            setNoteText("");
+            setNoteTitle(""); 
+            setDataChanged(true);
+            setNoteColor("#FFFFFF");
+            setNotification("");   
+        }
+        else{
+            const timer=""; 
+            const currentToken="";
+            await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+            console.log(timer,currentToken)
+            setNoteText("");
+            setNoteTitle(""); 
+            setDataChanged(true);
+            setNoteColor("#FFFFFF");
+            setNotification(""); 
+        }
     }
     //此useEffect用來確認是否click title 秀出完整框
     useEffect(()=>{
@@ -101,8 +124,7 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
             console.log("typing");
         }else{ 
             handleSaveNoteToDb();//存入db
-            setNoteText("");
-            setNoteTitle("");}
+      }
          return () =>{document.removeEventListener("click",handleClickOutofTarget);} //移除handleClickOutofTarget
     },[isInput])
     useEffect(()=>{//若noteItle跟noteText有值的變動，則執行以下動作
@@ -123,14 +145,19 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
     },[isClose])
 
     return(
-        <NoteDiv style={{backgroundColor: noteColor}} noteColor={noteColor} ref={typingTitleRef}>
+        <>
+        {/* {isFilter?null
+        : */}
+        <NoteDiv isFilter={isFilter} style={{backgroundColor: noteColor}} noteColor={noteColor} ref={typingTitleRef}>
         <NoteTitleInputDiv style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue} onClick={()=> setTitleClick(true)} ></NoteTitleInputDiv>
         {titleClick
         ? <NoteTextInputDiv style={{backgroundColor: noteColor}} ref={typingTextRef} value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv> :null}
         <NotificationDeleteEdit isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} notification={notification} setNotification={setNotification} />
         <CanvasTool setIsClose={setIsClose} setNotification={setNotification} setIsFromEdit={setIsFromEdit} isFromEdit={isFromEdit} setNoteColor={setNoteColor} noteColor={noteColor} titleClick={titleClick} noteTitle={noteTitle} noteText={noteText} uid={uid} notification={notification}/>
         </NoteDiv>
-        
+        {/* } */}
+
+        </>
     )
 
 }

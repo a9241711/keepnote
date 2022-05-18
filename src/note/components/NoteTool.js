@@ -9,6 +9,7 @@ import NotificationIndex from "./notification/NotificationIndex";
 
 const DeleteIcon=styled(IconDiv)`
   background-image: url(${DeleteCheck}) ;
+  cursor: pointer;
 `
 
 const NoteTool=({setDataChanged,uid,id,setList ,noteText,noteTitle})=>{

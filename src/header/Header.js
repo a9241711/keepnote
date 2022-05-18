@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { H1, H2, H3, Text } from "../components/constant";
+import { H1, H2, H3, IconDiv, IconTipText, Text } from "../components/constant";
 import Search from "./Search";
 import LogOut from "./LogOut";
 import LogIn from "./LogIn";
 import User from "./User";
 import { Link } from "react-router-dom";
-import { KeepLogo, Loading } from "../assets";
+import { KeepLogo, Loading, ReFresh } from "../assets";
 import HeaderLoadContext from "./HeaderLoadContext";
 
 
@@ -19,7 +19,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-around;
   padding: 0 25px;
-  z-index: 999;
+  z-index: 500;
   background: #FFFFFF;
 `;
 
@@ -29,46 +29,69 @@ const HeaderToolDiv=styled.div`
   justify-content: space-around;
   width: 100px;
   height: 65px;
+  position: fixed;
+  right: 0;
 `
 const LoadingDiv=styled.div`
   width: 40px;
   height: 40px;
   line-height: 40px;
-  text-align: center;
-  background-image: url(${Loading});
-  background-position: center;
-  background-size: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  right: 100px;
 `
+const LoadingImg=styled.img`
+  width: 40px;
+  object-fit: cover;
+`
+const LogoImg=styled.img`
+  width: 50px;
+  object-fit: cover;
+`
+const ReFreshIcon=styled(IconDiv)`
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(${ReFresh}) ;
+  background-color: transparent;
+`
+
 const LogoDiv=styled.div`
   width: 130px;
   height: 65px;
   display: flex;
   align-items: center;
-`
-const LogoImg=styled.img`
-  width: 65px;
-  object-fit: cover;
+  position: fixed;
+  left: 0;
+  top: 0;
 `
 const LogoText=styled(H3)`
   color:#5F6368;
-  font-size:20px;
+  font-size:18px;
+  text-decoration: none;
 `
 
 const HeaderDiv = ({isLoggin}) => {
-  const {isLoading,setIsLoading} =useContext(HeaderLoadContext);
+  const {isLoading,setIsLoading,setIsRefresh} =useContext(HeaderLoadContext);
   useEffect(()=>{
     setIsLoading(false);
   },[])
   return (
     <Header>
-      <LogoDiv>
+      <Link to={"/"} style={{ textDecoration: 'none' }}>
+      <LogoDiv >
         <LogoImg src={KeepLogo}></LogoImg>
         <LogoText>KeepNote</LogoText>
       </LogoDiv>
-      <Search></Search>
+      </Link>
+      <Search />
+      <LoadingDiv>
       {isLoading 
-      ? <LoadingDiv></LoadingDiv> 
-      :null}
+      ? <LoadingImg src={Loading}></LoadingImg>
+      :<ReFreshIcon onClick={()=> setIsRefresh(true)}><IconTipText>重新整理</IconTipText></ReFreshIcon>}
+      </LoadingDiv> 
       <HeaderToolDiv>
       {isLoggin?
       <>

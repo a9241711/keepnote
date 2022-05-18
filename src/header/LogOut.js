@@ -27,7 +27,7 @@ const LogOut=()=>{
         try {
           getLogOut();
           localStorage.removeItem("token");//移除uid local storage
-          let response = await logOutUser();
+           await logOutUser();
           navigation("/");
           setTimeout(()=>{
             window.location.reload();

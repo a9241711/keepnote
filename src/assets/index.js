@@ -23,7 +23,9 @@ import ColorPalette from "./img/editTool/colorPalette.png"
 import KeepLogo from "../assets/img/keepLogo.png"
 import Notification from "../assets/img/editTool/notification.png"
 import Close from "./img/editTool/close.png";
-import Clock from "./img/notification/clock.png"
+import Clock from "./img/notification/clock.png";
+import SearchImg from "./img/search/search.png"
+import ReFresh from "./img/loading/refresh.png"
 
 export {
   Pencil,
@@ -51,5 +53,7 @@ export {
   KeepLogo,
   Notification,
   Close,
-  Clock
+  Clock,
+  SearchImg,
+  ReFresh
 };

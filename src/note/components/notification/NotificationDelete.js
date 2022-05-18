@@ -26,6 +26,7 @@ const NotofDiv=styled.div`
     margin-bottom: 20px;
     &:hover ${NotifDelete}{
         display: block;
+        cursor: pointer;
     }
     &:hover ${NotifTime}{
         overflow: hidden;
@@ -99,11 +100,9 @@ export const NotificationPopUpDelete=({selected,uid,setDataChanged,notificationC
         console.log("pop up Time");
         const{id}=selectedItem;
         const res=await queryNotification(uid,id);
-        console.log(res)
-        if(res.error)return
+        if(res.error  || typeof res =="undefined")return
         const dateInMillis=res["whenToNotify"]* 1000;
         const notifyByTime=new Date(dateInMillis).toLocaleDateString(undefined,{month:"short",day:"numeric"})+" " +  new Date(dateInMillis).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-        console.log(notifyByTime)
         setNotify(notifyByTime);
         setDataChanged(true);
     }

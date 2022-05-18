@@ -15,7 +15,7 @@ const NoteModifySubmmit = styled(Button)`
 `;
 
 const NoteModiBtn=({uid,setSelected,setDataChanged})=>{
-  const{updateTitle,updateText,selectedItem,updateColor}=useContext(NoteContext);
+  const{updateTitle,updateText,selectedItem}=useContext(NoteContext);
   //控制送出修改按鈕
   const handleUpdateSubmmit =async  () => {
     const { id } = selectedItem;
@@ -23,7 +23,6 @@ const NoteModiBtn=({uid,setSelected,setDataChanged})=>{
       id,
       noteTitle: updateTitle,
       noteText: updateText,
-      color:updateColor
     };
     await updateNoteData(id, updateTextElements,uid);
     setSelected(false);
