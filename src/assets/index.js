@@ -19,13 +19,15 @@ import MenuCheck from "./img/boardTool/menuCheck.png";
 import Banned from "./img/boardTool/ban.png";
 import EditBoard from "./img/editTool/paintbrush.png"
 import Loading from "./img/loading/loading.gif";
-import ColorPalette from "./img/editTool/colorPalette.png"
-import KeepLogo from "../assets/img/keepLogo.png"
-import Notification from "../assets/img/editTool/notification.png"
+import ColorPalette from "./img/editTool/colorPalette.png";
+import KeepLogo from "../assets/img/keepLogo.png";
+import Notification from "../assets/img/editTool/notification.png";
 import Close from "./img/editTool/close.png";
 import Clock from "./img/notification/clock.png";
-import SearchImg from "./img/search/search.png"
-import ReFresh from "./img/loading/refresh.png"
+import SearchImg from "./img/search/search.png";
+import ReFresh from "./img/loading/refresh.png";
+import LeftArrow from "./img/editTool/left-arrow.png";
+import Plus from "./img/editTool/plus.png"
 
 export {
   Pencil,
@@ -55,5 +57,7 @@ export {
   Close,
   Clock,
   SearchImg,
-  ReFresh
+  ReFresh,
+  LeftArrow,
+  Plus
 };

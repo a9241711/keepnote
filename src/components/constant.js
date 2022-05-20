@@ -1,9 +1,9 @@
 import styled,{createGlobalStyle,keyframes} from "styled-components";
 
 
-export const Media_Query_SM='@media screen and (min-width: 320px) and (max-width: 610.99px) ';
-export const Media_Query_SMD='@media screen and (min-width: 611px) and (max-width: 849.99px) ';
-export const Media_Query_MD='@media screen and (min-width:850px) and (max-width: 1023.99px)';
+export const Media_Query_SM='@media screen and (min-width: 320px) and (max-width: 480px) ';
+export const Media_Query_SMD='@media screen and (min-width: 481px) and (max-width: 768px) ';
+export const Media_Query_MD='@media screen and (min-width:769px) and (max-width: 1023.99px)';
 export const Media_Query_LG='@media screen and (min-width:1024px)';
 
 
@@ -124,6 +124,12 @@ export const IconTipText=styled.span`
     left: 50%;
     transform: translateX(-50%);
     word-break: keep-all;
+    @media screen and (min-width: 320px) and (max-width: 480px){
+    display: none;
+    }
+    @media screen and (min-width: 481px) and (max-width: 768px){
+    display: none;
+    }
 `
 export const IconDiv=styled.div`
     position: relative;
@@ -271,6 +277,7 @@ export const scaleUp= keyframes`
   }
 `
 
+//由右至左
 export const scaleRight=keyframes`
   0% {
     -webkit-transform: scaleX(0);
@@ -286,5 +293,23 @@ export const scaleRight=keyframes`
             transform-origin: 100% 100%;
     opacity: 1;
 }
+`
+
+//由下至上
+export const scaleBottom=keyframes`
+    0% {
+    -webkit-transform: scaleY(0);
+            transform: scaleY(0);
+    -webkit-transform-origin: 0% 100%;
+            transform-origin: 0% 100%;
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+    -webkit-transform-origin: 0% 100%;
+            transform-origin: 0% 100%;
+    opacity: 1;
+  }
 
 `

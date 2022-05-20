@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useState,useRef } from "react";
 import styled from "styled-components";
-import { Undo,UndoCheck,Redo,RedoCheck, Menu, MenuCheck,Banned } from "../../assets";
+import { Undo,UndoCheck,Redo,RedoCheck, Menu, MenuCheck,Banned, Delete } from "../../assets";
 import { deleteBoard } from "../../store/HandleDb";
-import { ClickIconAnimate } from "../constant";
+import { ClickIconAnimate, Media_Query_MD, Media_Query_SM,Media_Query_SMD  } from "../constant";
 
 
 
@@ -12,6 +12,18 @@ const BoardSetpDiv=styled.div`
     position: fixed;
     right: 0;
     box-sizing: border-box;
+    ${Media_Query_SM}{
+      right:10px;
+      bottom: 0;
+    }
+    ${Media_Query_SMD}{
+      right:10px;
+      bottom: 0;
+    }
+    /* ${Media_Query_MD}{
+      right:10px;
+      bottom: 0;
+    } */
 `
 const UndoBtn=styled.div`
   display: flex;
@@ -20,7 +32,7 @@ const UndoBtn=styled.div`
   width: 52px;
   height: 52px;
   box-sizing: border-box;
-  margin: 10px 20px;
+  margin: 10px 0px;
   background:none;
   border:none;
   &::before{
@@ -50,6 +62,24 @@ const RedoBtn=styled(UndoBtn)`
     animation:${ClickIconAnimate} 0.3s linear;
   }
 `
+const DeleteBtn=styled(UndoBtn)`//手機版顯示
+    display:none;
+  &::before{
+    background-image:url(${Delete});
+  } 
+  &:active{
+    animation:${ClickIconAnimate} 0.3s linear;
+  }
+  ${Media_Query_SM}{
+    display: flex;
+  }
+  ${Media_Query_SMD}{
+    display: flex;
+  }
+  ${Media_Query_MD}{
+    display: flex;
+  }
+`
 const MenuBtn=styled(UndoBtn)`
   position:relative;
   &::before{
@@ -58,6 +88,15 @@ const MenuBtn=styled(UndoBtn)`
   &:hover:before{
     background-image:url(${MenuCheck}) 
     }
+  ${Media_Query_SM}{//非桌機版則不顯示
+    display: none;
+  }
+  ${Media_Query_SMD}{
+    display: none;
+  }
+  ${Media_Query_MD}{
+    display: none;
+  }
 `
 const MenuDropDown=styled.div`
     width:120px;
@@ -123,6 +162,7 @@ const BoardStep=({undo,redo,clear,id,currentIndex,uid})=>{
                 <MenuDropDowndBtn  onClick={handleClear}>清除頁面</MenuDropDowndBtn>
             </MenuDropDown>
         </MenuBtn>
+        <DeleteBtn onClick={handleClear}></DeleteBtn>
         </BoardSetpDiv>
         </>
     )

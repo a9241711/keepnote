@@ -7,13 +7,13 @@ import NotificationIndex, { NotificationEdit, NotificationElement } from "../not
 import NoteModiBtn from "./NoteModiBtn";
 import { useContext, useEffect } from "react";
 import NoteContext from "../../context/NoteContext";
-import { LargerAnimate,IconDiv,IconTipText } from "../../../components/constant";
+import { LargerAnimate,IconDiv,IconTipText,Media_Query_MD, Media_Query_SM,Media_Query_SMD, } from "../../../components/constant";
 import { EditBoard,DeleteCheck } from "../../../assets";
 import { useState } from "react";
 import { updateNoteData,deleteBoard,queryImageData } from "../../../store/HandleDb";
 import HeaderLoadContext from "../../../header/HeaderLoadContext";
 
-const NoteListModifyDiv = styled.div`//修改文字的Fixed背景
+const NoteListModifyBg = styled.div`//修改文字的Fixed背景
   position: fixed;
   top: 0;
   left: 0;
@@ -21,8 +21,11 @@ const NoteListModifyDiv = styled.div`//修改文字的Fixed背景
   height: 100%;
   background-color: rgba(121, 122, 124, 0.6);
   z-index: 999;
+  ${Media_Query_SM}{
+    display: none;
+  }
 `;
-const NoteListModifyBg=styled.div`
+const NoteListModifyDiv=styled.div`
     background-color: transparent;
     border: none;
     padding: 16px;
@@ -38,6 +41,12 @@ const NoteListModifyBg=styled.div`
     align-items: center;
     margin: 0 auto;
     animation: ${LargerAnimate} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    ${Media_Query_SM}{
+      padding: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
 `
 const NoteListModify = styled.div`//修改內容的Div
   width: 600px;
@@ -54,9 +63,12 @@ const NoteListModify = styled.div`//修改內容的Div
   overflow-x: hidden;
   &::-webkit-scrollbar {
         width: 12px;
+        ${Media_Query_SM}{
+        display: none; 
+        }
     }
     &::-webkit-scrollbar-button {
-    height: 0;}
+        height: 0;}
     &::-webkit-scrollbar-track {
         background: transparent; 
         border: 0;
@@ -77,23 +89,38 @@ const NoteListModify = styled.div`//修改內容的Div
         background-clip: padding-box;
         border: solid transparent;
         }
+    //set up media query
+    ${Media_Query_SM}{
+      width: 100%;
+      height: 100%;
+      min-height: unset;
+      max-height: unset;
+      padding:unset;
+      border-radius:unset;
+    }
 `
 const NodeToolDiv=styled.div`//彈出框的tool div
-  display: flex;
-  max-width: 600px;
-  width: 100%;
-  justify-content: space-around;
-  padding:0 10px;
-  position: relative;
-  bottom: 20px;
-  box-sizing: border-box;
-  box-shadow: 0px -1px 8px -1px rgba(0,0,0,0.23);
-  border-radius: 8px;
+    display: flex;
+    max-width: 600px;
+    width: 100%;
+    justify-content: space-between;
+    padding:0 10px;
+    position: relative;
+    bottom: 20px;
+    box-sizing: border-box;
+    box-shadow: 0px -1px 8px -1px rgba(0,0,0,0.23);
+    border-radius: 8px;
+        //set up media query
+        ${Media_Query_SM}{
+        border-radius:unset;
+        bottom: 0;
+        padding:0 5px;
+    }
 `
 const BoardAdd=styled(IconDiv)` //新增畫板的Icon
-  background-repeat: no-repeat;
-  background-position: center;
-  background-image: url(${EditBoard}) ;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(${EditBoard}) ;
 `
 const BoardList=styled.div` //board img的DIV
     width:100%;
@@ -102,10 +129,13 @@ const BoardList=styled.div` //board img的DIV
     opacity: ${props=>props.image?1:0};
     visibility: ${props=>props.image?"visible":"hidden"};
     transition:visibility 0.3s linear,opacity 0.3s linear;
-
 `
 const BoardDiv=styled.div`
     width: 100%;
+    ${Media_Query_SM}{
+    width: 50%;
+    margin-top: 20px;
+    }
 `
 const BoardImg=styled.img`//board img
     width:100%;
@@ -125,7 +155,6 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>
     const[clickColor,setClickColor]=useState(false);
     const[notificationChange,setNotificationChange]=useState(false);//是否更新NotificationIcon;
     const[image,setImage]=useState("");
-    const{isLoading,setIsLoading}=useContext(HeaderLoadContext);
     const {selectedItem,updateColor,updateTitle,updateText,updateNotification} =useContext(NoteContext);
     const{id, noteText, noteTitle, index,time,color,board=null}=selectedItem;
     
@@ -154,16 +183,14 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>
        if(!res.error){setImage(res["image"])}
        else{setImage("") }
       }
-      setIsLoading(true);
-      handleImgeQuery();
-      setTimeout(()=>setIsLoading(false),1000); 
+       handleImgeQuery();
     },[isDataChange])
 
     return(
       <>
-        <NoteListModifyDiv>
-        </NoteListModifyDiv>
         <NoteListModifyBg>
+        </NoteListModifyBg>
+        <NoteListModifyDiv>
             <NoteListModify  style={{background:updateColor}}  id={id}     >
               {/* { image ? */}
               <BoardList image={image}>
@@ -189,13 +216,11 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>
               <NoteColorElement  setClickColor={setClickColor} clickColor={clickColor}/>
               <NoteModiBtn uid={uid} setSelected={setSelected} setDataChanged={setDataChanged}/>
               {clickNotificate?<NotificationEdit setClickNotificate={setClickNotificate} setNotificationChange={setNotificationChange} uid={uid} selected={selected} setDataChanged={setDataChanged}/> :null}    
-              {clickColor? <NoteColorPop id={id} uid={uid} clickColor={clickColor} setClickColor={setClickColor} setDataChanged={setDataChanged}/> :null}
+              {clickColor? <NoteColorPop setClickColor={setClickColor} id={id} uid={uid} clickColor={clickColor} setDataChanged={setDataChanged}/> :null}
               </NodeToolDiv>
               
-        </NoteListModifyBg> 
+        </NoteListModifyDiv> 
            </>    
- 
-                // : null}
     )
 
 }

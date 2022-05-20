@@ -20,7 +20,7 @@ const ToolDiv = styled.div`
   display:flex;
   position:relative;
   box-sizing:border-box;
-  margin: 10px 15px;
+  margin: 10px 0px;
 `;
 const ToolLabel = styled.label`
   display: flex;
@@ -106,7 +106,7 @@ const GoBackPrePageBtn=styled.button`
   width: 52px;
   height: 52px;
   box-sizing: border-box;
-  margin: 10px 20px;
+  margin: 10px 0px;
   background:none;
   border:none;
   &:hover{

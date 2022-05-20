@@ -6,7 +6,7 @@ import SearchContext from "./components/SearchContext";
 import { IconDiv } from "../components/constant";
 
 const SearchBar = styled.div`
-  background-color:${props=>props.isFocus?"transparent":"#f1f3f4"} ;
+  background-color:${props=>props.isFocus?"transparent":"#FFFFFF"} ;
   border: 1px solid transparent;
   box-shadow: rgb(65 69 73 / 30%) 0px 1px 1px 0px,
     rgb(65 69 73 / 15%) 0px 1px 3px 1px;
@@ -20,30 +20,28 @@ const SearchBar = styled.div`
   padding: 0;
   box-sizing: border-box;
   position: fixed;
-  left: 160px;
   ${Media_Query_MD}{
-      width: 520px;
+      width: 450px;
       right: 160px;
       left: unset;
     }
   ${Media_Query_SMD}{
       max-width: 350px;
       width: 100%;
-      width: ${props=> props.show?"40px":"350px"};
+      width: ${props=> props.show?"40px":"320px"};
       box-shadow:${props=> props.show?"none": "rgb(65 69 73 / 30%) 0px 1px 1px 0px,rgb(65 69 73 / 15%) 0px 1px 3px 1px"} ;
-      background-color: ${props=> props.show?"transparent":"#f1f3f4"}; ;
+      /* background-color: ${props=> props.show?"transparent":"#f1f3f4"}; ; */
       transition:all linear 1s; 
       right: 160px;
       left: unset;
   }
   ${Media_Query_SM}{
-      max-width: 200px;;
       width: 100%;
-      width: ${props=> props.show?"40px":"200px"};
+      max-width: ${props=> props.show?"40px":"230px"};
       box-shadow:${props=> props.show?"none": "rgb(65 69 73 / 30%) 0px 1px 1px 0px,rgb(65 69 73 / 15%) 0px 1px 3px 1px"} ;
-      background-color: ${props=> props.show?"transparent":"#f1f3f4"}; ;
+      /* background-color: ${props=> props.show?"transparent":"#f1f3f4"};  */
       transition:all linear 1s; 
-      right: 160px;
+      right: 140px;
       left: unset;
   }
 `;
@@ -100,14 +98,20 @@ const SearchIcon2 = styled(IconDiv)`
   background-image: url(${SearchImg}) ;
   background-color:"#FFFFFF" ;
   display: ${props=>props.isFilter?"none":"block"};
+    &:hover{
+        background-color: transparent;
+      }
   }
   ${Media_Query_SM}{
-    cursor: pointer;
+  cursor: pointer;
   background-repeat: no-repeat;
   background-position: center;
   background-image: url(${SearchImg}) ;
   background-color:"#FFFFFF" ;
   display: ${props=>props.isFilter?"none":"block"};
+    &:hover{
+      background-color: transparent;
+    }
   }
 `;
 
@@ -124,7 +128,7 @@ const Search = () => {
   const[isFocus,setIsFocus]=useState(false);
   const{dataList,getFilterData,clearFilterData,filterData,filterButDataChange,getFilterButDataChange}=useContext(SearchContext);//取得所有list data
   const originDataList=dataList["dataList"];
-  const[show,setShow]=useState(false);
+  const[show,setShow]=useState(true);
   const{isFilter}=filterData;
 
   const handleInut=(e)=>{
@@ -147,9 +151,10 @@ const Search = () => {
   const handleClear=()=>{
     clearFilterData();
     setSearchWord("");
+    setShow(true);
   }
 
-  useEffect(()=>{//控制已經filter過淡dataChanged
+  useEffect(()=>{//控制已經filter過，使用者新增資料時dataChanged
     if(!filterButDataChange) return
     const handleFilter=()=>{
       const filter=originDataList.filter((item)=>{

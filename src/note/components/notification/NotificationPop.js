@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Text,Button,IconDiv,IconTipText,bounceInLeft,LargerAnimate } from "../../../components/constant";
+import { Text,Button,IconDiv,IconTipText,bounceInLeft,LargerAnimate, Media_Query_SM } from "../../../components/constant";
 import { Close } from "../../../assets";
 import { Link } from "react-router-dom";
 import NoteInput from "../NoteInput";
@@ -25,6 +25,9 @@ const NotificationFixed=styled.div`
     display: flex;
     justify-content: space-around;
     animation:${bounceInLeft} 1.1s both;
+    ${Media_Query_SM}{
+        max-width: 320px;
+    }
 `
 const NotifDiv=styled.div`
     display: flex;

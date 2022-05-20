@@ -1,5 +1,6 @@
-import { useReducer } from "react";
+import { useReducer,useContext } from "react";
 import SearchContext from "./SearchContext";
+import HeaderLoadContext from "../HeaderLoadContext";
 
 
 const handleSearch=(state,action)=>{
@@ -32,16 +33,17 @@ const SearchReducer=(props)=>{
     const[dataList,disDataPatch]=useReducer(handleSearch,initialData);
     const[filterData,disFilterPatch]=useReducer(handleSearch,initialFilter);
     const[filterButDataChange,disFilterDataChange]=useReducer(handleSearch,false);
+    const{setIsLoading}=useContext(HeaderLoadContext);
 
     const getOriginData=(item)=>{
-        console.log(item)
+        setIsLoading(true);
         disDataPatch({
             type:"GETDATA",
             payload:item
-        })
+        });
+        setTimeout(()=>setIsLoading(false),1000);
     }
     const getFilterData=(item)=>{
-        console.log(item)
         disFilterPatch({
             type:"FILTER",
             payload:item

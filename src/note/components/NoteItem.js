@@ -1,6 +1,6 @@
-import React,{ useState, useEffect, useRef, useContext, useLayoutEffect } from "react";
+import React,{ useState, useEffect, useRef, useContext, } from "react";
 import styled from "styled-components";
-import { Text, Button, LargerAnimate, IconDiv } from "../../components/constant";
+import { Media_Query_MD, Text, } from "../../components/constant";
 import NotificationDelete from "./notification/NotificationDelete";
 import NoteContext from "../context/NoteContext";
 
@@ -57,7 +57,7 @@ const NoteItem = ({
   setList,
   setDataChanged,
   uid,
-  setSelected,whenToNotify
+  setSelected,whenToNotify=""
 }) => {
   const{getSelectedItem,getColorUpdate,getNoteUpdateTitle,getNoteUpdateText,getNoteHeight}=useContext(NoteContext);
  const heightTitleRef=useRef();
@@ -73,18 +73,32 @@ const NoteItem = ({
     getColorUpdate(color);
     getNoteUpdateTitle(noteTitle);
     getNoteUpdateText(noteText);
-    handleHeight(heightTitleRef.current.offsetHeight/2,heightTextRef.current.offsetHeight/2);
+    handleHeight(heightTitleRef,heightTextRef);
     setSelected(true);
   };
-  const handleHeight=(titleHeight,textHeight)=>{//處理最小高度
+  const handleHeight=(heightTitleRef,heightTextRef)=>{//處理最小高度
     const minHeight=24;
-    const heightObj={titleHeight,textHeight}
-    if(titleHeight<minHeight){
-      heightObj.titleHeight=minHeight;
-    }if(textHeight<minHeight){
-      heightObj.textHeight=minHeight;
+    console.log(heightTitleRef.current, heightTextRef.current)
+    if(typeof heightTitleRef.current =="undefined" ||typeof heightTextRef.current =="undefined")
+    {
+    const heightObj={titleHeight:minHeight,textHeight:minHeight}
+    return getNoteHeight(heightObj.titleHeight,heightObj.textHeight)}
+    else if( heightTitleRef.current ===null || heightTextRef.current ===null)
+    {
+    const heightObj={titleHeight:minHeight,textHeight:minHeight}
+    return getNoteHeight(heightObj.titleHeight,heightObj.textHeight)}
+    else{
+      const titleHeight=heightTitleRef.current.offsetHeight/2;
+      const textHeight=heightTextRef.current.offsetHeight/2;
+      const heightObj={titleHeight,textHeight}
+      if(titleHeight<minHeight){
+        heightObj.titleHeight=minHeight;
+      }if(textHeight<minHeight){
+        heightObj.textHeight=minHeight;
+      }
+      getNoteHeight(heightObj.titleHeight,heightObj.textHeight) 
     }
-    getNoteHeight(heightObj.titleHeight,heightObj.textHeight) 
+    
   }
 
 
@@ -97,14 +111,16 @@ const NoteItem = ({
             <BoardImg src={image}></BoardImg>
         </BoardList>
         : null }
-
+        <NoteDiv >  
         {!image && !noteTitle &&!noteText 
         ?<NoteNone>空白記事</NoteNone>
         :
-        <NoteDiv >      
+        <>
         <NoteTitle ref={heightTitleRef}>{noteTitle}</NoteTitle>
         <NoteText ref={heightTextRef}>{noteText}</NoteText>
-        </NoteDiv>  }
+        </>
+          }
+        </NoteDiv>
         </NoteLists>
       <NotificationDelete setDataChanged={setDataChanged} whenToNotify={whenToNotify}  id={id} uid={uid} />
     </>

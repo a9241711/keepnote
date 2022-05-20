@@ -76,7 +76,12 @@ export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,set
     let refNotelists=doc(db,"notelists",uid);
     let notelistSnap=await getDoc(refNotelists);
     let result=notelistSnap.data();
-    if(result ===undefined ) return {"message":null}
+    console.log(result)
+    if(result ===undefined ) {//若無資料
+        console.log("無資料")
+        setData([]);
+        getOriginData([]);
+        return}
     let num=result["orderlists"].length-1
     let noteLists=[]
     for(let i=num;i>=0;i--){//從後面取得最新
@@ -164,6 +169,7 @@ export const queryImageData=async(id,uid)=>{
       const data=doc.data();
       array.push(data);
     });
+    console.log(array)
     const res=array.map((item)=> {
         if(!item.image){return {error:null}}
         else{
@@ -205,6 +211,8 @@ export const deleteBoard = async(id,uid)=>{
     await updateDoc(deleteDbImage,{image:deleteField()});
     const boardSnap=await getDocs(deleteBoardRef);
     boardSnap.forEach((item)=> deleteDoc(item.ref));
+    const time=Timestamp.now();
+    await updateDoc(deleteDbImage, {time:time});
 }
 
 
@@ -228,7 +236,6 @@ export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件�
     // let q=query(collection(db,"user",uid,"notelist"));//
     const refBoard=doc(db,"user",uid,"notelist",id)
     let snapShot=await getDoc(refBoard)
-    console.log(snapShot)
     if(snapShot.exists()){//若已有文字記事，則更新圖片記事
         drawElement( elements);
         await updateDoc(refBoard, {time});
@@ -241,7 +248,6 @@ export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件�
     let refNotelists=doc(db,"notelists",uid);
     let notelistSnap=await getDoc(refNotelists);
     if(notelistSnap.exists()){
-        console.log("notelistSnap",notelistSnap.data());
         await updateDoc(refNotelists,{orderlists:arrayUnion(refBoard)});
     }else{
     await setDoc(refNotelists,{orderlists:arrayUnion(refBoard)});
@@ -368,5 +374,7 @@ export const deleteNotification=async (uid,id)=>{
     const updateRef=doc(db, "user", uid,"notelist",id);
     const updateData={whenToNotify:""};
     await updateDoc(updateRef,updateData);//存入NotifyTime，in order to show in fronted
+    const time=Timestamp.now();
+    await updateDoc(updateRef, {time:time});
     return {success:true}
 }

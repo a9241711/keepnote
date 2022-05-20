@@ -28,6 +28,10 @@ const ToolNav=styled.div`
   user-select:none;
   z-index:999;
 `
+const BoardDrawToollDiv=styled.div`
+  display: flex;
+`
+
 const useHistoryPosition = (initialState) => {
   //customHook用use+自定義名稱，就可以製作自己的hook
   const [index, setIndex] = useState(0); //記錄所有圖形的位置
@@ -109,7 +113,6 @@ const BoardIndex =()=>{
       if(elements.length ===0) return
       else{
         if(isMouseUp){
-          console.log(elements,isMouseUp);
           getBoardElements (elements,id,uid)
         }else return;
       }
@@ -139,8 +142,10 @@ const BoardIndex =()=>{
         <>
             <BoardDiv>
             <ToolNav>
+            <BoardDrawToollDiv>
             <BoardDrawingTool id={id} tool={tool} setTool={setTool} elements={elements} uid={uid}/>
             <BoardOutfit color={color} setColor={setColor} range={range} setRange={setRange}/>
+            </BoardDrawToollDiv>
             <BoardStep undo={undo} redo={redo} clear={clear} id={id} currentIndex={currentIndex} uid={uid}/>
             </ToolNav>
             <BoardCanvas elements={elements} setElements={setElements} tool={tool} color={color} range={range} selectedElement={selectedElement} setSelectedElement={setSelectedElement}action={action} setAction={setAction} setIsMouseUp={setIsMouseUp} boardData={boardData}/>

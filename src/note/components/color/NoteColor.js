@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState,useRef, useEffect, useContext } from "react";
-import { IconDiv,IconTipText,scaleUp } from "../../../components/constant";
-import { ColorPalette } from "../../../assets";
+import { IconDiv,IconTipText,scaleBottom, Media_Query_SM,scaleRight } from "../../../components/constant";
+import { ColorPalette, LeftArrow } from "../../../assets";
 import { updateNoteData } from "../../../store/HandleDb";
 import NoteContext from "../../context/NoteContext";
 
@@ -149,15 +149,51 @@ export const NoteColorElement=({setClickColor,clickColor})=>{
         </ColorIcon>
     )
 }
+const NoteListColorDiv=styled.div`
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(121, 122, 124, 0.6);
+    z-index:999;
+    ${Media_Query_SM}{
+      display: block;
+
+  }
+`
 
 const ColorInputPopDiv=styled(ColorInputDiv)`
     border-radius: 8px;
     left: 20%;
     top: 37px;
+    animation: ${scaleRight}  0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    ${ Media_Query_SM}{
+        z-index:4001;
+        width: 100%;
+        height: 100px;
+        justify-content: space-around;
+        padding: unset;
+        border-radius: unset;
+        left: 0;
+        top: unset;
+        bottom: 0;
+        box-shadow: unset;
+        animation:${scaleBottom} 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both; 
+    }
+`
+const LeftArrowDiv=styled(IconDiv)`
+        display: none;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-image: url(${LeftArrow}) ;
+        ${ Media_Query_SM}{display:block}
 `
 
-export const NoteColorPop=({id,uid,clickColor,setDataChanged})=>{//彈出視窗PopUp Color
+export const NoteColorPop=({id,uid,clickColor,setDataChanged,setClickColor,})=>{//彈出視窗PopUp Color
     const{getColorUpdate,selcetedItem}=useContext(NoteContext);
+    const colorRef=useRef();
     const handelClickColor= async(e)=>{
         const updateColorElements = {
             color:e.target.value,
@@ -165,13 +201,15 @@ export const NoteColorPop=({id,uid,clickColor,setDataChanged})=>{//彈出視窗P
         await updateNoteData(id, updateColorElements,uid);//回傳DB
         setDataChanged(true);
         getColorUpdate(e.target.value);
-        setDataChanged(true);
       }
 
     return(
         <>
         {clickColor?
-            <ColorInputPopDiv  >
+        <>
+            <NoteListColorDiv></NoteListColorDiv>
+            <ColorInputPopDiv  ref={colorRef}>
+            <LeftArrowDiv onClick={()=>setClickColor(false)}></LeftArrowDiv>
             <ColorWhiteBtn value="#FFFFFF" onClick={(e)=> handelClickColor(e)}><IconToolTipText>預設</IconToolTipText></ColorWhiteBtn>
             <ColorRedBtn value="#F28B82" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紅色</IconToolTipText></ColorRedBtn>
             <ColorYellowBtn value="#FFF475" onClick={(e)=> handelClickColor(e)}><IconToolTipText>黃色</IconToolTipText></ColorYellowBtn>
@@ -179,7 +217,7 @@ export const NoteColorPop=({id,uid,clickColor,setDataChanged})=>{//彈出視窗P
             <ColorBlueBtn value="#AECBFA" onClick={(e)=> handelClickColor(e)}><IconToolTipText>藍色</IconToolTipText></ColorBlueBtn>
             <ColorPurpleBtn value="#D7AEFB" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紫色</IconToolTipText></ColorPurpleBtn>
             </ColorInputPopDiv>
-        
+        </>
             :null}
         </>
     )

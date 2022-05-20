@@ -6,9 +6,11 @@ import { requestForToken, saveNoteData } from "../../store/HandleDb";
 import CanvasTool from "./CanvasTool";
 import  { NotificationDeleteEdit } from "./notification/NotificationDelete";
 import SearchContext from "../../header/components/SearchContext";
+import NoteEditMb from "./edit/NoteEditMb";
+import { NoteModiEditBtn } from "./modify/NoteModiBtn";
 
 const NoteDiv=styled.div`
-    width:600px;
+    width: 50%;
     position:relative;
     box-sizing:border-box;
     box-shadow:0 1px 2px 0 rgb(60 64 67/30%), 
@@ -20,10 +22,10 @@ const NoteDiv=styled.div`
     flex-direction: column;
     display: ${props=> props.isFilter?"none":"flex"};
     ${Media_Query_SMD}{
-        width: 80%;
+        width: 60%;
     }
   ${Media_Query_MD}{
-        width: 80%;
+        width: 50%;
     }
     ${Media_Query_SM}{
         width: 80%;
@@ -36,6 +38,10 @@ const NoteTitleInputDiv=styled(NoteTitleInput)`
 const NoteTextInputDiv=styled(NoteTextInput)`
     height: 22px;
     line-height: 22px;
+`
+const NoteEditTool=styled.div`
+    display: flex;
+    justify-content: space-between;
 `
 
 const NoteEdit=({addData,uid,setDataChanged})=>{
@@ -83,24 +89,19 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
         console.log(typeof notification!="undefined")
         if(typeof notification!="undefined" && notification===null){
             const{timer,currentToken}=notification;
-            console.log(timer,currentToken)
             await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
-            setNoteText("");
-            setNoteTitle(""); 
+            setIsClose(true);
             setDataChanged(true);
-            setNoteColor("#FFFFFF");
-            setNotification("");   
+            setIsInput(false);
         }
         else{
             const timer=""; 
             const currentToken="";
             await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
-            console.log(timer,currentToken)
-            setNoteText("");
-            setNoteTitle(""); 
+            console.log(timer,currentToken);
+            setIsClose(true);
             setDataChanged(true);
-            setNoteColor("#FFFFFF");
-            setNotification(""); 
+            setIsInput(false);
         }
     }
     //此useEffect用來確認是否click title 秀出完整框
@@ -137,6 +138,7 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
 
     useEffect(()=>{//是否按下關閉，是則清空內容
         if(!isClose)return 
+        setTitleClick(false);
         setNoteTitle("");
         setNoteText("");
         setNoteColor("#FFFFFF");
@@ -146,17 +148,20 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
 
     return(
         <>
-        {/* {isFilter?null
-        : */}
+        {/* 桌機+平版 */}
         <NoteDiv isFilter={isFilter} style={{backgroundColor: noteColor}} noteColor={noteColor} ref={typingTitleRef}>
         <NoteTitleInputDiv style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue} onClick={()=> setTitleClick(true)} ></NoteTitleInputDiv>
         {titleClick
         ? <NoteTextInputDiv style={{backgroundColor: noteColor}} ref={typingTextRef} value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv> :null}
         <NotificationDeleteEdit isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} notification={notification} setNotification={setNotification} />
+        <NoteEditTool>
         <CanvasTool setIsClose={setIsClose} setNotification={setNotification} setIsFromEdit={setIsFromEdit} isFromEdit={isFromEdit} setNoteColor={setNoteColor} noteColor={noteColor} titleClick={titleClick} noteTitle={noteTitle} noteText={noteText} uid={uid} notification={notification}/>
+        {titleClick
+        ?<NoteModiEditBtn handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>:null}
+        </NoteEditTool>
         </NoteDiv>
-        {/* } */}
-
+        {/* <NoteEditMb uid={uid}noteTitle={noteTitle}noteText={noteText}getNodeTitleValue={getNodeTitleValue}getNodeTextValue={getNodeTextValue}setNoteColor={setNoteColor} isFromEdit={isFromEdit}setIsFromEdit={isFromEdit}notification={notification}setNotification={setNotification}setIsClose={setIsClose}/> */}
+        
         </>
     )
 

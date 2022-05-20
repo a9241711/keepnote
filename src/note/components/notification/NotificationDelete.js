@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { Text,IconDiv } from "../../../components/constant";
+import { Text,IconDiv ,Media_Query_SM} from "../../../components/constant";
 import { Close,Clock } from "../../../assets";
 import { useEffect, useState,useContext } from "react";
 import { deleteNotification,queryNotification, } from "../../../store/HandleDb";
 import NoteContext from "../../context/NoteContext";
+import HeaderLoadContext from "../../../header/HeaderLoadContext";
 
 
 const NotifDelete=styled(IconDiv)`
@@ -33,6 +34,10 @@ const NotofDiv=styled.div`
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    ${Media_Query_SM} {
+        max-width: 160px;
+        margin:0px;
+    }
 `
 const NotifIcon=styled(IconDiv)`
     background-image: url(${Clock});
@@ -45,7 +50,7 @@ const NotifIcon=styled(IconDiv)`
 
 const NotificationDelete=({id, uid,whenToNotify,setDataChanged,})=>{
     const[notify,setNotify]=useState("");
-   
+    const{setIsLoading}=useContext(HeaderLoadContext);
     const handleDeleteNoti=async()=>{//刪除notification
         //List修改框
             const res=await deleteNotification(uid,id);
@@ -55,15 +60,16 @@ const NotificationDelete=({id, uid,whenToNotify,setDataChanged,})=>{
         }
 
     const handleTimeFromDb=(whenToNotify)=>{//處理時間轉換
-        if(whenToNotify===""){ setNotify("");}
-        else{
+        // if(whenToNotify===""){ setNotify("");}
+        // else{
             const dateInMillis=whenToNotify* 1000;
             const notifyByTime=new Date(dateInMillis).toLocaleDateString(undefined,{month:"short",day:"numeric"})+" " +  new Date(dateInMillis).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
             setNotify(notifyByTime);
-        }
+        // }
     }
     useEffect(()=>{
-
+        if(whenToNotify===""){return setNotify("");}
+        console.log("deleteingnotifcaiotn")
         handleTimeFromDb(whenToNotify);
     },[whenToNotify]);
  
