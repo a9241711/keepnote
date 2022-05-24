@@ -1,6 +1,6 @@
 import { useContext, useReducer,useLayoutEffect, useState,useRef, useEffect } from "react";
 import styled from "styled-components";
-import { NoteTitleInput,NoteTextInput,Text } from "../../components/constant";
+import { NoteTitleInput,NoteTextInput,Text, Media_Query_SM } from "../../components/constant";
 import NoteContext from "../context/NoteContext";
 
 const NoteDiv=styled.div`
@@ -8,6 +8,9 @@ const NoteDiv=styled.div`
   display:flex;
   justify-content: flex-start;
   flex-direction: column;
+  ${Media_Query_SM}{
+    margin-top:50px;
+  }
 `
 const NoteTime=styled(Text)`
   font-size: 12px;

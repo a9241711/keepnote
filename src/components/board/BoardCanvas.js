@@ -1,14 +1,10 @@
 import rough from "roughjs/bundled/rough.esm";
 import { useEffect, useState,useRef } from "react";
 import styled from "styled-components";
-import { saveBoardData } from "../../store/HandleDb";
-import { Media_Query_SM } from "../constant";
 
 const BoardCanvasDiv=styled.canvas`
     width:100%;
     height:100vh;
-    /* position:absolute; */
-
 `
 
 const generator = rough.generator();
@@ -46,7 +42,7 @@ const nearPoint = (x, y, postionX, positionY, name) => {
 };
 
 const positionWithinElement = (x, y, element) => {
-  // console.log("positionWithinElement", x, y, element);
+  console.log("positionWithinElement", x, y, element);
   //檢查物件是否是該物件
   const { type, x1, x2, y1, y2 } = element;
   if (type === "rectangle") {

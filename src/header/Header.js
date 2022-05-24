@@ -6,7 +6,7 @@ import LogOut from "./LogOut";
 import LogIn from "./LogIn";
 import User from "./User";
 import { Link } from "react-router-dom";
-import { KeepLogo, Loading, ReFresh } from "../assets";
+import { KeepLogo, Loading, ReFresh,Nav } from "../assets";
 import HeaderLoadContext from "./HeaderLoadContext";
 
 
@@ -14,6 +14,7 @@ const Header = styled.div`
   width: 100%;
   height: 65px;
   position: fixed;
+  top:0;
   display: flex;
   border-bottom: 1px solid rgb(218, 220, 224);
   align-items: center;
@@ -57,15 +58,31 @@ const ReFreshIcon=styled(IconDiv)`
   background-image: url(${ReFresh}) ;
   background-color: transparent;
 `
+//Nav區 包含Logo
+const NavDiv=styled.div`
+  width: 100%;
+  max-width: 180px;
+  display: flex;
+  position: fixed;
+  left: 0;
+  top: 0;
+  align-items: center;
+  justify-content: center;
+`
+const NavIcon=styled(IconDiv)`
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(${Nav}) ;
+  background-color: transparent;
+`
 
 const LogoDiv=styled.div`
   width: 130px;
   height: 65px;
   display: flex;
   align-items: center;
-  position: fixed;
-  left: 0;
-  top: 0;
+
 `
 const LogoText=styled(H3)`
   color:#5F6368;
@@ -74,24 +91,35 @@ const LogoText=styled(H3)`
 `
 
 const HeaderDiv = ({isLoggin}) => {
-  const {isLoading,setIsLoading,setIsRefresh} =useContext(HeaderLoadContext);
+  const {isLoading,setIsLoading,setIsRefresh,page,navClick,getNavClick} =useContext(HeaderLoadContext);
+  const{archive}=page
+
   useEffect(()=>{
     setIsLoading(false);
   },[])
   return (
     <Header>
-      <Link to={"/"} style={{ textDecoration: 'none' }}>
-      <LogoDiv >
+
+      <NavDiv>
+        <NavIcon onClick={()=>getNavClick()}></NavIcon>
+        <Link to={"/"} style={{ textDecoration: 'none' }}>
+        <LogoDiv  >
         <LogoImg src={KeepLogo}></LogoImg>
         <LogoText>KeepNote</LogoText>
-      </LogoDiv>
-      </Link>
-      <Search />
+        </LogoDiv>
+        </Link>
+      </NavDiv>
+
+      {isLoggin?
+      <>
+      {archive?null : <Search />}
       <LoadingDiv>
       {isLoading 
       ? <LoadingImg src={Loading}></LoadingImg>
       :<ReFreshIcon onClick={()=> setIsRefresh(true)}><IconTipText>重新整理</IconTipText></ReFreshIcon>}
       </LoadingDiv> 
+      </>
+      :null}
       <HeaderToolDiv>
       {isLoggin?
       <>
@@ -104,3 +132,40 @@ const HeaderDiv = ({isLoggin}) => {
 };
 
 export default HeaderDiv;
+
+export const HeaderArchiveDiv = ({isLoggin,}) => {//For Archive
+  const {isLoading,setIsLoading,setIsRefresh,page,getPage} =useContext(HeaderLoadContext);
+  console.log(page);
+
+  return (
+    <Header>
+      <NavDiv>
+        <NavIcon></NavIcon>
+        <Link to={"/"} style={{ textDecoration: 'none' }}>
+        <LogoDiv  >
+        <LogoImg src={KeepLogo}></LogoImg>
+        <LogoText>KeepNote</LogoText>
+        </LogoDiv>
+        </Link>
+      </NavDiv>
+      {isLoggin?
+      <>
+      <LoadingDiv>
+      {isLoading 
+      ? <LoadingImg src={Loading}></LoadingImg>
+      :<ReFreshIcon onClick={()=> setIsRefresh(true)}><IconTipText>重新整理</IconTipText></ReFreshIcon>}
+      </LoadingDiv> 
+      </>
+      :null}
+      <HeaderToolDiv>
+      {isLoggin?
+      <>
+      <LogOut /><User isLoggin={isLoggin}/></>
+      :<LogIn />
+      }
+      </HeaderToolDiv>
+    </Header>
+  );
+};
+
+

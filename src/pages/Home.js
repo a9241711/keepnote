@@ -6,6 +6,7 @@ import { GlobalStyle,H3,Text } from "../components/constant";
 import { H1 } from "../components/constant";
 import { Link } from "react-router-dom";
 import SearchReducer from "../header/components/SearchReducer";
+import NavSideBar from "../header/components/NavSideBar";
 
 
 const ContentDiv=styled.div`
@@ -17,7 +18,7 @@ const ContentDiv=styled.div`
 `
 const IntroDiv=styled.div`
     width: 100%;
-    max-width: 1220px;
+    max-width: 1200px;
     position: absolute;
     top: 70px;
     left: 0;
@@ -26,7 +27,6 @@ const IntroDiv=styled.div`
 `
 const BannerDiv=styled.div`
     width: 100%;
-    background: gray;
     height: 400px;
     display: flex;
     justify-content: center;
@@ -39,10 +39,10 @@ const MainDiv=styled.div`
 `
 const Title=styled(H1)`
     font-size: 54px;
-
+    margin: 30px;
 `
 const SignUpBtn=styled.button`
-    background: #E9AF00;
+    background: #FBBC04;
     border: 0;
     border-radius: 8px;
     font-weight: 700;
@@ -84,6 +84,7 @@ const Home=()=>{
         {isLoggin?
         <>        
         <ContentDiv>
+        <NavSideBar />
         <NotePage isLoggin={isLoggin} />
         </ContentDiv> 
         </>

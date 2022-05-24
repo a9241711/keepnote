@@ -22,3 +22,13 @@ const NoteBgColor=({id,color})=>{
 }
 
 export default NoteBgColor
+
+
+export const ArchiveBgColor=({id,color})=>{
+
+    return(
+        <NoteBgLists color={color} id={id} ></NoteBgLists>
+    )
+
+}
+

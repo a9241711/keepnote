@@ -92,25 +92,60 @@ export const NoteTextInput = styled(NoteTitleInput).attrs({
   font-size: 16px;
 `;
 
-export const Button=styled.button`
+export const Button=styled.button`//提交按鈕
   width: 100px;
   font-size: 14px;
   height: 32px;
   line-height: 32px;
   border: none;
-  border-radius: 5%;
-  background-color: #F1F3F4;
+  border-radius: 40px 40px;
   transition: all ease-in-out .5s; 
   margin:0 5px;
   outline: none;
   background-color: transparent;
-  &:hover{
+  @media screen and (max-width:1024px){//觸控版
+    background-color: #FBBC04;
+    color:#FFFFFF;
+    &:active{
+    border: 1px solid #FBBC04 ;
+    background-color: #FFFFFF;
+    color: black;
+  }
+  }
+  @media screen and (min-width:1024px){//桌機
+    &:hover{
     cursor: pointer;
-    border: none;
-    background-color: rgba(255,255,255,0.039);
+    border:  1px solid black ;
+    background-color: rgba(0,0,0,0.039);
+    color:black;
     outline: none;
   }
+  }
 `
+export const CloseButton=styled(Button)`//取消按鈕
+  &:hover{
+    border: 1px solid #FBBC04 ;
+    color: black;
+  }
+  @media screen and (max-width:1024px){//觸控版
+    background-color: transparent;
+    color:black;
+    &:active{
+    border: 1px solid #FBBC04 ;
+    background-color: #FFFFFF;
+    color: black;
+  }
+  }
+  @media screen and (min-width:1024px){//桌機
+    &:hover{
+    cursor: pointer;
+    border: none;
+    background-color: rgba(0,0,0,0.039);
+    outline: none;
+  }
+  }
+`
+
 export const IconTipText=styled.span`
     font-size: 12px;
     visibility: hidden;
@@ -143,14 +178,16 @@ export const IconDiv=styled.div`
     padding:2.5px;
     background-repeat: no-repeat;
     background-position: center;
-    &:hover{
+    @media screen and (min-width:1024px){//桌機版
+      &:hover{
         background-color: rgba(95,99,104,0.157);
         opacity: 0.87;
         border-radius: 50%;
     }
-    &:hover ${IconTipText}{
-      visibility: visible;
-    }
+      &:hover ${IconTipText}{
+        visibility: visible;
+      }
+  }
 `
 
 //小工具背景變成圓形的專用div

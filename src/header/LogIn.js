@@ -1,7 +1,6 @@
-import { useContext,useState } from "react";
-import AuthContext from "../store/AuthContext";
+
 import { BgRoundDiv } from "../components/constant";
-import styled from "styled-components";
+
 import { Link } from "react-router-dom";
 
 const LogIn=()=>{

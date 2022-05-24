@@ -1,5 +1,4 @@
 import React,{ useState,createContext, useEffect }  from "react";
-import BoardToDbTool from "./BoardToDbTool";
 import BoardDrawingTool from "./BoardDrawingTool";
 import BoardStep from "./BoardStep";
 import styled from "styled-components";
@@ -7,9 +6,8 @@ import BoardOutfit from "./BoardOutfit";
 import BoardCanvas from "./BoardCanvas";
 import { saveBoardData,getBoardData,updateBoardData } from "../../store/HandleDb";
 import {useLocation, useNavigate} from "react-router-dom";
-import { async } from "@firebase/util";
+import { GlobalStyle } from "../constant";
 
-// import { BoardContext } from "./BoardContext";
 
 export const BoardContext=createContext({name:"guest"})
 
@@ -140,6 +138,7 @@ const BoardIndex =()=>{
 
     return(
         <>
+            <GlobalStyle/>
             <BoardDiv>
             <ToolNav>
             <BoardDrawToollDiv>

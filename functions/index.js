@@ -9,42 +9,16 @@ const database=admin.firestore();
 //抓取trigger觀察notification doc被新增上去，以及狀態是否為false
 
 exports.sendNotificationAsia=functions.pubsub.schedule("* * * * *").onRun(async(context)=>{
-    // const query=await database.collectionGroup("notifications")
-    const currentTime=admin.firestore.Timestamp.now()
+    const currentTime=admin.firestore.Timestamp.now();
     const query=await database.collectionGroup("notifications")
     .where("whenToNotify","<=",currentTime)
     .where("notificationSent","==",false).get();
-    // const promises=[]
-    //  query.forEach( snapshot=>{
-    //     // const title=snapshot.data().title;
-    //     // const text=snapshot.data().text;
-    //     // const token=snapshot.data().token;
-    //     promises.push(snapshot.data())
-    //     snapshot.ref.update({"notificationSent":true})
-    // });
-    // Promise.all(promises);
-    // console.log("promises",promises)
-    // for(let i =0 ; i<promises.length ; i++){
-    //     const title=promises[i]["title"];
-    //     const text=promises[i]["text"];
-    //     const token=promises[i]["token"];
-    //     const message={
-    //         notification:{title:title, body:text},
-    //         token:token,
-    //     }
-    //     console.log("title",title,text,token,"message",message);
-    //     return admin.messaging().send(message).then(response=>{
-    //         console.log("sent success",response)
-    //     }).catch(e=>{
-    //         console.log("Error",e)
-    //     })
-    // }
     query.forEach(async snapshop=>{
         const{title,text,token,id,whenToNotify}=snapshop.data();
         const timer  = whenToNotify.seconds * 1000;
         sendNotification(title,text,token,id,timer);
         console.log(snapshop.data());
-        await snapshop.ref.update({"notificationSent":true})
+        await snapshop.ref.update({"notificationSent":true});
     })
     function sendNotification(title,text,token,id,timer){
         console.log("title,text,token,timer,id",title,text,token,timer,id);

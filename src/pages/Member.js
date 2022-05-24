@@ -1,12 +1,13 @@
-import { H3,H1 } from "../components/constant";
+import { H3,H1, Media_Query_SM } from "../components/constant";
 import { useState, useRef, useContext, useEffect } from "react";
 import AuthContext from "../store/AuthContext";
-import { signIn, signUp, logOut, useAuth,resetPassword } from "../store/AuthFirebase";
+import { signIn, signUp, logOutUser, useAuth,resetPassword } from "../store/AuthFirebase";
 import { saveSignUpdData } from "../store/HandleDb";
 import { Button,Text } from "../components/constant";
 import { useNavigate,Link } from "react-router-dom";
 import styled from "styled-components";
-
+import { LeftArrow } from "../assets";
+import GoogleSign from "../store/thirdpary/GoogleSign";
 
 const MemberDiv=styled.div`
   display: flex;
@@ -22,6 +23,11 @@ const MemberDiv=styled.div`
   padding: 62.12px 99px 48px;
   width: 314px;
   box-shadow: 0px 4px 24px rgb(0 0 0 / 10%);
+  ${Media_Query_SM}{
+    max-width: 90%;
+    width: 100%;
+    padding: 10px;
+  }
 `
 const MemberInputDiv=styled.div`
   display: flex;
@@ -31,6 +37,9 @@ const MemberInputDiv=styled.div`
   align-items: center;
   width: 400px;
   border-radius: 6px;
+  ${Media_Query_SM}{
+    width: 90%;
+  }
 `
 const InputDiv=styled.input`
   width: 100%;
@@ -52,20 +61,15 @@ const BtnDiv=styled.div`
 `
 
 const SignUpBtn=styled(Button)`
-  margin:5px 0 20px 0;
+  margin:5px 0 10px 0;
   width: 45%;
   border-radius: 8px;
   height: 40px;
   background: #FBBC04;
   border-radius: 8px;
-  margin-top: 0;
-  &:hover{
-    border: 1px solid #FBBC04 ;
-    background-color: #FFFFFF;
-  }
+  color: #FFFFFF;
 `
 const LoginBtn=styled(SignUpBtn)`
-  
 `
 const Plink=styled(Text)`
   pointer-events:unset ;
@@ -91,7 +95,20 @@ const LoginLink=styled(Link)`
           text-decoration: underline;
     }
 `
-const MemberSignIn = () => {
+const BackToIndex=styled.div`
+    position: absolute;
+    left:5%;
+    top:5%;
+    width: 32px;
+    height: 32px;
+    background: no-repeat;
+    background-image: url(${LeftArrow});
+    &:hover{
+      cursor: pointer;
+    }
+`
+
+const MemberSignIn = () => {//登入
   const {
     getSignIn,
     getErrorMessage,
@@ -144,6 +161,9 @@ const MemberSignIn = () => {
     <>
     
     <MemberDiv>
+    <Link to={"/"}>
+    <BackToIndex></BackToIndex>
+    </Link>
     <H1> KeepNote </H1>
     <MemberInputDiv>
     {/* 重設密碼區 */}
@@ -184,6 +204,7 @@ const MemberSignIn = () => {
       </LoginBtn>
       <LoginLink  to={"/signup"}>沒有帳戶？請點此註冊帳號</LoginLink> 
       </BtnDiv>
+      <GoogleSign />
       </>
       }
 
@@ -200,7 +221,7 @@ export default MemberSignIn;
 
 
 
-export const MemberSignUp = () => {
+export const MemberSignUp = () => {//註冊
     const {
       getSignUp,
       getErrorMessage,
@@ -241,6 +262,9 @@ export const MemberSignUp = () => {
       <>
       
       <MemberDiv>
+      <Link to={"/"}>
+      <BackToIndex></BackToIndex>
+      </Link>
       <H1> KeepNote </H1>
       <MemberInputDiv>
       

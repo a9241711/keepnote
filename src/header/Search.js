@@ -1,17 +1,15 @@
 import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Close,SearchImg } from "../assets";
-import { IconTipText, Media_Query_MD, Media_Query_SM,Media_Query_SMD,scaleRight} from "../components/constant";
+import { IconTipText, Media_Query_LG, Media_Query_MD, Media_Query_SM,Media_Query_SMD,scaleRight} from "../components/constant";
 import SearchContext from "./components/SearchContext";
 import { IconDiv } from "../components/constant";
 
 const SearchBar = styled.div`
-  background-color:${props=>props.isFocus?"transparent":"#FFFFFF"} ;
   border: 1px solid transparent;
   box-shadow: rgb(65 69 73 / 30%) 0px 1px 1px 0px,
     rgb(65 69 73 / 15%) 0px 1px 3px 1px;
   border-radius: 8px;
-  width: 620px;
   height: 46px;
   display: flex;
   justify-content: space-around;
@@ -20,17 +18,23 @@ const SearchBar = styled.div`
   padding: 0;
   box-sizing: border-box;
   position: fixed;
+  ${Media_Query_LG}{
+      width: 620px;
+      left: 240px;
+      background-color:${props=>props.isFocus?"#FFFFFF":"#f1f3f4"} ;
+    }
   ${Media_Query_MD}{
       width: 450px;
       right: 160px;
       left: unset;
+      background-color:${props=>props.isFocus?"#FFFFFF":"#f1f3f4"} ;
     }
   ${Media_Query_SMD}{
       max-width: 350px;
       width: 100%;
       width: ${props=> props.show?"40px":"320px"};
       box-shadow:${props=> props.show?"none": "rgb(65 69 73 / 30%) 0px 1px 1px 0px,rgb(65 69 73 / 15%) 0px 1px 3px 1px"} ;
-      /* background-color: ${props=> props.show?"transparent":"#f1f3f4"}; ; */
+      background-color:${props=>props.show?"transparent":"#FFFFFF"} ;
       transition:all linear 1s; 
       right: 160px;
       left: unset;
@@ -40,6 +44,7 @@ const SearchBar = styled.div`
       max-width: ${props=> props.show?"40px":"230px"};
       box-shadow:${props=> props.show?"none": "rgb(65 69 73 / 30%) 0px 1px 1px 0px,rgb(65 69 73 / 15%) 0px 1px 3px 1px"} ;
       /* background-color: ${props=> props.show?"transparent":"#f1f3f4"};  */
+      background-color:${props=>props.show?"transparent":"#FFFFFF"} ;
       transition:all linear 1s; 
       right: 140px;
       left: unset;
@@ -126,7 +131,7 @@ const DeleteIcon = styled(IconDiv)`
 const Search = () => {
   const[searchWord,setSearchWord]=useState("");//Search Word
   const[isFocus,setIsFocus]=useState(false);
-  const{dataList,getFilterData,clearFilterData,filterData,filterButDataChange,getFilterButDataChange}=useContext(SearchContext);//取得所有list data
+  const{dataList,getFilterData,clearFilterData,filterData,getErrorData,errorData,filterButDataChange,getFilterButDataChange}=useContext(SearchContext);//取得所有list data
   const originDataList=dataList["dataList"];
   const[show,setShow]=useState(true);
   const{isFilter}=filterData;
@@ -138,21 +143,29 @@ const Search = () => {
     }
   }
   const handleInputFilter=(e)=>{
-    if(e.keyCode===13){
+    if(e.keyCode===13){//enter鍵
     e.preventDefault();
     const newFilter=originDataList.filter((item)=>{
       console.log(item,"searchWord",searchWord);
       return item.noteTitle.includes(searchWord) || item.noteText.includes(searchWord);
     });
-      console.log("newFilter",newFilter)
-      getFilterData(newFilter);//回傳篩選結果給Search
+    console.log(newFilter);
+    if(newFilter.length===0){//查無結果
+      console.log("查無結果")
+      const empty={error:"查無結果"};
+      // newFilter.push(empty);
+      return getErrorData(empty);//回傳查無結果給Search
+    }
+    getFilterData(newFilter);//回傳篩選結果給Search
   }
   }
   const handleClear=()=>{
     clearFilterData();
     setSearchWord("");
     setShow(true);
+    getErrorData(null);
   }
+
 
   useEffect(()=>{//控制已經filter過，使用者新增資料時dataChanged
     if(!filterButDataChange) return
@@ -163,8 +176,8 @@ const Search = () => {
         console.log("newFilter",filter)
         getFilterData(filter);//回傳篩選結果給Search
     }
-    handleFilter()
-    getFilterButDataChange(false)
+    handleFilter();
+    getFilterButDataChange(false);
   },[filterButDataChange])
   return (
     <SearchBar show={show} isFocus={isFocus}>
@@ -174,7 +187,7 @@ const Search = () => {
       <SearchIcon2   isFilter={isFilter}  onClick={()=> {setShow(!show); setIsFocus(false);}}>
       <IconTipText>搜尋</IconTipText>
       </SearchIcon2>
-      {isFilter? 
+      {isFilter ||errorData!==null? 
       <DeleteIcon onClick={handleClear}>
       </DeleteIcon>
       :null}

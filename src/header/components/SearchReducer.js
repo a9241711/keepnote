@@ -6,12 +6,13 @@ import HeaderLoadContext from "../HeaderLoadContext";
 const handleSearch=(state,action)=>{
     switch (action.type){
         case "GETDATA":
-            console.log(state,action)
             return {dataList:action.payload,isFilter:false} ;
         case "FILTER":
             return {filterDataList:action.payload,isFilter:true} ;
         case "CLEAR":
             return {filterDataList:null,isFilter:false} ;
+        case "ERROR":
+            return action.payload;
         case "FILTERBUTDATA":
             return action.payload ;
         default :
@@ -30,8 +31,10 @@ const SearchReducer=(props)=>{
         whenToNotify:""
     }
     const initialFilter={filterDataList:null,isFilter:false};
+    const initialError=null
     const[dataList,disDataPatch]=useReducer(handleSearch,initialData);
     const[filterData,disFilterPatch]=useReducer(handleSearch,initialFilter);
+    const[errorData,disErrorPatch]=useReducer(handleSearch,initialError);
     const[filterButDataChange,disFilterDataChange]=useReducer(handleSearch,false);
     const{setIsLoading}=useContext(HeaderLoadContext);
 
@@ -44,6 +47,7 @@ const SearchReducer=(props)=>{
         setTimeout(()=>setIsLoading(false),1000);
     }
     const getFilterData=(item)=>{
+        console.log(item,"filter")
         disFilterPatch({
             type:"FILTER",
             payload:item
@@ -54,6 +58,13 @@ const SearchReducer=(props)=>{
             type:"CLEAR",
         })
     }
+    const getErrorData=(item)=>{
+        console.log("ietme",item)
+        disErrorPatch({
+            type:"ERROR",
+            payload:item
+        })
+    }
     const getFilterButDataChange=(boolean)=>{
         disFilterDataChange({
             type:"FILTERBUTDATA",
@@ -61,7 +72,7 @@ const SearchReducer=(props)=>{
         })
     }
     return(
-        <SearchContext.Provider value={{getFilterButDataChange,getOriginData,getFilterData,clearFilterData,dataList:dataList,filterData:filterData,filterButDataChange}}>
+        <SearchContext.Provider value={{getFilterButDataChange,getOriginData,getFilterData,clearFilterData,getErrorData,dataList:dataList,filterData:filterData,filterButDataChange,errorData:errorData}}>
             {props.children}
         </SearchContext.Provider>
     )

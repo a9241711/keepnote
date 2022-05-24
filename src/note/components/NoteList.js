@@ -12,11 +12,11 @@ import NoteModifyArea from "./modify/NoteModifyArea";
 import Masonry from 'react-masonry-css';
 import SearchContext from "../../header/components/SearchContext";
 import NoteDragMb from "./drag/NoteDragMb";
-import HeaderLoadContext from "../../header/HeaderLoadContext";
-import Loading from "./loading/Loading";
+
 
 const NoteListsDiv=styled.div`//List Content Div
     width: 100%;
+    margin-bottom: 45px;
 `
 const NoteListCol=styled(Masonry)`
     &.my-masonry-grid{  
@@ -48,9 +48,8 @@ const NoteIconDiv=styled.div`//Tool Div
     box-sizing: border-box;
 `
 
-const NoteLists=styled.div`//draggable的Div
+const NoteLists=styled.div`//
     width: 250px;
-    /* width: 100%; */
     box-sizing: border-box;
     height:auto;
     margin: 10px 0;
@@ -67,13 +66,15 @@ const NoteLists=styled.div`//draggable的Div
     ${Media_Query_SM}{
         width: 100%;
     }
-    &:hover{
+    ${Media_Query_LG}{
+        &:hover{
         transition: all ease-in-out .3s ;
         box-shadow: 0 1px 2px 0 rgb(60 64 67/50%), 0 2px 6px 2px rgb(60 64 67 /30%);
-    }
-    &:hover ${NoteIconDiv}{
-        opacity:1;
-        visibility:"visible";
+        }
+        &:hover ${NoteIconDiv}{
+            opacity:1;
+            visibility:"visible";
+        }
     }
     &:active ${NoteIconDiv}{
         visibility: hidden;
@@ -99,7 +100,7 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,updateData})=>{
         e.dataTransfer.effectAllowed = "move";
         dragItem.current=position;
         draggedItem.current.style.boxShadow="rgb(65 69 73 / 30%) 0px 1px 1px 0px,rgb(65 69 73 / 15%) 0px 1px 3px 1px;"
-      } 
+    } 
     const handleDragEnd=(e)=>{
         // console.log("dragEnd",e.target.parentNode)
       }
@@ -117,7 +118,6 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,updateData})=>{
     }
     const dragDrop=(e)=>{
         draggedItem.current.style.boxShadow="none;"
-        // setDraggedItem(false);
         //更新畫面
         const setListCopy=[...setList];//取得所有lists;
         const dragedItem=setListCopy[dragItem.current];//取得被拖曳item的值;
@@ -128,7 +128,7 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,updateData})=>{
         //更新DB
         dragItem.current=null;//清空ref資料
         dragOverItem.current=null;
-        e.currentTarget.style.board="none";
+        e.currentTarget.style.board="1px solid #e0e0e0";
     }
 
     useEffect(()=>{
@@ -166,13 +166,10 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,updateData})=>{
 
     return(
         <>
-        {/* {isLoading?<Loading/>
-        : */}
         <NoteListsDiv>
             <NoteListCol breakpointCols={breakPoints} className="my-masonry-grid" columnClassName="my-masonry-grid_column" onDrop={dragDrop}>
             { 
             setList.map((item,index)=>{
-                // if(index %4 ===0){
                     const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
                     const board=item.board;
                     const key=v4();
@@ -190,9 +187,8 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,updateData})=>{
             {selected ? <NoteModifyArea isDataChange={isDataChange} setDataChanged={setDataChanged} uid={uid} selected={selected} setSelected={setSelected}   />
                  : null}
                 {isNotification?<NotificationPop  setSelected={setSelected}  popValue={popValue} setList={setList} setIsNotification={setIsNotification}/>:null}
-            </NoteListsDiv>
-            {/* } */}
-            </>
+        </NoteListsDiv>
+        </>
             )
 }       
 

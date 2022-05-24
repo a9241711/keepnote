@@ -2,11 +2,11 @@ import { useEffect, useState,useRef,useContext } from "react";
 import styled from "styled-components";
 import {NoteTitleInput,NoteTextInput,Media_Query_MD,Media_Query_SM,Media_Query_SMD} from "../../components/constant"
 import { v4 } from "uuid";
-import { requestForToken, saveNoteData } from "../../store/HandleDb";
+import { saveNoteData } from "../../store/HandleDb";
 import CanvasTool from "./CanvasTool";
 import  { NotificationDeleteEdit } from "./notification/NotificationDelete";
 import SearchContext from "../../header/components/SearchContext";
-import NoteEditMb from "./edit/NoteEditMb";
+import { NoteModifyAreaMb } from "./modify/NoteModifyArea";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
 
 const NoteDiv=styled.div`
@@ -17,18 +17,19 @@ const NoteDiv=styled.div`
     0 2px 6px 2px rgb(60 64 67 /15%);
     border-radius:8px;
     margin-top:33px;
-    padding: 10px;
+    padding: 5px 10px;
     background-color: #ffffff;
     flex-direction: column;
     display: ${props=> props.isFilter?"none":"flex"};
     ${Media_Query_SMD}{
-        width: 60%;
+        display: none;
     }
-  ${Media_Query_MD}{
-        width: 50%;
+    ${Media_Query_MD}{
+        display: none;
     }
     ${Media_Query_SM}{
-        width: 80%;
+        /* width: 80%; */
+        display: none;
     }
 `
 const NoteTitleInputDiv=styled(NoteTitleInput)`
@@ -48,7 +49,7 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
     const[noteTitle,setNoteTitle]=useState("");
     const[noteText,setNoteText]=useState("");
     const[noteColor,setNoteColor]=useState("#FFFFFF");
-    const[notification,setNotification]=useState("");
+    const[notification,setNotification]=useState(1);
     const[isFromEdit,setIsFromEdit]=useState(true);
     const[isInput,setIsInput]=useState(false);//檢查是否仍在輸入
     const[titleClick,setTitleClick] =useState(false);//檢查是否點擊title
@@ -77,7 +78,8 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
 
     const handleClickOutofTarget=(e)=>{//檢查是否點到輸入框以外，是或否都改變isinput狀態
         if(!typingTitleRef.current.contains(e.target) && !typingTextRef.current.contains(e.target)){
-            setIsInput(false);
+            console.log("Clikver out side",typingTitleRef.current,typingTextRef.current)
+            // setIsInput(false);
             setTitleClick(false);
         }
     }
@@ -86,8 +88,7 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
         const id =v4();
         const{noteTitle,noteText}=debouncedText;
         setDebouncedText("");
-        console.log(typeof notification!="undefined")
-        if(typeof notification!="undefined" && notification===null){
+        if(notification!==1){
             const{timer,currentToken}=notification;
             await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
             setIsClose(true);
@@ -95,8 +96,8 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
             setIsInput(false);
         }
         else{
-            const timer=""; 
-            const currentToken="";
+            const timer=1; 
+            const currentToken=1;
             await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
             console.log(timer,currentToken);
             setIsClose(true);
@@ -116,18 +117,19 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
     },[titleClick])
 
     //此useEffect用來確認title & text是否正在輸入或輸入完成
-    useEffect(()=>{
-        if(!debouncedText){//阻止第一次effect
-            return
-        }
-        if(isInput){//檢查是否正在輸入title或text，設定callback
-            document.addEventListener("click",handleClickOutofTarget);
-            console.log("typing");
-        }else{ 
-            handleSaveNoteToDb();//存入db
-      }
-         return () =>{document.removeEventListener("click",handleClickOutofTarget);} //移除handleClickOutofTarget
-    },[isInput])
+    // useEffect(()=>{
+    //     if(!debouncedText){//阻止第一次effect
+    //         return
+    //     }
+    //     if(isInput){//檢查是否正在輸入title或text，設定callback
+    //         document.addEventListener("click",handleClickOutofTarget);
+    //         console.log("typing");
+    //     }else{ 
+    //         handleSaveNoteToDb();//存入db
+    //   }
+    //      return () =>{document.removeEventListener("click",handleClickOutofTarget);} //移除handleClickOutofTarget
+    // },[isInput])
+
     useEffect(()=>{//若noteItle跟noteText有值的變動，則執行以下動作
         if(!noteTitle && !noteText){//阻止第一次的useEffect
             return
@@ -142,13 +144,13 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
         setNoteTitle("");
         setNoteText("");
         setNoteColor("#FFFFFF");
-        setNotification("");
+        setNotification(1);
         setIsClose(false);
     },[isClose])
 
     return(
         <>
-        {/* 桌機+平版 */}
+        {/* 桌機 */}
         <NoteDiv isFilter={isFilter} style={{backgroundColor: noteColor}} noteColor={noteColor} ref={typingTitleRef}>
         <NoteTitleInputDiv style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue} onClick={()=> setTitleClick(true)} ></NoteTitleInputDiv>
         {titleClick
@@ -160,8 +162,7 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
         ?<NoteModiEditBtn handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>:null}
         </NoteEditTool>
         </NoteDiv>
-        {/* <NoteEditMb uid={uid}noteTitle={noteTitle}noteText={noteText}getNodeTitleValue={getNodeTitleValue}getNodeTextValue={getNodeTextValue}setNoteColor={setNoteColor} isFromEdit={isFromEdit}setIsFromEdit={isFromEdit}notification={notification}setNotification={setNotification}setIsClose={setIsClose}/> */}
-        
+        <NoteModifyAreaMb uid={uid} setDataChanged={setDataChanged}/> 
         </>
     )
 

@@ -21,7 +21,7 @@ const NoteLists = styled.div`
   flex-direction: column;
   align-items: flex-start;
   box-sizing: border-box;
-  padding: 5px 10px;
+  padding: 3px;
   transition: all ease-in-out .2s; 
   position: relative;
   cursor: pointer;
@@ -77,7 +77,7 @@ const NoteItem = ({
     setSelected(true);
   };
   const handleHeight=(heightTitleRef,heightTextRef)=>{//處理最小高度
-    const minHeight=24;
+    const minHeight=28;
     console.log(heightTitleRef.current, heightTextRef.current)
     if(typeof heightTitleRef.current =="undefined" ||typeof heightTextRef.current =="undefined")
     {
@@ -100,7 +100,6 @@ const NoteItem = ({
     }
     
   }
-
 
 
   return (

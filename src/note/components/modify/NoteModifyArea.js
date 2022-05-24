@@ -1,19 +1,19 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import NoteInput from "../NoteInput";
-import NotificationDelete, { NotificationPopUpDelete } from "../notification/NotificationDelete";
-import NoteColor, { NoteColorElement, NoteColorPop } from "../color/NoteColor";
-import NotificationIndex, { NotificationEdit, NotificationElement } from "../notification/NotificationIndex";
-import NoteModiBtn from "./NoteModiBtn";
-import { useContext, useEffect } from "react";
+import NotificationDelete, { NotificationPopUpDelete,NotificationDeleteEdit } from "../notification/NotificationDelete";
+import NoteColor, { NoteColorElement, NoteColorPop,NoteColorPopMb } from "../color/NoteColor";
+import  { NotificationEdit, NotificationElement,NotificationEditMb } from "../notification/NotificationIndex";
+import NoteModiBtn,{NoteModiEditBtnMb} from "./NoteModiBtn";
+import { useContext, useEffect,useState } from "react";
 import NoteContext from "../../context/NoteContext";
-import { LargerAnimate,IconDiv,IconTipText,Media_Query_MD, Media_Query_SM,Media_Query_SMD, } from "../../../components/constant";
-import { EditBoard,DeleteCheck } from "../../../assets";
-import { useState } from "react";
-import { updateNoteData,deleteBoard,queryImageData } from "../../../store/HandleDb";
-import HeaderLoadContext from "../../../header/HeaderLoadContext";
+import { LargerAnimate,IconDiv,IconTipText,Media_Query_MD, Media_Query_SM,Media_Query_SMD,NoteTitleInput,NoteTextInput } from "../../../components/constant";
+import { EditBoard,DeleteCheck,Plus } from "../../../assets";
+import { updateNoteData,deleteBoard,queryImageData,saveNoteData } from "../../../store/HandleDb";
+import { v4 } from "uuid";
 
-const NoteListModifyBg = styled.div`//修改文字的Fixed背景
+
+const NoteListModifyBg = styled.div`//修改文字的Fixed背景顏色，觸控版關閉
   position: fixed;
   top: 0;
   left: 0;
@@ -21,6 +21,9 @@ const NoteListModifyBg = styled.div`//修改文字的Fixed背景
   height: 100%;
   background-color: rgba(121, 122, 124, 0.6);
   z-index: 999;
+  ${Media_Query_SMD}{
+    display: none;
+  }
   ${Media_Query_SM}{
     display: none;
   }
@@ -41,6 +44,12 @@ const NoteListModifyDiv=styled.div`
     align-items: center;
     margin: 0 auto;
     animation: ${LargerAnimate} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    ${Media_Query_SMD}{
+      padding: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
     ${Media_Query_SM}{
       padding: 0;
       top: 0;
@@ -63,6 +72,9 @@ const NoteListModify = styled.div`//修改內容的Div
   overflow-x: hidden;
   &::-webkit-scrollbar {
         width: 12px;
+        ${Media_Query_SMD}{
+        display: none; 
+        }
         ${Media_Query_SM}{
         display: none; 
         }
@@ -90,7 +102,29 @@ const NoteListModify = styled.div`//修改內容的Div
         border: solid transparent;
         }
     //set up media query
+    ${Media_Query_MD}{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      min-height: unset;
+      max-height: unset;
+      padding:unset;
+      border-radius:unset;
+    }
+    ${Media_Query_SMD}{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      min-height: unset;
+      max-height: unset;
+      padding:unset;
+      border-radius:unset;
+    }
     ${Media_Query_SM}{
+      display: flex;
+      flex-direction: column;
       width: 100%;
       height: 100%;
       min-height: unset;
@@ -99,7 +133,7 @@ const NoteListModify = styled.div`//修改內容的Div
       border-radius:unset;
     }
 `
-const NodeToolDiv=styled.div`//彈出框的tool div
+const NodeToolDiv=styled.div`//彈出框的tool div，手機版fixed在底部
     display: flex;
     max-width: 600px;
     width: 100%;
@@ -111,38 +145,48 @@ const NodeToolDiv=styled.div`//彈出框的tool div
     box-shadow: 0px -1px 8px -1px rgba(0,0,0,0.23);
     border-radius: 8px;
         //set up media query
+        ${Media_Query_MD}{
+        border-radius:unset;
+        bottom: 0;
+        max-width:unset;
+      }
+        ${Media_Query_SMD}{
+        border-radius:unset;
+        bottom: 0;
+        max-width:unset;
+      }
         ${Media_Query_SM}{
         border-radius:unset;
         bottom: 0;
-        padding:0 5px;
-    }
+      }
 `
 const BoardAdd=styled(IconDiv)` //新增畫板的Icon
     background-repeat: no-repeat;
     background-position: center;
     background-image: url(${EditBoard}) ;
 `
-const BoardList=styled.div` //board img的DIV
+const BoardList=styled.div` //board img的大DIV
     width:100%;
     background:#f9f6f6;
     position: relative;
     opacity: ${props=>props.image?1:0};
     visibility: ${props=>props.image?"visible":"hidden"};
     transition:visibility 0.3s linear,opacity 0.3s linear;
-`
-const BoardDiv=styled.div`
-    width: 100%;
     ${Media_Query_SM}{
-    width: 50%;
-    margin-top: 20px;
+    margin-top: 50px;
+    }
+`
+const BoardDiv=styled.div` //board img的小DIV
+    height: 500px;
+    ${Media_Query_SM}{
+    height: 400px;
     }
 `
 const BoardImg=styled.img`//board img
-    width:100%;
+    height:100%;
     pointer-events:none;
-
 `
-const DeleteIcon=styled(IconDiv)`
+const DeleteIcon=styled(IconDiv)`//img刪除按鈕
   background-image: url(${DeleteCheck}) ;
   cursor: pointer;
   position: absolute;
@@ -150,7 +194,7 @@ const DeleteIcon=styled(IconDiv)`
   right: 5%;
 `
 
-const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>{
+const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>{//PopUp Update 視窗
     const[clickNotificate,setClickNotificate]=useState(false);//是否點擊NotificationIcon;
     const[clickColor,setClickColor]=useState(false);
     const[notificationChange,setNotificationChange]=useState(false);//是否更新NotificationIcon;
@@ -192,7 +236,7 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>
         </NoteListModifyBg>
         <NoteListModifyDiv>
             <NoteListModify  style={{background:updateColor}}  id={id}     >
-              {/* { image ? */}
+              { image ?
               <BoardList image={image}>
               <Link  to={"/boarding"} state={{id:id,board:board,uid}}>
               <BoardDiv >
@@ -203,7 +247,7 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>
               <IconTipText >刪除</IconTipText>
               </DeleteIcon>
               </BoardList>
-                {/* : null } */}
+                : null }
               <NoteInput  />
               <NotificationPopUpDelete notificationChange={notificationChange} setNotificationChange={setNotificationChange}  setDataChanged={setDataChanged} selected={selected}  uid={uid} />
             </NoteListModify>
@@ -224,5 +268,175 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>
     )
 
 }
+export default NoteModifyArea;
 
-export default NoteModifyArea
+//For Edit Mobile
+const NoteListEditDiv=styled.div`
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    position: fixed;
+    width: fit-content;
+    width: 100%;
+    height: 100%;
+    top:0;
+    right: 0;
+    left: 0;
+    z-index: 4001;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    animation: ${LargerAnimate} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    ${Media_Query_MD}{
+    display: flex;
+    }
+    ${Media_Query_SMD}{
+    display: flex;
+    }
+    ${Media_Query_SM}{
+      display: flex;
+    }
+`
+const NoteListEditBm=styled.div`
+      width: 100%;
+      height: 45px;
+      position: fixed;
+      left: 0;
+      background: #ebebeb;
+      bottom: 0;
+      display: none;
+      justify-content: center;
+      z-index: 3500;
+    ${Media_Query_MD}{
+    display: flex;
+    }
+    ${Media_Query_SMD}{
+    display: flex;
+    }
+    ${Media_Query_SM}{
+      display: flex;
+    }
+`
+const NoteEditAddDiv=styled.div`
+    width: 50px;
+    height: 50px;
+    transform: translateY(-35px);
+    display: none;
+    background: #f0f0f0f7;
+    border-radius: 15px 15px;
+    align-items: center;
+    border: 2;
+    border: 5px solid #FFFFFF;
+    justify-content: center;
+    ${Media_Query_MD}{
+    display: flex;
+    }
+    ${Media_Query_SMD}{
+    display: flex;
+    }
+    ${Media_Query_SM}{
+      display: flex;
+    }
+`
+const NoteEditAdd=styled(IconDiv)`
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(${Plus}) ;
+
+`
+const NoteTitleInputDiv=styled(NoteTitleInput)`
+    height: 22px;
+    line-height: 22px;
+
+`
+const NoteTextInputDiv=styled(NoteTextInput)`
+    height: 22px;
+    line-height: 22px;
+
+`
+
+export const NoteModifyAreaMb =({uid,setDataChanged})=>{
+  const[noteTitle,setNoteTitle]=useState("");
+  const[noteText,setNoteText]=useState("");
+  const[noteColor,setNoteColor]=useState("#FFFFFF");
+  const[notification,setNotification]=useState(1);
+  const[clickNotificate,setClickNotificate]=useState(false);//是否點擊NotificationIcon;
+  const[clickColor,setClickColor]=useState(false);//是否點擊ColorIcon
+  const[isClickEdit,setIsClickEdit]=useState(false);//是否點擊Add新增
+  const[isClose,setIsClose]=useState(false);//檢查是否按關閉
+  const id =v4();
+  //auto height 輸入框
+    //控制修改文字框的height
+    const handleAutoHeight=(e)=>{
+      e.target.style.height=e.target.scrollHeight + "px"
+    }
+
+    const getNodeTitleValue=(e)=>{
+        setNoteTitle(e.currentTarget.value);
+        handleAutoHeight(e);
+    }
+
+    const getNodeTextValue=(e)=>{
+        setNoteText(e.currentTarget.value);
+        handleAutoHeight(e);
+    }
+  const handleSaveNoteToDb=async ()=>{
+    if(notification!==1){
+        const{timer,currentToken}=notification;
+        await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+        setDataChanged(true);
+        setIsClose(true);
+        setIsClickEdit(false);
+      }
+
+    else{
+      const timer=1; 
+      const currentToken=1;
+      await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+      setDataChanged(true);
+      setIsClose(true);
+      setIsClickEdit(false);
+    }
+  }
+  useEffect(()=>{//是否按下關閉，是則清空內容
+      if(!isClose)return 
+      setNoteTitle("");
+      setNoteText("");
+      setNoteColor("#FFFFFF");
+      setNotification(1);
+      setIsClose(false);
+    },[isClose])
+  return(
+    <>
+    {isClickEdit?
+    <>
+      <NoteListEditDiv>
+          <NoteListModify  style={{background:noteColor}}  id={id}     >
+          <NoteTitleInputDiv style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue}  ></NoteTitleInputDiv>
+          <NoteTextInputDiv style={{backgroundColor: noteColor}}  value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv>
+          <NotificationDeleteEdit   notification={notification} setNotification={setNotification} />
+          </NoteListModify>
+          <NodeToolDiv style={{background:noteColor}}>
+            <Link  to={"/boarding"} state={{id:id,uid}}>
+            <BoardAdd  onClick={handleSaveNoteToDb}></BoardAdd>
+            </Link>
+            <NotificationElement   setClickNotificate={setClickNotificate}/>
+            <NoteColorElement setClickColor={setClickColor} />
+            <NoteModiEditBtnMb setIsClickEdit={setIsClickEdit} handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>
+            {clickNotificate?<NotificationEditMb setClickNotificate={setClickNotificate} setNotification={setNotification}/> :null}    
+            {clickColor? <NoteColorPopMb  setClickColor={setClickColor} setNoteColor={setNoteColor}/>:null}
+            </NodeToolDiv>
+      </NoteListEditDiv> 
+    </>
+    :<NoteListEditBm>
+      <NoteEditAddDiv>
+      <NoteEditAdd onClick={()=>setIsClickEdit(true)}></NoteEditAdd>
+      </NoteEditAddDiv>
+    </NoteListEditBm>
+        }
+    </>
+  )
+
+}

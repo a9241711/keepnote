@@ -27,7 +27,14 @@ import Clock from "./img/notification/clock.png";
 import SearchImg from "./img/search/search.png";
 import ReFresh from "./img/loading/refresh.png";
 import LeftArrow from "./img/editTool/left-arrow.png";
-import Plus from "./img/editTool/plus.png"
+import Plus from "./img/editTool/plus.png";
+import Google from "./img/member/google-symbol.png";
+import ArchiveImg from "./img/archive/archive.png";
+import ArchiveBack from "./img/archive/archiveback.png";
+import ArchiveBg from "./img/archive/archiveBg.png";
+import Nav from "./img/nav/menu.png";
+import Bulb from "./img/nav/bulb.png";
+import BulbCheck from "./img/nav/bulbCheck.png";
 
 export {
   Pencil,
@@ -59,5 +66,12 @@ export {
   SearchImg,
   ReFresh,
   LeftArrow,
-  Plus
+  Plus,
+  Google,
+  ArchiveImg,
+  ArchiveBack,
+  ArchiveBg,
+  Nav,
+  Bulb,
+  BulbCheck
 };

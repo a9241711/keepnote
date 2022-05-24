@@ -1,5 +1,6 @@
 import styled,{keyframes} from"styled-components";
 import { KeepLogo } from "../../../assets";
+import { Media_Query_LG } from "../../../components/constant";
 
 
 const bars6=keyframes`
@@ -44,7 +45,9 @@ const LoadingAnimate=styled.div`
     left: 50%;
     height: 50px;
     width: 50px;
-    margin: -25px 0 0 -25px;
+    ${Media_Query_LG}{
+        margin-left: 10px;
+    }
 `
 const Span=styled.span`
     position: absolute;

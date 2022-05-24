@@ -1,7 +1,7 @@
 import { requestForToken } from "../../../store/HandleDb";
 import styled from "styled-components";
 import { useState,useRef, useEffect, useContext } from "react";
-import { Button, IconDiv,IconTipText,Text,Media_Query_SM,scaleRight } from "../../../components/constant";
+import { Button,CloseButton, IconDiv,IconTipText,Text,Media_Query_SM,scaleRight } from "../../../components/constant";
 import { Notification } from "../../../assets";
 import { getMessaging,onMessage,getToken } from "firebase/messaging";
 import NoteContext from "../../context/NoteContext";
@@ -39,6 +39,9 @@ const NotificationInputDiv=styled(IconDiv)`//vlaue選擇框
         background-color: #FFFFFF;
         border-radius:unset;
     }
+    ${Media_Query_SM}{
+      width:250px;
+    }
 `
 const NotificationTextDiv=styled.div`
   width:100%;
@@ -55,6 +58,9 @@ const NotificationSelectDiv=styled.div`
   padding: 0px 35px 0 15px;
   width: 270px;
   flex-direction: column;
+  ${Media_Query_SM}{
+    width: 80%;
+  }
 `
 
 const InputDate=styled.input.attrs({
@@ -116,6 +122,7 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
       const dateTime=date+"T"+time;
       const timer=new Date(dateTime).getTime() //取得時間戳
       if(isFromEdit){
+        console.log("From Edit")
         getToken(messaging,{vapidKey:publicVapidKey})
         .then((currentToken) => {
           return setNotification({timer,currentToken})
@@ -233,16 +240,55 @@ const NotificationPopUpInputDiv=styled.div`
       animation: transform linear .2s;
     }
 `
-const BtnClose=styled(Button)`
+const BtnClose=styled(CloseButton)`
     display: none;
     ${Media_Query_SM}{
     display:block;
-    border-radius: 40px 40px;
-
     }
 `
+export const NotificationEditMb=({setClickNotificate,setNotification})=>{//forPopUp Edit Mobile
+  const[date,setDate]=useState("");
+  const[time,setTime]=useState("");
+  
+  const handleSave=async ()=>{
+    const dateTime=date+"T"+time;
+    const timer=new Date(dateTime).getTime() //取得時間戳
+    getToken(messaging,{vapidKey:publicVapidKey})
+      .then((currentToken) => {
+        return setNotification({timer,currentToken})
+      })//傳回Edit頁面
+    setClickNotificate(false)
+  }
 
-export const NotificationEdit=({uid, selected, setDataChanged,notificationChange,setNotificationChange,setClickNotificate})=>{//forPopUp
+  const disablePastDate=()=>{//只能選擇當下時間點以後的時間
+    let today=new Date();
+    let dd=String(today.getDate()).padStart(2, '0'); //padStart用給定用於填充的字串，以重複的方式，插入到目標字串的起頭(左側)，直到目標字串到達指定長度。
+    let mm=String(today.getMonth() + 1).padStart(2, '0');
+    let yyyy=today.getFullYear();
+    return `${yyyy}-${mm}-${dd}`;
+  }
+  return(
+    <>        
+    <NoteListNotificationDiv></NoteListNotificationDiv>
+      <NotificationPopUpInputDiv >
+      <NotificationTextDiv>
+      <NotificationText>選擇日期與時間</NotificationText>
+      </NotificationTextDiv>
+      <NotificationSelectDiv>
+      <InputDate  value={date} min={disablePastDate()} onChange={(e)=>setDate(e.target.value)}/> 
+      <InputTime    value={time} onChange={(e)=>setTime(e.target.value)}/>
+      </NotificationSelectDiv>
+      <BtnDiv date={date} time={time}>
+      <BtnClose onClick={()=> setClickNotificate(false)} >取消</BtnClose>
+      <BtnSummit date={date} time={time} onClick={handleSave} >儲存</BtnSummit>
+      </BtnDiv>
+      </NotificationPopUpInputDiv>
+      </>
+  )
+}
+
+
+export const NotificationEdit=({uid, selected, setDataChanged,notificationChange,setNotificationChange,setClickNotificate})=>{//forPopUp update
     const[date,setDate]=useState("");
     const[time,setTime]=useState("");
     const{updateTitle,updateText,selectedItem,getNotificationUpdate}=useContext(NoteContext);
@@ -252,10 +298,6 @@ export const NotificationEdit=({uid, selected, setDataChanged,notificationChange
       const timer=new Date(dateTime).getTime() //取得時間戳
       const{id}=selectedItem;
       await requestForToken(uid,updateTitle,updateText,timer,id)//傳回uid跟token儲存回db
-      // getToken(messaging,{vapidKey:publicVapidKey})
-      // .then((currentToken) => {
-      //   return getNotificationUpdate(timer,currentToken) 
-      // })//傳回Edit頁面
       
       setDataChanged(true);
       setNotificationChange(true);

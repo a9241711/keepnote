@@ -11,7 +11,12 @@ export const saveSignUpdData= async(user)=>{
     let uid=user["uid"];
     let email=user["email"];
     let refUser=doc(db,"user",uid);//紀錄使用者uid
-    await setDoc(refUser,{email,uid});
+    let notelistSnap=await getDoc(refUser);
+    if(notelistSnap.exists()){
+        return
+    }else{
+        await setDoc(refUser,{email,uid});
+    }
 }
 
 //Note Lists Data
@@ -21,14 +26,14 @@ export const saveNoteData=async(id,noteTitle,noteText,uid,noteColor,timer,curren
     let refBoard=doc(db,"user",uid,"notelist",id);//創造自訂義的id並存入obj，未來可更新board資料用
     let noteCollection=query(collection(db,"user",uid,"notelist"));//
     let noteCollectionDocs=await getDocs(noteCollection);
-    let noteDocsLength=noteCollectionDocs.docs.length +1; //自訂index number
-    console.log("DB",id,noteTitle,noteText,uid,noteColor,timer,currentToken)
-    if(timer!==""){
+    let noteStatus=0 //自訂note狀態，初始值為0，若封存為1
+    if(timer!==1){//表示有設定notification
         console.log("timer")
         const whenToNotify=new Date(timer);
         await setDoc(refBoard,{id,noteTitle,noteText,time,color:noteColor,
             token:currentToken,
             whenToNotify,
+            noteStatus,
             notificationSent:false});
         //儲存Notifications
         const q=query(collection(db,"user",uid,"notifications"),where("id","==",id));
@@ -42,6 +47,7 @@ export const saveNoteData=async(id,noteTitle,noteText,uid,noteColor,timer,curren
                         uid,
                         token:currentToken,
                         whenToNotify:time,
+                        noteStatus,
                         notificationSent:false
                     })
                 })     
@@ -54,11 +60,12 @@ export const saveNoteData=async(id,noteTitle,noteText,uid,noteColor,timer,curren
                      uid,
                      token:currentToken,
                      whenToNotify:time,
+                     noteStatus,
                      notificationSent:false
                  });
         }
     }else{
-        await setDoc(refBoard,{id,noteTitle,noteText,time,color:noteColor});
+        await setDoc(refBoard,{id,noteTitle,noteText,time,color:noteColor,noteStatus});
     }
     //存入notelists，方便做listpage的排序跟顯示
     let refNotelists=doc(db,"notelists",uid);
@@ -70,13 +77,43 @@ export const saveNoteData=async(id,noteTitle,noteText,uid,noteColor,timer,curren
     }
 }
 
-//getALl noteList 
-export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,setData,uid)=>{
+//getALl ArchiveLists where noteStatus ===1
+export const getAllArchiveLists=async(setArchiveLists,uid)=>{
     //取得noteLists
     let refNotelists=doc(db,"notelists",uid);
     let notelistSnap=await getDoc(refNotelists);
     let result=notelistSnap.data();
     console.log(result)
+    if(result ===undefined ) {//若無資料
+        console.log("無資料")
+        setArchiveLists([]);
+        return}
+    let num=result["orderlists"].length-1
+    let noteLists=[]
+    for(let i=num;i>=0;i--){//從後面取得最新
+        const listRef=result["orderlists"][i];
+        const getListData=await getDoc(listRef);
+        console.log(typeof getListData)
+        if(getListData.data().noteStatus===1){
+            noteLists.push(getListData.data());
+        }
+    }  
+    console.log("noteLists",noteLists)
+    noteLists.forEach((item)=>{//處理時間
+        const timeStampDate = item["time"];
+        const dateInMillis  = timeStampDate.seconds * 1000;
+        var date = "上次編輯時間：" + new Date(dateInMillis).toLocaleDateString()+" " +  new Date(dateInMillis).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+        item["time"]=date;
+    })
+    setArchiveLists(noteLists);
+}
+
+//getALl noteList where noteStatus ===0
+export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,setData,uid)=>{
+    //取得noteLists
+    let refNotelists=doc(db,"notelists",uid);
+    let notelistSnap=await getDoc(refNotelists);
+    let result=notelistSnap.data();
     if(result ===undefined ) {//若無資料
         console.log("無資料")
         setData([]);
@@ -87,7 +124,9 @@ export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,set
     for(let i=num;i>=0;i--){//從後面取得最新
         const listRef=result["orderlists"][i];
         const getListData=await getDoc(listRef);
-        noteLists.push(getListData.data());
+        if(getListData.data().noteStatus===0){
+            noteLists.push(getListData.data());
+        }
     }  
     noteLists.forEach((item)=>{//處理時間
         const timeStampDate = item["time"];
@@ -117,7 +156,6 @@ export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,set
             }else{
                 noteLists[i].board="";
             }
-
         }
         return noteLists
     }
@@ -186,6 +224,22 @@ export const updateNoteData = async(id,updateTextElements,uid)=>{
     await updateDoc(updateToDb, updateTextElements,time);
 }
 
+//Update NoteStatus from 0 to 1
+export const UpdateNoteStatus = async(id,uid)=>{
+    console.log(id,"id");//更新status為1
+    const updateDbNote = doc(db,"user",uid,"notelist",id);
+    const noteStatus=1;
+    await updateDoc(updateDbNote,{noteStatus:noteStatus});
+}
+
+//update NoteStatus from 1 to 0 恢復封存
+export const UpdateNoteStatusBack= async(id,uid)=>{
+    console.log(id,"id");//更新status為0
+    const updateDbNote = doc(db,"user",uid,"notelist",id);
+    const noteStatus=0;
+    await updateDoc(updateDbNote,{noteStatus:noteStatus});
+}
+
 //deleteNoteData+ deleteBoard subcollection
 export const deleteDbNote = async(id,uid)=>{
     console.log(id,"id");//刪掉user內容所有內容
@@ -241,7 +295,7 @@ export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件�
         await updateDoc(refBoard, {time});
     }else{//若沒有建立文字記事，則直接建立圖片記事
         
-        await setDoc(refBoard,{id,noteTitle:"",noteText:"",time,color:"#FFFFFF"});
+    await setDoc(refBoard,{id,noteTitle:"",noteText:"",time,color:"#FFFFFF",noteStatus:0});
     }
 
     //存入notelists，方便做listpage的排序跟顯示

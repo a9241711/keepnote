@@ -86,7 +86,7 @@ const ColorWhiteBtn=styled(ColorRedBtn)`
     background-color: #FFFFFF;
 `
 
-const NoteColor=({uid,id, selected,setList,setDataChanged,setNoteColor,isFromEdit,isColorPopUpEdit,setPopUpColor})=>{
+const NoteColor=({uid,id, selected,setList,setDataChanged,setNoteColor,isFromEdit,isColorPopUpEdit,setPopUpColor})=>{//EDit and List windows
     const[clickColor,setClickColor]=useState(false);
     const currentRef=useRef();//用來判斷是否為該物件
     const colorIconRef=useRef();
@@ -191,7 +191,30 @@ const LeftArrowDiv=styled(IconDiv)`
         ${ Media_Query_SM}{display:block}
 `
 
-export const NoteColorPop=({id,uid,clickColor,setDataChanged,setClickColor,})=>{//彈出視窗PopUp Color
+export const NoteColorPopMb=({setClickColor,setNoteColor})=>{//彈出視窗PopUp Color Edit Mb
+
+    const handelClickColor= async(e)=>{
+         setNoteColor(e.target.value)}//判斷是從note Edit來的，不是從List來的
+
+
+    return(
+        <>
+            <NoteListColorDiv></NoteListColorDiv>
+            <ColorInputPopDiv >
+            <LeftArrowDiv onClick={()=>setClickColor(false)}></LeftArrowDiv>
+            <ColorWhiteBtn value="#FFFFFF" onClick={(e)=> handelClickColor(e)}><IconToolTipText>預設</IconToolTipText></ColorWhiteBtn>
+            <ColorRedBtn value="#F28B82" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紅色</IconToolTipText></ColorRedBtn>
+            <ColorYellowBtn value="#FFF475" onClick={(e)=> handelClickColor(e)}><IconToolTipText>黃色</IconToolTipText></ColorYellowBtn>
+            <ColorGreenBtn value="#CCFF90" onClick={(e)=> handelClickColor(e)}><IconToolTipText>綠色</IconToolTipText></ColorGreenBtn>
+            <ColorBlueBtn value="#AECBFA" onClick={(e)=> handelClickColor(e)}><IconToolTipText>藍色</IconToolTipText></ColorBlueBtn>
+            <ColorPurpleBtn value="#D7AEFB" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紫色</IconToolTipText></ColorPurpleBtn>
+            </ColorInputPopDiv>
+ 
+        </>
+    )
+}
+
+export const NoteColorPop=({id,uid,setDataChanged,setClickColor,})=>{//彈出視窗PopUp Color update
     const{getColorUpdate,selcetedItem}=useContext(NoteContext);
     const colorRef=useRef();
     const handelClickColor= async(e)=>{
@@ -205,8 +228,6 @@ export const NoteColorPop=({id,uid,clickColor,setDataChanged,setClickColor,})=>{
 
     return(
         <>
-        {clickColor?
-        <>
             <NoteListColorDiv></NoteListColorDiv>
             <ColorInputPopDiv  ref={colorRef}>
             <LeftArrowDiv onClick={()=>setClickColor(false)}></LeftArrowDiv>
@@ -217,9 +238,7 @@ export const NoteColorPop=({id,uid,clickColor,setDataChanged,setClickColor,})=>{
             <ColorBlueBtn value="#AECBFA" onClick={(e)=> handelClickColor(e)}><IconToolTipText>藍色</IconToolTipText></ColorBlueBtn>
             <ColorPurpleBtn value="#D7AEFB" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紫色</IconToolTipText></ColorPurpleBtn>
             </ColorInputPopDiv>
-        </>
-            :null}
+
         </>
     )
-
 }

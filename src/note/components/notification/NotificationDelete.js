@@ -50,7 +50,6 @@ const NotifIcon=styled(IconDiv)`
 
 const NotificationDelete=({id, uid,whenToNotify,setDataChanged,})=>{
     const[notify,setNotify]=useState("");
-    const{setIsLoading}=useContext(HeaderLoadContext);
     const handleDeleteNoti=async()=>{//刪除notification
         //List修改框
             const res=await deleteNotification(uid,id);
@@ -68,8 +67,7 @@ const NotificationDelete=({id, uid,whenToNotify,setDataChanged,})=>{
         // }
     }
     useEffect(()=>{
-        if(whenToNotify===""){return setNotify("");}
-        console.log("deleteingnotifcaiotn")
+        if(whenToNotify==1 || whenToNotify==""){return setNotify("");}
         handleTimeFromDb(whenToNotify);
     },[whenToNotify]);
  
@@ -135,25 +133,53 @@ export const NotificationPopUpDelete=({selected,uid,setDataChanged,notificationC
 //From Edit
 export const NotificationDeleteEdit=({isFromEdit,notification,setNotification})=>{
     const[notifFromEdit,setNotifFromEdit]=useState("");
-    const handleNotificaiotn=()=>{
+    const handleNotification=()=>{
         const{timer}=notification;
         console.log(notification,timer)
         const notifyByTime=new Date(timer).toLocaleDateString(undefined,{month:"short",day:"numeric"})+" " +  new Date(timer).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
         setNotifFromEdit(notifyByTime);
     }
     useEffect(()=>{
-        if(notification==="")return
-        handleNotificaiotn();
+        if(notification===1)return
+        handleNotification();
     },[notification])
 
     return(
         <>
-        {notification? 
+        {notification!==1? 
             <NotofDiv>
             <NotifIcon></NotifIcon>
             <NotifTime>{notifFromEdit}</NotifTime>
-            <NotifDelete onClick={()=> {setNotification("");setNotifFromEdit("")}}></NotifDelete>
+            <NotifDelete onClick={()=> {setNotification(1);setNotifFromEdit("")}}></NotifDelete>
         </NotofDiv>
+        :null
+        }
+        </>
+    )
+}
+
+
+export const ArchiveNotification=({whenToNotify})=>{
+    const[notify,setNotify]=useState("");
+    const handleTimeFromDb=(whenToNotify)=>{//處理時間轉換
+        const dateInMillis=whenToNotify* 1000;
+        const notifyByTime=new Date(dateInMillis).toLocaleDateString(undefined,{month:"short",day:"numeric"})+" " +  new Date(dateInMillis).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+        setNotify(notifyByTime);
+
+    }
+    useEffect(()=>{
+        if(whenToNotify==1 || whenToNotify==""){return setNotify("");}
+        console.log("deleteingnotifcaiotn")
+        handleTimeFromDb(whenToNotify);
+    },[whenToNotify]);
+ 
+    return(
+        <>
+        {notify? 
+            <NotofDiv>
+            <NotifIcon></NotifIcon>
+            <NotifTime>{notify}</NotifTime>
+            </NotofDiv>
         :null
         }
         </>

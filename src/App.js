@@ -6,6 +6,7 @@ import { MemberSignUp } from "./pages/Member";
 import AuthState from "./store/AuthState";
 import AuthRequired from "./store/AuthRequired";
 import HeadLoadState from "./header/HeaderLoadState";
+import Archive from "./note/archive/Archive";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signup" element={<MemberSignUp/> }/>
         <Route element={<AuthRequired />}>
         <Route path="/boarding" element={<BoardIndex />} />
+        <Route path="/archive" element={<Archive />} />
         </Route>
       </Routes>   
       </HeadLoadState>
