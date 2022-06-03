@@ -1,7 +1,7 @@
 import { requestForToken } from "../../../store/HandleDb";
 import styled from "styled-components";
 import { useState,useRef, useEffect, useContext } from "react";
-import { Button,CloseButton, IconDiv,IconTipText,Text,Media_Query_SM,scaleRight } from "../../../components/constant";
+import { Button,CloseButton, IconDiv,IconTipText,Text,Media_Query_SM,Media_Query_SMD,Media_Query_MD,scaleRight } from "../../../components/constant";
 import { Notification } from "../../../assets";
 import { getMessaging,onMessage,getToken } from "firebase/messaging";
 import NoteContext from "../../context/NoteContext";
@@ -25,7 +25,6 @@ const NotificationInputDiv=styled(IconDiv)`//vlaue選擇框
     position: absolute;
     top:${props=>{return props.selected? "-260px":"35px"}} ;
     left:0;
-    z-index: 0;
     border-radius: 8px;
     border: none;
     display: flex;
@@ -34,7 +33,7 @@ const NotificationInputDiv=styled(IconDiv)`//vlaue選擇框
     justify-content: center;
     overflow: hidden;
     box-shadow: 0 1px 2px 0 rgb(60 64 67/30%), 0 2px 6px 2px rgb(60 64 67 /15%);
-    z-index: 5;
+    z-index: 1000;
     &:hover{
         background-color: #FFFFFF;
         border-radius:unset;
@@ -116,7 +115,6 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
     const[time,setTime]=useState("");
     const[clickNotificate,setClickNotificate]=useState(false);//是否點擊到該icon;
     const notificationIconRef=useRef();
-    const{updateTitle,updateText,selectedItem}=useContext(NoteContext);
     
     const handleSave=async ()=>{
       const dateTime=date+"T"+time;
@@ -173,7 +171,7 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
         <InputTime    value={time} onChange={(e)=>setTime(e.target.value)}/>
         </NotificationSelectDiv>
         <BtnDiv date={date} time={time}>
-        <BtnSummit date={date} time={time} onClick={handleSave} >儲存</BtnSummit>
+        <BtnSummit date={date} time={time} onClick={handleSave} className="confirm">儲存</BtnSummit>
         </BtnDiv>
         </NotificationInputDiv>
         :null}
@@ -215,9 +213,8 @@ const NotificationPopUpInputDiv=styled.div`
     height: fit-content;
     background-color: #FFFFFF;
     position: absolute;
-    left: 10%;
+    left: 0;
     bottom: 37px;
-    z-index: 0;
     border-radius: 8px;
     border: none;
     display: flex;
@@ -227,10 +224,10 @@ const NotificationPopUpInputDiv=styled.div`
     overflow: hidden;
     box-shadow: 0 1px 2px 0 rgb(60 64 67/30%), 0 2px 6px 2px rgb(60 64 67 /15%);
     z-index: 9999;
-    &:hover{
+    /* &:hover{
         background-color: #FFFFFF;
         border-radius:unset;
-    }
+    } */
     ${Media_Query_SM}{
       position: fixed;
       top: 50%;
@@ -242,6 +239,12 @@ const NotificationPopUpInputDiv=styled.div`
 `
 const BtnClose=styled(CloseButton)`
     display: none;
+    ${Media_Query_MD}{
+    display:block;
+    }
+    ${Media_Query_SMD}{
+    display:block;
+    }
     ${Media_Query_SM}{
     display:block;
     }

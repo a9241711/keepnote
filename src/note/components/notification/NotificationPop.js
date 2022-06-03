@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Text,Button,IconDiv,IconTipText,bounceInLeft,LargerAnimate, Media_Query_SM } from "../../../components/constant";
+import { Text,Button,IconDiv,IconTipText,bounceInLeft,LargerAnimate, Media_Query_SM,Media_Query_SMD } from "../../../components/constant";
 import { Close } from "../../../assets";
 import { Link } from "react-router-dom";
 import NoteInput from "../NoteInput";
@@ -20,13 +20,16 @@ const NotificationFixed=styled.div`
     background-color: #323232;
     box-sizing:border-box;
     padding: 30px;
-    border-radius: 3px;
+    border-radius: 8px;
     transition: all 0.218 ease-in-out;
     display: flex;
     justify-content: space-around;
     animation:${bounceInLeft} 1.1s both;
-    ${Media_Query_SM}{
+    ${Media_Query_SMD}{
         max-width: 320px;
+    }
+    ${Media_Query_SM}{
+        max-width: 280px;
     }
 `
 const NotifDiv=styled.div`
@@ -56,13 +59,19 @@ const NotifBtn=styled(Button)`
     height: auto;
     padding: 8px 24px;
     border-radius: 4px;
+    ${Media_Query_SMD}{
+        background-color: transparent;
+    }
+    ${Media_Query_SM}{
+        background-color: transparent;
+    }
 `
 const NotifIconDiv=styled(IconDiv)`
     background-repeat: no-repeat;
     background-position: center;
     background-image: url(${Close}) ;
 `       
-const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{
+const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{//前端，提醒訊息彈出視窗
     const{title,body,time}=popValue;
     const {getSelectedItem,getColorUpdate,getNoteUpdateTitle,getNoteUpdateText}=useContext(NoteContext)
     const currentTime=new Date(parseInt(time)).toLocaleDateString()+" "  + new Date(parseInt(time)).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})
@@ -73,10 +82,6 @@ const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{
             item.id === id 
         );
         const {  noteText, noteTitle, index,time,color,image }=notificationItem[0]
-        console.log(notificationItem);
-        // setUpdateText(noteText);
-        // setUpdateTitle(noteTitle);
-        // setPopUpColor(color);
         getColorUpdate(color);
         getNoteUpdateTitle(noteText);
         getNoteUpdateText(noteText);
@@ -93,10 +98,9 @@ const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{
             <NotifIconDiv onClick={()=>setIsNotification(false)}><IconTipText>關閉</IconTipText></NotifIconDiv>
             </NotifDiv>
         </NotificationFixed>
-    
         </>
     )
-
 }
 
 export default NotificationPop
+

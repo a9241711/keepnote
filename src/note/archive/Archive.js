@@ -33,8 +33,8 @@ const ArchiveContent=styled.div`
     } 
 `
 const ArchiveListsDiv=styled(Masonry)`
-    width: 100%;
     &.my-masonry-grid{  
+    width: 100%;
     display: flex;
     margin: 80px auto;
     box-sizing: border-box;
@@ -42,7 +42,9 @@ const ArchiveListsDiv=styled(Masonry)`
     }            
     &.my-masonry-grid >.my-masonry-grid_column{
     margin: 0 10px;
-
+    ${Media_Query_LG}{
+        width: 25%;
+    }
 }       
 `
 const ArchiveIconDiv=styled.div`//Tool Div
@@ -133,14 +135,10 @@ const InitialText=styled.div`
 const Archive=()=>{
     const isLoggin=JSON.parse(localStorage.getItem("token"));
     const uid=isLoggin["uid"];
+    const userEmail=isLoggin["email"];
     const[archiveLists,setArchiveLists]=useState([]);
     const[isDataChange,setDataChanged]=useState(false);
     const{setIsLoading,isRefresh,setIsRefresh}=useContext(HeaderLoadContext);
-    const breakPoints={//Masonry排版
-        default:4,
-        1023:3,
-        768:2,
-    }
     useEffect(()=>{//獲取資訊
         setIsLoading(true);
         async function handleAllArchiveLists(){
@@ -151,29 +149,31 @@ const Archive=()=>{
         setDataChanged(false);
         setIsRefresh(false);
     },[isDataChange,isRefresh])//若資料更新或使用者點Refreh則須更新畫面
+
+    const breakPoints={//Masonry排版
+        default:4,
+        1023:3,
+        768:2,
+    }
     return(
         <>        
-        <HeaderDiv   isLoggin={isLoggin}/>
+        <HeaderArchiveDiv   isLoggin={isLoggin}/>
         <ArchiveContent>
         <NavSideBar />
         {archiveLists.length>0? 
-        <ArchiveListsDiv breakpointCols={breakPoints} className="my-masonry-grid" columnClassName="my-masonry-grid_column">
-
-        <>
+        <ArchiveListsDiv breakpointCols={breakPoints}className="my-masonry-grid" columnClassName="my-masonry-grid_column">
             {archiveLists.map((item)=>{
-                 const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
+                 const{id,noteText,noteTitle,image,time,color,whenToNotify="",permissionEmail,owner,targetEmail}=item;
                  return(
                     <ArchiveLists key={id}>
                     <ArchiveBgColor id={id}  color={color}/>
-                    <ArchiveItem  id={id} noteText={noteText}noteTitle={noteTitle}image={image}time={time}color={color}whenToNotify={whenToNotify}/>
+                    <ArchiveItem  id={id} noteText={noteText}noteTitle={noteTitle}image={image}time={time}color={color}whenToNotify={whenToNotify}permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/>
                     <ArchiveIconDiv >
-                    <ArchiveTool  id={id} uid={uid} setDataChanged={setDataChanged} />
+                    <ArchiveTool  id={id} uid={uid} setDataChanged={setDataChanged} permissionEmail={permissionEmail}owner={owner} userEmail={userEmail}/>
                     </ArchiveIconDiv>
                     </ArchiveLists>
                  )
-
             })}
-        </>
 
         </ArchiveListsDiv>
         :

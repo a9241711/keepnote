@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Text,IconDiv ,Media_Query_SM} from "../../../components/constant";
+import { Text,IconDiv ,Media_Query_SM,Media_Query_SMD,Media_Query_MD,Media_Query_LG} from "../../../components/constant";
 import { Close,Clock } from "../../../assets";
 import { useEffect, useState,useContext } from "react";
 import { deleteNotification,queryNotification, } from "../../../store/HandleDb";
@@ -18,13 +18,13 @@ const NotofDiv=styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: 175px;
+    width: 100%;
     background-color:rgba(0,0,0,0.03);
     box-sizing: border-box;
     position: relative;
-    margin:5px 10px;
+    /* margin:5px 10px; */
     border-radius: 20px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     &:hover ${NotifDelete}{
         display: block;
         cursor: pointer;
@@ -33,6 +33,18 @@ const NotofDiv=styled.div`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+    ${Media_Query_LG} {
+        max-width: 175px;
+        margin:0px;
+    }
+    ${Media_Query_MD} {
+        max-width: 175px;
+        margin:0px;
+    }
+    ${Media_Query_SMD} {
+        max-width: 175px;
+        margin:0px;
     }
     ${Media_Query_SM} {
         max-width: 160px;
@@ -50,6 +62,7 @@ const NotifIcon=styled(IconDiv)`
 
 const NotificationDelete=({id, uid,whenToNotify,setDataChanged,})=>{
     const[notify,setNotify]=useState("");
+    console.log("uid id",uid,id)
     const handleDeleteNoti=async()=>{//刪除notification
         //List修改框
             const res=await deleteNotification(uid,id);
@@ -123,7 +136,7 @@ export const NotificationPopUpDelete=({selected,uid,setDataChanged,notificationC
             <NotifIcon></NotifIcon>
             <NotifTime>{notify}</NotifTime>
             <NotifDelete onClick={handleDeleteNoti}></NotifDelete>
-        </NotofDiv>
+            </NotofDiv>
         :null
         }
         </>

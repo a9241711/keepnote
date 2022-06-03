@@ -7,6 +7,7 @@ import NoteColor from "./color/NoteColor";
 import NotificationIndex from "./notification/NotificationIndex";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
 import { saveNoteData } from "../../store/HandleDb";
+import { PermissionEditArea } from "../../components/permission/Permssion";
 
 const CanvasTools=styled(IconDiv)`//Edit上點擊前的Icon
     position:absolute;
@@ -17,9 +18,10 @@ const CanvasTools=styled(IconDiv)`//Edit上點擊前的Icon
     background-repeat: no-repeat;
     background-position: center;
     background-image: url(${EditBoard}) ;
+    display:${props=>{return props.titleClick?"none":"block"}};
 `
 const NodeToolDiv=styled.div`//彈出框的tool div
-  display: flex;
+  display: ${props=>{return props.titleClick?"flex":"none"}};
   justify-content: space-between;
   padding:0 10px;
   position: relative;
@@ -34,10 +36,10 @@ const BoardAdd=styled(IconDiv)` //新增畫板的Icon
 `
 
 //for桌機平板
-const CanvasTool=({noteTitle ,noteText,uid,titleClick,setNoteColor,noteColor,setIsFromEdit,isFromEdit,setNotification,notification,setIsClose} )=>{//上方輸入框的icon，把文字跟board畫板帶入到下一個頁面並儲存
+const CanvasTool=({noteTitle ,noteText,uid,userEmail,titleClick,setNoteColor,noteColor,setEmailList,emailList,isFromEdit,setNotification,notification,setIsClose} )=>{
     const id =v4()
     const handleSaveNoteToDb=async ()=>{
-      console.log(typeof notification!="undefined",notification)
+      console.log(typeof notification!="undefined",notification);
       if(notification!==1){
           const{timer,currentToken}=notification;
           await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);}
@@ -49,55 +51,23 @@ const CanvasTool=({noteTitle ,noteText,uid,titleClick,setNoteColor,noteColor,set
   }
     return(
         <>
-        {titleClick
-        ?
-        <NodeToolDiv>
+        {/* {titleClick
+        ? */}
+        <NodeToolDiv titleClick={titleClick}>
         <Link  to={"/boarding"} state={{id,uid}}>
         <BoardAdd onClick={handleSaveNoteToDb}><IconTipText>新增繪圖記事</IconTipText></BoardAdd>
         </Link>
-        <NotificationIndex isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} setNotification={setNotification}/>
-        <NoteColor isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} setNoteColor={setNoteColor}/>
+        <NotificationIndex isFromEdit={isFromEdit} setNotification={setNotification}/>
+        <NoteColor isFromEdit={isFromEdit}  setNoteColor={setNoteColor}/>
+        <PermissionEditArea  uid={uid}userEmail={userEmail}setEmailList={setEmailList} emailList={emailList}/>
         </NodeToolDiv>
-        :<Link to={"/boarding"} state={{id,uid}}>
-        <CanvasTools titleClick={titleClick}  onClick={handleSaveNoteToDb}><IconTipText>新增繪圖記事</IconTipText></CanvasTools>
+        <Link to={"/boarding"} state={{id,uid}}>
+        <CanvasTools  titleClick={titleClick}  onClick={handleSaveNoteToDb}><IconTipText>新增繪圖記事</IconTipText></CanvasTools>
         </Link>
-        }
+        
         </>
     )
 }
 
 export default CanvasTool
 
-// //for 手機
-// export const CanvasToolMb=({noteTitle ,noteText,uid,titleClick,setNoteColor,noteColor,setIsFromEdit,isFromEdit,setNotification,notification,setIsClose} )=>{//上方輸入框的icon，把文字跟board畫板帶入到下一個頁面並儲存
-//   const id =v4()
-//   const handleSaveNoteToDb=async ()=>{
-//     console.log(typeof notification!="undefined",notification)
-//     if(notification!==1){
-//         const{timer,currentToken}=notification;
-//         await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);}
-//     else{
-//       const timer=1; 
-//       const currentToken=1;
-//       await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
-//     }
-// }
-//   return(
-//       <>
-//       {titleClick
-//       ?
-//       <NodeToolDiv>
-//       <Link  to={"/boarding"} state={{id,uid}}>
-//       <BoardAdd onClick={handleSaveNoteToDb}></BoardAdd>
-//       </Link>
-//       <NotificationIndex isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} setNotification={setNotification}/>
-//       <NoteColor isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} setNoteColor={setNoteColor}/>
-//       <NoteModiEditBtn setIsClose={setIsClose}/>
-//       </NodeToolDiv>
-//       :<Link to={"/boarding"} state={{id,uid}}>
-//       <CanvasTools titleClick={titleClick} ><IconTipText>新增繪圖記事</IconTipText></CanvasTools>
-//       </Link>
-//       }
-//       </>
-//   )
-// }

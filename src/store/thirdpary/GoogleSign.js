@@ -43,7 +43,9 @@ const GoogleSign=()=>{
             email: response["user"]["email"],
             token: response["user"]["accessToken"],
             uid: response["user"]["uid"],
+            providerId:response["user"]["providerData"][0]["providerId"]
           };
+          console.log("user",user)
           await saveSignUpdData(user);//存入DB
           getSignIn(user);////回呼disAutoPatch
           localStorage.setItem("token",JSON.stringify(user));//存入uid到local storage

@@ -7,10 +7,12 @@ import  { NotificationEdit, NotificationElement,NotificationEditMb } from "../no
 import NoteModiBtn,{NoteModiEditBtnMb} from "./NoteModiBtn";
 import { useContext, useEffect,useState } from "react";
 import NoteContext from "../../context/NoteContext";
-import { LargerAnimate,IconDiv,IconTipText,Media_Query_MD, Media_Query_SM,Media_Query_SMD,NoteTitleInput,NoteTextInput } from "../../../components/constant";
+import { LargerAnimate,IconDiv,IconTipText,Media_Query_MD, Media_Query_SM,Media_Query_SMD,NoteTitleInput,NoteTextInput, Media_Query_LG } from "../../../components/constant";
 import { EditBoard,DeleteCheck,Plus } from "../../../assets";
 import { updateNoteData,deleteBoard,queryImageData,saveNoteData } from "../../../store/HandleDb";
 import { v4 } from "uuid";
+import { PermissionItemModi } from "../../../components/permission/PermissionItem";
+import { PermissionEditArea, PermissionModify } from "../../../components/permission/Permssion";
 
 
 const NoteListModifyBg = styled.div`//修改文字的Fixed背景顏色，觸控版關閉
@@ -44,6 +46,9 @@ const NoteListModifyDiv=styled.div`
     align-items: center;
     margin: 0 auto;
     animation: ${LargerAnimate} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    ${Media_Query_LG}{
+      left: 70px;
+    }
     ${Media_Query_SMD}{
       padding: 0;
       top: 0;
@@ -58,10 +63,11 @@ const NoteListModifyDiv=styled.div`
     }
 `
 const NoteListModify = styled.div`//修改內容的Div
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   height: auto;
   min-height: 195px;
-  max-height: 450px;
+  max-height: 500px;
   position: relative;
   padding:10px 10px 30px 10px;
   box-sizing: border-box;
@@ -105,8 +111,8 @@ const NoteListModify = styled.div`//修改內容的Div
     ${Media_Query_MD}{
       display: flex;
       flex-direction: column;
-      width: 100%;
       height: 100%;
+      max-width:unset;
       min-height: unset;
       max-height: unset;
       padding:unset;
@@ -115,7 +121,7 @@ const NoteListModify = styled.div`//修改內容的Div
     ${Media_Query_SMD}{
       display: flex;
       flex-direction: column;
-      width: 100%;
+      max-width: unset;
       height: 100%;
       min-height: unset;
       max-height: unset;
@@ -125,7 +131,6 @@ const NoteListModify = styled.div`//修改內容的Div
     ${Media_Query_SM}{
       display: flex;
       flex-direction: column;
-      width: 100%;
       height: 100%;
       min-height: unset;
       max-height: unset;
@@ -144,6 +149,7 @@ const NodeToolDiv=styled.div`//彈出框的tool div，手機版fixed在底部
     box-sizing: border-box;
     box-shadow: 0px -1px 8px -1px rgba(0,0,0,0.23);
     border-radius: 8px;
+    z-index: 15;
         //set up media query
         ${Media_Query_MD}{
         border-radius:unset;
@@ -151,6 +157,7 @@ const NodeToolDiv=styled.div`//彈出框的tool div，手機版fixed在底部
         max-width:unset;
       }
         ${Media_Query_SMD}{
+        max-width: unset;
         border-radius:unset;
         bottom: 0;
         max-width:unset;
@@ -193,10 +200,17 @@ const DeleteIcon=styled(IconDiv)`//img刪除按鈕
   bottom: 0;
   right: 5%;
 `
+const PermissionNotifiDiv=styled.div`//permission and notification shows div
+  display: flex;
+  flex-wrap:wrap;
+  align-items: center;
+  padding:0 10px;
+  margin-bottom: 10px;
+`
 
-const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>{//PopUp Update 視窗
+const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange,userEmail,setIsArchive})=>{//PopUp Update 視窗
     const[clickNotificate,setClickNotificate]=useState(false);//是否點擊NotificationIcon;
-    const[clickColor,setClickColor]=useState(false);
+    const[clickColor,setClickColor]=useState(false);//是否點擊colorIcon;
     const[notificationChange,setNotificationChange]=useState(false);//是否更新NotificationIcon;
     const[image,setImage]=useState("");
     const {selectedItem,updateColor,updateTitle,updateText,updateNotification} =useContext(NoteContext);
@@ -249,7 +263,10 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>
               </BoardList>
                 : null }
               <NoteInput  />
+              <PermissionNotifiDiv>
               <NotificationPopUpDelete notificationChange={notificationChange} setNotificationChange={setNotificationChange}  setDataChanged={setDataChanged} selected={selected}  uid={uid} />
+              <PermissionItemModi />
+              </PermissionNotifiDiv>
             </NoteListModify>
             <NodeToolDiv style={{background:updateColor}}>
               { image ? null
@@ -258,7 +275,8 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange})=>
               </Link>}
               <NotificationElement  clickNotificate={clickNotificate} setClickNotificate={setClickNotificate}/>
               <NoteColorElement  setClickColor={setClickColor} clickColor={clickColor}/>
-              <NoteModiBtn uid={uid} setSelected={setSelected} setDataChanged={setDataChanged}/>
+              <PermissionModify isDataChange={isDataChange}setDataChanged={setDataChanged} uid={uid} userEmail={userEmail}/>
+              <NoteModiBtn setIsArchive={setIsArchive} uid={uid} setSelected={setSelected} setDataChanged={setDataChanged}/>
               {clickNotificate?<NotificationEdit setClickNotificate={setClickNotificate} setNotificationChange={setNotificationChange} uid={uid} selected={selected} setDataChanged={setDataChanged}/> :null}    
               {clickColor? <NoteColorPop setClickColor={setClickColor} id={id} uid={uid} clickColor={clickColor} setDataChanged={setDataChanged}/> :null}
               </NodeToolDiv>
@@ -290,10 +308,10 @@ const NoteListEditDiv=styled.div`
     margin: 0 auto;
     animation: ${LargerAnimate} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     ${Media_Query_MD}{
-    display: flex;
+      display: flex;
     }
     ${Media_Query_SMD}{
-    display: flex;
+      display: flex;
     }
     ${Media_Query_SM}{
       display: flex;
@@ -310,10 +328,10 @@ const NoteListEditBm=styled.div`
       justify-content: center;
       z-index: 3500;
     ${Media_Query_MD}{
-    display: flex;
+      display: flex;
     }
     ${Media_Query_SMD}{
-    display: flex;
+      display: flex;
     }
     ${Media_Query_SM}{
       display: flex;
@@ -331,10 +349,10 @@ const NoteEditAddDiv=styled.div`
     border: 5px solid #FFFFFF;
     justify-content: center;
     ${Media_Query_MD}{
-    display: flex;
+      display: flex;
     }
     ${Media_Query_SMD}{
-    display: flex;
+      display: flex;
     }
     ${Media_Query_SM}{
       display: flex;
@@ -357,11 +375,12 @@ const NoteTextInputDiv=styled(NoteTextInput)`
 
 `
 
-export const NoteModifyAreaMb =({uid,setDataChanged})=>{
+export const NoteModifyAreaMb =({uid,setDataChanged,userEmail})=>{//forEdit
   const[noteTitle,setNoteTitle]=useState("");
   const[noteText,setNoteText]=useState("");
   const[noteColor,setNoteColor]=useState("#FFFFFF");
   const[notification,setNotification]=useState(1);
+  const[emailList,setEmailList]=useState([]);
   const[clickNotificate,setClickNotificate]=useState(false);//是否點擊NotificationIcon;
   const[clickColor,setClickColor]=useState(false);//是否點擊ColorIcon
   const[isClickEdit,setIsClickEdit]=useState(false);//是否點擊Add新增
@@ -385,7 +404,7 @@ export const NoteModifyAreaMb =({uid,setDataChanged})=>{
   const handleSaveNoteToDb=async ()=>{
     if(notification!==1){
         const{timer,currentToken}=notification;
-        await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+        await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken,emailList);
         setDataChanged(true);
         setIsClose(true);
         setIsClickEdit(false);
@@ -394,7 +413,7 @@ export const NoteModifyAreaMb =({uid,setDataChanged})=>{
     else{
       const timer=1; 
       const currentToken=1;
-      await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+      await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken,emailList);
       setDataChanged(true);
       setIsClose(true);
       setIsClickEdit(false);
@@ -424,10 +443,11 @@ export const NoteModifyAreaMb =({uid,setDataChanged})=>{
             </Link>
             <NotificationElement   setClickNotificate={setClickNotificate}/>
             <NoteColorElement setClickColor={setClickColor} />
+            <PermissionEditArea uid={uid}userEmail={userEmail}setEmailList={setEmailList} emailList={emailList} />
             <NoteModiEditBtnMb setIsClickEdit={setIsClickEdit} handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>
             {clickNotificate?<NotificationEditMb setClickNotificate={setClickNotificate} setNotification={setNotification}/> :null}    
             {clickColor? <NoteColorPopMb  setClickColor={setClickColor} setNoteColor={setNoteColor}/>:null}
-            </NodeToolDiv>
+          </NodeToolDiv>
       </NoteListEditDiv> 
     </>
     :<NoteListEditBm>

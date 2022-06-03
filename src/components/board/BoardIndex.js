@@ -13,18 +13,18 @@ export const BoardContext=createContext({name:"guest"})
 
 const BoardDiv = styled.div`
   width: 100%;
+  height: 100%;
   background:#FFFFFF;
-  height: 100vh;
 `;
 const ToolNav=styled.div`
   position:fixed;
   display:flex;
   width:100%;
   border-bottom:1px solid rgba(0,0,0,.24);
-  padding:8px 0;
   touch-action:none;
   user-select:none;
   z-index:999;
+  background-color: #FFF;
 `
 const BoardDrawToollDiv=styled.div`
   display: flex;

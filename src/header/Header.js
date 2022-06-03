@@ -91,17 +91,19 @@ const LogoText=styled(H3)`
 `
 
 const HeaderDiv = ({isLoggin}) => {
-  const {isLoading,setIsLoading,setIsRefresh,page,navClick,getNavClick} =useContext(HeaderLoadContext);
-  const{archive}=page
+  const {isLoading,setIsLoading,setIsRefresh,navClick,getNavClick} =useContext(HeaderLoadContext);
+
 
   useEffect(()=>{
+
     setIsLoading(false);
-  },[])
+  },[]);
+  
   return (
     <Header>
 
       <NavDiv>
-        <NavIcon onClick={()=>getNavClick()}></NavIcon>
+      {isLoggin?<NavIcon onClick={()=>getNavClick()}></NavIcon>:null}
         <Link to={"/"} style={{ textDecoration: 'none' }}>
         <LogoDiv  >
         <LogoImg src={KeepLogo}></LogoImg>
@@ -112,7 +114,7 @@ const HeaderDiv = ({isLoggin}) => {
 
       {isLoggin?
       <>
-      {archive?null : <Search />}
+       <Search />
       <LoadingDiv>
       {isLoading 
       ? <LoadingImg src={Loading}></LoadingImg>
@@ -123,7 +125,11 @@ const HeaderDiv = ({isLoggin}) => {
       <HeaderToolDiv>
       {isLoggin?
       <>
-      <LogOut /><User isLoggin={isLoggin}/></>
+      <LogOut />
+      <Link to={"/membership"} style={{ textDecoration: 'none' }}>
+          <User isLoggin={isLoggin}/>
+      </Link>
+      </>
       :<LogIn />
       }
       </HeaderToolDiv>
@@ -134,13 +140,17 @@ const HeaderDiv = ({isLoggin}) => {
 export default HeaderDiv;
 
 export const HeaderArchiveDiv = ({isLoggin,}) => {//For Archive
-  const {isLoading,setIsLoading,setIsRefresh,page,getPage} =useContext(HeaderLoadContext);
-  console.log(page);
+  const {isLoading,setIsLoading,setIsRefresh,page,navClick,getNavClick} =useContext(HeaderLoadContext);
+
+  useEffect(()=>{
+
+    setIsLoading(false);
+  },[]);
 
   return (
     <Header>
       <NavDiv>
-        <NavIcon></NavIcon>
+        {isLoggin?<NavIcon onClick={()=>getNavClick()}></NavIcon>:null}
         <Link to={"/"} style={{ textDecoration: 'none' }}>
         <LogoDiv  >
         <LogoImg src={KeepLogo}></LogoImg>
@@ -160,7 +170,11 @@ export const HeaderArchiveDiv = ({isLoggin,}) => {//For Archive
       <HeaderToolDiv>
       {isLoggin?
       <>
-      <LogOut /><User isLoggin={isLoggin}/></>
+      <LogOut />
+      <Link to={"/membership"} style={{ textDecoration: 'none' }}>
+          <User isLoggin={isLoggin}/>
+      </Link>
+      </>
       :<LogIn />
       }
       </HeaderToolDiv>

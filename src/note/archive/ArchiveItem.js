@@ -1,6 +1,7 @@
 import { Text } from "../../components/constant";
 import styled from "styled-components";
 import {ArchiveNotification} from "../components/notification/NotificationDelete";
+import PermissionItem from "../../components/permission/PermissionItem";
 
 const BoardList=styled.div` //board img的DIV
     width:100%;
@@ -20,7 +21,6 @@ const NoteLists = styled.div`
     padding: 3px;
     transition: all ease-in-out .2s; 
     position: relative;
-    cursor: pointer;
 `;
 
 const NoteDiv=styled.div`
@@ -44,8 +44,11 @@ const NoteText=styled(Text)`
 const NoteNone=styled(Text)`
     font-size: 26px;
 `
+const NoteAttitionDiv=styled.div`
+    padding: 0 10px;
+`
 
-const ArchiveItem=({uid,id,image,noteText,noteTitle,whenToNotify})=>{
+const ArchiveItem=({uid,id,image,noteText,noteTitle,whenToNotify,permissionEmail,owner,targetEmail,userEmail})=>{
 
     return(
         <>
@@ -66,7 +69,10 @@ const ArchiveItem=({uid,id,image,noteText,noteTitle,whenToNotify})=>{
           }
         </NoteDiv>
         </NoteLists>
-      <ArchiveNotification  whenToNotify={whenToNotify}   />
+        <NoteAttitionDiv>
+        <PermissionItem permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/>
+        <ArchiveNotification  whenToNotify={whenToNotify}   />
+        </NoteAttitionDiv>
       </>
     )
 

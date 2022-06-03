@@ -1,4 +1,4 @@
-import { useContext, useReducer,useLayoutEffect, useState,useRef, useEffect } from "react";
+import { useContext, useReducer, useState,useRef, useEffect } from "react";
 import styled from "styled-components";
 import { NoteTitleInput,NoteTextInput,Text, Media_Query_SM } from "../../components/constant";
 import NoteContext from "../context/NoteContext";

@@ -159,6 +159,7 @@ export const IconTipText=styled.span`
     left: 50%;
     transform: translateX(-50%);
     word-break: keep-all;
+    z-index: 500;
     @media screen and (min-width: 320px) and (max-width: 480px){
     display: none;
     }
@@ -168,7 +169,7 @@ export const IconTipText=styled.span`
 `
 export const IconDiv=styled.div`
     position: relative;
-    z-index: 0;
+    z-index: 10;
     width:32px;
     height: 32px;
     display: flex;

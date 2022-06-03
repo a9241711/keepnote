@@ -1,10 +1,10 @@
-import { useContext } from "react";
+import { useContext,useState,useEffect } from "react";
 import styled from "styled-components";
 import { Button,CloseButton, Media_Query_SM,Media_Query_SMD, Media_Query_MD} from "../../../components/constant";
-import { updateNoteData } from "../../../store/HandleDb";
 import NoteContext from "../../context/NoteContext";
-import { deleteDbNote } from "../../../store/HandleDb";
+import { updateNoteStatus,updateNoteData, } from "../../../store/HandleDb";
 import { LeftArrow } from "../../../assets";
+import HeaderLoadContext from "../../../header/HeaderLoadContext";
 
 const NoteModifyDiv=styled.div`
   display: flex;
@@ -48,8 +48,9 @@ const NoteModifyConfirm=styled(Button)`
   }
 `
 
-const NoteModiBtn=({uid,setSelected,setDataChanged})=>{//popUp視窗按鈕
+const NoteModiBtn=({uid,setSelected,setDataChanged,setIsArchive})=>{//popUp視窗按鈕
   const{updateTitle,updateText,selectedItem}=useContext(NoteContext);
+  const[isArchive,setIsBeenArchive]=useState(false);
   //控制送出修改按鈕
   const handleUpdateSubmmit =async  () => {
     const { id } = selectedItem;
@@ -66,19 +67,31 @@ const NoteModiBtn=({uid,setSelected,setDataChanged})=>{//popUp視窗按鈕
     const handleClose=async()=>{
         setSelected(false);
       }
-    const deleteItem = async () => {
+    const updateItemStatus = async () => {
       const { id } = selectedItem;
-        await deleteDbNote(id,uid);
-        setSelected(false);
-        setDataChanged(true);
-      };
+      await updateNoteStatus(id,uid);
+      setDataChanged(true);
+      setIsBeenArchive(true);
+    };
+    useEffect(()=>{//觀察是否有封存
+      if(!isArchive)return
+      const { id } = selectedItem;
+      setTimeout(setIsArchive({show:true,id}),500);
+      // setIsBeenArchive(false);
+      setSelected(false);
+    },[isArchive]);
+
+    useEffect(()=>{//十秒自動關閉封存彈出視窗
+      setTimeout(()=>{
+        setIsArchive({show:false,id:null});setIsBeenArchive(false);},10000);
+    },[isArchive]);
 
     return(
       <>
         <BackToIndex onClick={() => handleClose()}></BackToIndex>
         <NoteModifyDiv>
-        <NoteModifyDelete  onClick={() => deleteItem()}>
-          刪除
+        <NoteModifyDelete  onClick={() => updateItemStatus()}>
+          封存
         </NoteModifyDelete>
         <NoteModifyCancle  onClick={() => handleClose()}>
           取消
@@ -95,7 +108,7 @@ export default NoteModiBtn;
 
 
 const NoteEditSubmmit = styled(Button)`//For 觸控版本使用
-  /* display: none; */
+      pointer-events: ${props=>{return props.isLoading==="true"?"none":"auto"}};
   &:hover{
     background-color: rgba(57,57,57,0.039);
   }
@@ -122,13 +135,13 @@ const NoteModifyClose=styled(CloseButton)`
 `
 
 export const NoteModiEditBtn=({setIsClose ,handleSaveNoteToDb})=>{//Edit區塊視窗按鈕
-  
+  const{isLoading}=useContext(HeaderLoadContext);
     return(
         <NoteModifyDiv>
         <NoteModifyClose  onClick={() => setIsClose(true)}>
           取消
         </NoteModifyClose>
-        <NoteEditSubmmit  onClick={() => handleSaveNoteToDb()}>
+        <NoteEditSubmmit isLoading={isLoading.toString()} disabled={isLoading} onClick={() => handleSaveNoteToDb()}>
           新增
         </NoteEditSubmmit>
         </NoteModifyDiv>

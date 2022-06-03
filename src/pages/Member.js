@@ -228,7 +228,6 @@ export const MemberSignUp = () => {//註冊
       error,
     } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);//防止使用者重複點擊
-    const navigation=useNavigate();
     const emailRef = useRef();
     const passwordRef = useRef();
     const currentUser = useAuth();
@@ -241,10 +240,12 @@ export const MemberSignUp = () => {//註冊
           emailRef.current.value,
           passwordRef.current.value
         );
+        console.log("response",response)
         let user = {
           email: response["user"]["email"],
           token: response["user"]["accessToken"],
           uid: response["user"]["uid"],
+          providerId:"firebase"
         };
         await saveSignUpdData(user);//存入DB
         getSignUp(user);////回呼disAutoPatch
@@ -282,8 +283,6 @@ export const MemberSignUp = () => {//註冊
           註冊
         </SignUpBtn>
         <LoginLink  to={"/login"}>已有帳號？點此登入</LoginLink>
-        {/* <Plink  onClick={(e)=> {e.preventDefault();setIsSignUp(false);}}> </Plink> 
-        <Plink  onClick={(e)=> {e.preventDefault();setIsSignUp(true);}}> 沒有帳戶？請點此註冊帳號</Plink> */}
         </BtnDiv>
         </>
         }

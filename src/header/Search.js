@@ -149,9 +149,7 @@ const Search = () => {
       console.log(item,"searchWord",searchWord);
       return item.noteTitle.includes(searchWord) || item.noteText.includes(searchWord);
     });
-    console.log(newFilter);
     if(newFilter.length===0){//查無結果
-      console.log("查無結果")
       const empty={error:"查無結果"};
       // newFilter.push(empty);
       return getErrorData(empty);//回傳查無結果給Search

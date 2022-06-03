@@ -4,7 +4,6 @@ const admin = require("firebase-admin") ;
 admin.initializeApp();
 const database=admin.firestore();
 
-// const db=admin.firestore();
 
 //抓取trigger觀察notification doc被新增上去，以及狀態是否為false
 
@@ -32,45 +31,22 @@ exports.sendNotificationAsia=functions.pubsub.schedule("* * * * *").onRun(async(
     return console.log("end of function")
 })
 
-//寫一個function傳入projectCreated使用並建立新的doc
-// const createNote =(notification=>{
-//     return admin.firestore().collection("notification")
-//     .add(notification).then(doc=>console.log("notification add",doc))
-// })
+exports.deleteNotificationAsia=functions.pubsub.schedule("0 8 * * sun").onRun(async(context)=>{
+    const currentTime=admin.firestore.Timestamp.now();
+    const query=await database.collectionGroup("notifications")
+    .where("whenToNotify","<=",currentTime)
+    .where("notificationSent","==",true).get();
+    query.forEach(async snapshop=>{
+        await snapshop.ref.delete();
+    })
+    return console.log("end of function")
+})
 
-// exports.projectCreated=functions.firestore
-// .document("/task/{teaskId}")
-// .onCreate(doc=>{
-//     const project=doc.data();
-//     const notification={
-//         content:"Add new text",
-//         user:project.uid,
-//         time:admin.firestore.FieldValue.serverTimestamp()
-//     }
-
-//     return createNote(notification)
-// })
-
-// export const taskRunner=functions.runWith({memory:"2GB"}).pubsub.schedule("* * * * *")
-// .onRun(async context=>{
-//     const now =admin.firestore.Timestamp.now();
-
-//     //query all document ready to perform
-//     const query=db.collection("tasks").where("performAt","<=",now).where("status","==","scheduled")
-    
-//     const tasks=await query.get();
-
-//     //Jobs to execute
-//     const jobs=[];
-
-//     //loop over documents and push job
-//     tasks.forEach(snap=>{
-//         console.log(snap);
-//     })
-
-// }) https://firebase.google.com/docs/functions/write-firebase-functions
-
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+exports.deleteMail=functions.pubsub.schedule("0 8 * * sun").onRun(async(context)=>{
+    const query=await database.collection("mail").where("delivery","!=",null).get();
+    console.log("query",query)
+    query.forEach(async snapshop=>{
+        await snapshop.ref.delete();
+    })
+    return console.log("end of function")
+})

@@ -35,6 +35,11 @@ import ArchiveBg from "./img/archive/archiveBg.png";
 import Nav from "./img/nav/menu.png";
 import Bulb from "./img/nav/bulb.png";
 import BulbCheck from "./img/nav/bulbCheck.png";
+import AddUser from "./img/editTool/adduser.png";
+import Check from "./img/permission/check.png";
+import User from "./img/permission/user.png";
+import UserS from "./img/permission/users.png";
+import PermissionClose from "./img/permission/close.png";
 
 export {
   Pencil,
@@ -73,5 +78,10 @@ export {
   ArchiveBg,
   Nav,
   Bulb,
-  BulbCheck
+  BulbCheck,
+  AddUser,
+  Check,
+  PermissionClose,
+  User,
+  UserS
 };

@@ -2,7 +2,7 @@ import styled,{css} from "styled-components";
 import { IconDiv,IconTipText,Text,Media_Query_SM, Media_Query_LG, Media_Query_SMD,Media_Query_MD } from "../../components/constant";
 import { ArchiveImg,Bulb,BulbCheck } from "../../assets";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import HeaderLoadContext from "../HeaderLoadContext";
 
 const NavSideDiv=styled.div`
@@ -19,7 +19,7 @@ const NavSideDiv=styled.div`
     transition-duration: 150ms;
     transition-property: width,box-shadow,border-radius;
     transition-timing-function: cubic-bezier(0.4,0,0.2,1);
-    z-index: 499;
+    z-index: 12;
     ${Media_Query_LG}{
         width:  ${(props)=> {return props.navClick? "280px":"70px"}};
         box-shadow:${(props)=> {return props.navClick? "6px 1px 14px -1px rgba(86,86,86,0.43)":"unset"}};
@@ -98,18 +98,26 @@ const ArchivePageIcon=styled(NavPageIcon).attrs(props=>({
 `
 
 const NavSideBar=()=>{
-    const {navClick,page,getHome,getArchive} =useContext(HeaderLoadContext);
-    const{home,archive}=page
-
+    const {navClick,page,getHome,getArchive,getNavClick} =useContext(HeaderLoadContext);
+    const{home,archive}=page;
+    const handleClickHome=()=>{
+        getHome();
+        getNavClick();
+    }
+    const handleClickArchive=()=>{
+        getArchive();
+        getNavClick();
+    }
+ 
     return(
-        <NavSideDiv navClick={navClick}>
-            <Link to={"/"} style={{ textDecoration: 'none' }} onClick={getHome}>
+        <NavSideDiv navClick={navClick} >
+            <Link to={"/"} style={{ textDecoration: 'none' }} onClick={handleClickHome}>
             <NavHomePageDiv home={home}>
             <NavPageIcon home={home}></NavPageIcon>
             <NavPageIconText>記事</NavPageIconText>
             </NavHomePageDiv>
             </Link>
-            <Link to={"/archive"} style={{ textDecoration: 'none' }} onClick={getArchive}>
+            <Link to={"/archive"} style={{ textDecoration: 'none' }} onClick={handleClickArchive}>
             <NavArchivePageDiv archive={archive}>
             <ArchivePageIcon archive={archive}> </ArchivePageIcon>
             <NavPageIconText>封存</NavPageIconText>

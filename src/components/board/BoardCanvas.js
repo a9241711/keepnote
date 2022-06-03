@@ -1,10 +1,14 @@
 import rough from "roughjs/bundled/rough.esm";
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState,useRef,useMemo } from "react";
 import styled from "styled-components";
 
-const BoardCanvasDiv=styled.canvas`
-    width:100%;
-    height:100vh;
+const BoardCanvasArea=styled.canvas`
+    width: 100%;
+    height: 100%;
+    /* width:1200px;
+    height:500px; */
+    /* display: block; */
+    position: absolute;
 `
 
 const generator = rough.generator();
@@ -26,13 +30,10 @@ function createElement(id, x1, y1, x2, y2, type, color, range) {
             });
       return { id, x1, y1, x2, y2, type, roughElement, color,range };
     case "pencil":
-
-      // return { id, type, points: [{ x: x1, y: y1 }], color };
       return { id, type, points: [[x1, y1]], color, range };
     default:
       throw new Error(`Type is wrong ${type}`);
   }
-  //type ===line or rectangle
 }
 
 const nearPoint = (x, y, postionX, positionY, name) => {
@@ -101,7 +102,45 @@ const adjustElementCoordinates = (element) => {
 
 const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSelectedElement,action,setAction,setIsMouseUp,boardData})=>{
     const myRef=useRef();
+    const lastRef=useRef();
+    const[scrollTheEnd,setScrollTheEnd]=useState(false);
+    console.log("scrollTheEnd",scrollTheEnd,lastRef);
+    const options= useMemo(()=>{
+      return{
+      root:null,
+      rootMargin:"0px",
+      threshold:.5}
+    },[]);
+    const callBack=(entries)=>{
+      const entry=entries[0];
+      setScrollTheEnd(entry.isIntersecting)
+    }
 
+    useEffect(()=>{//endless scroll
+      console.log(myRef.current.height);
+
+      const observer= new IntersectionObserver(callBack,options);
+      if(lastRef.current) observer.observe(lastRef.current);
+      return()=>{
+        if(lastRef.current) observer.unobserve(lastRef.current)
+      }
+    },[lastRef])
+
+    useEffect(()=>{
+
+      if(!scrollTheEnd) return;
+      const addHeight= myRef.current.height + "px";
+      const canvas = document.getElementById("canvas");
+      // console.log(-canvas.height);
+      canvas.addEventListener("resize",(e)=>{
+        console.log("e",e)
+        canvas.height=canvas.height+770;
+      })
+      // canvas.innerHeight.=canvas.height+770+"px";
+      lastRef.current.style.bottom=-(canvas.height+770)+"px";
+    },[scrollTheEnd]);
+
+    
     useEffect(()=>{//若是手機版，畫圖時把scroll event拿掉
       myRef.current.addEventListener('touchstart',function(e){
         if(e.target.id==="canvas"){
@@ -112,8 +151,9 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
     useEffect(() => {//畫圖
         const canvas = document.getElementById("canvas");
         const context = canvas.getContext("2d");
+        // canvas.style.height=canvas.height+"px";
+        // canvas.style.width=canvas.width+"px";
         context.clearRect(0, 0, canvas.width, canvas.height);
-    
         const roughCanvas = rough.canvas(canvas);
         elements.forEach((element) => {
           if(element.type!=="pencil"){
@@ -132,8 +172,9 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
       useEffect(()=>{
         if(!boardData) return
         getBoardElements();
-
       },[boardData])
+
+
 
       const getBoardElements=()=>{
         const array=[];
@@ -189,6 +230,7 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
 
     const handleMouseDown = (event) => {
         const { clientX, clientY } = event; //Event是一個物件，因此透過物件解構賦值把clientX 跟clientY的值指定回去//
+        console.log(event, clientX, clientY )
         if (tool === "selection") {
           //如果選擇selection工具
           //可以moving移動物件
@@ -423,8 +465,7 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
     setIsMouseUp(true);
   };
     return(
-
-        <BoardCanvasDiv
+        <BoardCanvasArea
         id="canvas"
         width={window.innerWidth}
         height={window.innerHeight}
@@ -436,7 +477,7 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
         onTouchEnd={handleTouchEnd}
         ref={myRef}
         > 
-      </BoardCanvasDiv>
+      </BoardCanvasArea>
     )
 
 }

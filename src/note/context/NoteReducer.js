@@ -39,6 +39,8 @@ const noteSelect=(state,action)=>{
     switch(action.type){
         case "SELECTED":
             return action.payload
+        case "PERMISSION":
+            return action.payload
         default:
             return state
     }
@@ -73,11 +75,15 @@ const NoteReducer=(props)=>{
         titleHeight:"",
         textHeight:""
     }
+    const permissionInitialData={
+        permissionEmail:[],owner:true,targetEmail:[]
+    }
     const[updateNoti,disNotiPatch]=useReducer(noteNoti,notification);
     const[updateTitle,disTitlePatch]=useReducer(noteTitle,title);
     const[updateText,disTextPatch]=useReducer(noteText,text);
     const[updateColor,disColorPatch]=useReducer(noteColor,color);
-    const[height,disHeightPatch]=useReducer(noteHeight,noteHeightList)
+    const[permissionList,disPermissionPatch]=useReducer(noteSelect,permissionInitialData)
+    const[height,disHeightPatch]=useReducer(noteHeight,noteHeightList);
     const[selectedItem,disSelectedPatch]=useReducer(noteSelect,selectedData);
     const getNoteUpdateTitle=(updateTitle)=>{
         disTitlePatch({
@@ -115,9 +121,15 @@ const NoteReducer=(props)=>{
             payload:{ id, noteText, noteTitle, index,image,time,color,whenToNotify,board}
         });
     }
+    const getPermissionItem=(permissionEmail,owner,targetEmail)=>{
+        disPermissionPatch({
+            type:"PERMISSION",
+            payload:{permissionEmail,owner,targetEmail}
+        })
+    }
 
     return(
-        <NoteContext.Provider value={{updateTitle:updateTitle.updateTitle,updateText:updateText.updateText,updateColor:updateColor.updateColor,updateNotification:updateNoti.notification,selectedItem,noteHeight:height,getColorUpdate,getNotificationUpdate,getNoteUpdateTitle,getNoteUpdateText,getSelectedItem,getNoteHeight}}>
+        <NoteContext.Provider value={{updateTitle:updateTitle.updateTitle,updateText:updateText.updateText,updateColor:updateColor.updateColor,updateNotification:updateNoti.notification,selectedItem,noteHeight:height,permissionList,getColorUpdate,getNotificationUpdate,getNoteUpdateTitle,getNoteUpdateText,getSelectedItem,getNoteHeight,getPermissionItem}}>
             {props.children}
         </NoteContext.Provider>
     )

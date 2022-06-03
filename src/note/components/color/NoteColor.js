@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState,useRef, useEffect, useContext } from "react";
-import { IconDiv,IconTipText,scaleBottom, Media_Query_SM,scaleRight } from "../../../components/constant";
+import { IconDiv,IconTipText,scaleBottom, Media_Query_SM,Media_Query_SMD,Media_Query_MD,scaleRight } from "../../../components/constant";
 import { ColorPalette, LeftArrow } from "../../../assets";
 import { updateNoteData } from "../../../store/HandleDb";
 import NoteContext from "../../context/NoteContext";
@@ -86,7 +86,7 @@ const ColorWhiteBtn=styled(ColorRedBtn)`
     background-color: #FFFFFF;
 `
 
-const NoteColor=({uid,id, selected,setList,setDataChanged,setNoteColor,isFromEdit,isColorPopUpEdit,setPopUpColor})=>{//EDit and List windows
+const NoteColor=({uid,id,setDataChanged,setNoteColor,isFromEdit,})=>{//EDit and List windows
     const[clickColor,setClickColor]=useState(false);
     const currentRef=useRef();//用來判斷是否為該物件
     const colorIconRef=useRef();
@@ -166,14 +166,32 @@ const NoteListColorDiv=styled.div`
 
 const ColorInputPopDiv=styled(ColorInputDiv)`
     border-radius: 8px;
-    left: 20%;
-    top: 37px;
+    left: 0;
+    top: 35px;
     animation: ${scaleRight}  0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    z-index:4001;
+    width: 100%;
+    height: 100px;
+    justify-content: space-around;
+    ${ Media_Query_MD}{
+        padding: unset;
+        border-radius: unset;
+        left: 0;
+        top: unset;
+        bottom: 0;
+        box-shadow: unset;
+        animation:${scaleBottom} 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both; 
+    }
+    ${ Media_Query_SMD}{
+        padding: unset;
+        border-radius: unset;
+        left: 0;
+        top: unset;
+        bottom: 0;
+        box-shadow: unset;
+        animation:${scaleBottom} 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both; 
+    }
     ${ Media_Query_SM}{
-        z-index:4001;
-        width: 100%;
-        height: 100px;
-        justify-content: space-around;
         padding: unset;
         border-radius: unset;
         left: 0;
@@ -188,6 +206,8 @@ const LeftArrowDiv=styled(IconDiv)`
         background-repeat: no-repeat;
         background-position: center;
         background-image: url(${LeftArrow}) ;
+        ${ Media_Query_MD}{display:block}
+        ${ Media_Query_SMD}{display:block}
         ${ Media_Query_SM}{display:block}
 `
 

@@ -13,10 +13,12 @@ const BoardSetpDiv=styled.div`
     right: 0;
     box-sizing: border-box;
     ${Media_Query_SM}{
+
       right:10px;
       bottom: 0;
     }
     ${Media_Query_SMD}{
+      position: fixed;
       right:10px;
       bottom: 0;
     }

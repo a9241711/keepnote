@@ -19,27 +19,28 @@ const ContentDiv=styled.div`
 const IntroDiv=styled.div`
     width: 100%;
     max-width: 1200px;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
+    position: relative;
 `
 const BannerDiv=styled.div`
     width: 100%;
-    height: 400px;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 `
 const MainDiv=styled.div`
     text-align: center;
-    max-width: 80%;
+    max-width: 100%;
     margin: 0 auto;
+    position:absolute;
+    top: 25%;
 `
 const Title=styled(H1)`
     font-size: 54px;
     margin: 30px;
+`
+const SubTitle=styled(H3)`
+    margin: 0 30px;
 `
 const SignUpBtn=styled.button`
     background: #FBBC04;
@@ -95,7 +96,7 @@ const Home=()=>{
         <BannerDiv>
             <MainDiv>
             <Title>紀錄您的日常瑣事...</Title>
-            <H3>輕鬆記住所有事情、忙碌的生活也不遺漏任何事。</H3>
+            <SubTitle>輕鬆記住所有事情、忙碌的生活也不遺漏任何事。</SubTitle>
             <Link  to={"/signup"} style={{textDecoration: "none"}}>
             <SignUpBtn>免費註冊</SignUpBtn>
             </Link>

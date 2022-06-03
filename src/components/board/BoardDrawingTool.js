@@ -144,7 +144,7 @@ const BoardDrawingTool = ({tool,setTool,id ,elements,uid}) => {
 
   return (
     <>
-      <Link to={"/"} onClick={refreshPage}>
+      <Link to={"/"} >
       <GoBackPrePageBtn  onClick={saveBoardToDb}/>
         </Link>
       <ToolDiv>

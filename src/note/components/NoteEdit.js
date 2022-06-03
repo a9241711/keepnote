@@ -8,6 +8,8 @@ import  { NotificationDeleteEdit } from "./notification/NotificationDelete";
 import SearchContext from "../../header/components/SearchContext";
 import { NoteModifyAreaMb } from "./modify/NoteModifyArea";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
+import HeaderLoadContext from "../../header/HeaderLoadContext";
+import PermissionItem from "../../components/permission/PermissionItem";
 
 const NoteDiv=styled.div`
     width: 50%;
@@ -40,16 +42,23 @@ const NoteTextInputDiv=styled(NoteTextInput)`
     height: 22px;
     line-height: 22px;
 `
+const PermissionNotifiDiv=styled.div`//permission and notification shows div
+    display: ${props=>{return props.titleClick?"flex":"none"}};
+    flex-wrap:wrap;
+    align-items: center;
+    padding:0 10px;
+`
 const NoteEditTool=styled.div`
     display: flex;
     justify-content: space-between;
 `
 
-const NoteEdit=({addData,uid,setDataChanged})=>{
+const NoteEdit=({uid,setDataChanged,userEmail})=>{
     const[noteTitle,setNoteTitle]=useState("");
     const[noteText,setNoteText]=useState("");
     const[noteColor,setNoteColor]=useState("#FFFFFF");
     const[notification,setNotification]=useState(1);
+    const[emailList,setEmailList]=useState([]);
     const[isFromEdit,setIsFromEdit]=useState(true);
     const[isInput,setIsInput]=useState(false);//檢查是否仍在輸入
     const[titleClick,setTitleClick] =useState(false);//檢查是否點擊title
@@ -59,6 +68,7 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
     const typingTextRef=useRef();
     const{filterData}=useContext(SearchContext);//取得所有filter data
     const{isFilter}=filterData;
+    const{setIsLoading}=useContext(HeaderLoadContext);
 
     //auto height 輸入框
     //控制修改文字框的height
@@ -77,7 +87,9 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
     }
 
     const handleClickOutofTarget=(e)=>{//檢查是否點到輸入框以外，是或否都改變isinput狀態
-        if(!typingTitleRef.current.contains(e.target) && !typingTextRef.current.contains(e.target)){
+        console.log(typingTitleRef);
+        if(e.target.classList.contains("close") ||e.target.classList.contains("confirm"))return;//for  close and confrim icon
+        else if(!typingTitleRef.current.contains(e.target) ){
             console.log("Clikver out side",typingTitleRef.current,typingTextRef.current)
             // setIsInput(false);
             setTitleClick(false);
@@ -85,12 +97,13 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
     }
 
     const handleSaveNoteToDb=async ()=>{
+        setIsLoading(true);
         const id =v4();
         const{noteTitle,noteText}=debouncedText;
         setDebouncedText("");
         if(notification!==1){
             const{timer,currentToken}=notification;
-            await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+            await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken,emailList);
             setIsClose(true);
             setDataChanged(true);
             setIsInput(false);
@@ -98,37 +111,24 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
         else{
             const timer=1; 
             const currentToken=1;
-            await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken);
+            await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken,emailList);
             console.log(timer,currentToken);
             setIsClose(true);
             setDataChanged(true);
             setIsInput(false);
         }
+        setIsLoading(false);
     }
     //此useEffect用來確認是否click title 秀出完整框
     useEffect(()=>{
         if(!titleClick) return
-        if(titleClick){
-            document.addEventListener("click",handleClickOutofTarget);
-            console.log("clicking");
-        }
+        document.addEventListener("click",handleClickOutofTarget);
+        console.log("clicking");
+
         return () =>{document.removeEventListener("click",handleClickOutofTarget);} 
         
     },[titleClick])
 
-    //此useEffect用來確認title & text是否正在輸入或輸入完成
-    // useEffect(()=>{
-    //     if(!debouncedText){//阻止第一次effect
-    //         return
-    //     }
-    //     if(isInput){//檢查是否正在輸入title或text，設定callback
-    //         document.addEventListener("click",handleClickOutofTarget);
-    //         console.log("typing");
-    //     }else{ 
-    //         handleSaveNoteToDb();//存入db
-    //   }
-    //      return () =>{document.removeEventListener("click",handleClickOutofTarget);} //移除handleClickOutofTarget
-    // },[isInput])
 
     useEffect(()=>{//若noteItle跟noteText有值的變動，則執行以下動作
         if(!noteTitle && !noteText){//阻止第一次的useEffect
@@ -145,6 +145,7 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
         setNoteText("");
         setNoteColor("#FFFFFF");
         setNotification(1);
+        setEmailList([]);
         setIsClose(false);
     },[isClose])
 
@@ -152,24 +153,24 @@ const NoteEdit=({addData,uid,setDataChanged})=>{
         <>
         {/* 桌機 */}
         <NoteDiv isFilter={isFilter} style={{backgroundColor: noteColor}} noteColor={noteColor} ref={typingTitleRef}>
-        <NoteTitleInputDiv style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue} onClick={()=> setTitleClick(true)} ></NoteTitleInputDiv>
+        <NoteTitleInputDiv   style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue} onClick={()=> setTitleClick(true)} ></NoteTitleInputDiv>
         {titleClick
-        ? <NoteTextInputDiv style={{backgroundColor: noteColor}} ref={typingTextRef} value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv> :null}
+        ? <NoteTextInputDiv style={{backgroundColor: noteColor}} value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv> :null}
+        <PermissionNotifiDiv titleClick={titleClick}>
         <NotificationDeleteEdit isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} notification={notification} setNotification={setNotification} />
-        <NoteEditTool>
-        <CanvasTool setIsClose={setIsClose} setNotification={setNotification} setIsFromEdit={setIsFromEdit} isFromEdit={isFromEdit} setNoteColor={setNoteColor} noteColor={noteColor} titleClick={titleClick} noteTitle={noteTitle} noteText={noteText} uid={uid} notification={notification}/>
+        <PermissionItem permissionEmail={emailList}/>
+        </PermissionNotifiDiv>
+        <NoteEditTool >
+        <CanvasTool  setIsClose={setIsClose} setNotification={setNotification} isFromEdit={isFromEdit} setNoteColor={setNoteColor} noteColor={noteColor} titleClick={titleClick} noteTitle={noteTitle} noteText={noteText} uid={uid}userEmail={userEmail}setEmailList={setEmailList} emailList={emailList}notification={notification}/>
         {titleClick
         ?<NoteModiEditBtn handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>:null}
         </NoteEditTool>
         </NoteDiv>
-        <NoteModifyAreaMb uid={uid} setDataChanged={setDataChanged}/> 
+        <NoteModifyAreaMb uid={uid} setDataChanged={setDataChanged} userEmail={userEmail}/> 
         </>
     )
 
 }
-
-
-
 
 
 export default NoteEdit

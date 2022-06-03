@@ -37,7 +37,7 @@ const DragDiv=styled.div`
     }
 `
 
-const NoteDragMb=({setIsDragged,setDataChanged,setList,uid,updateData,setSelected})=>{
+const NoteDragMb=({setIsDragged,setDataChanged,setList,uid,updateData,setSelected,userEmail})=>{
       async function handleDragEnd(result){
       if(!result.destination) return;
       const sourceIndex=result.source.index;//被拿取的位置
@@ -65,13 +65,13 @@ const getItemStyle=(isDragging,draggableStyle)=>({
                 <NoteListsMbDiv  {...provided.droppableProps} ref={provided.innerRef} style={{...provided.droppableProps.style}}>
             {
             setList.map((item,index)=>{
-                    const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
+                    const{id,noteText,noteTitle,image,time,color,whenToNotify="",permissionEmail,owner,targetEmail}=item;
                     const board=item.board;
                     return(  <Draggable key={id} draggableId={id} index={index} >
                             {(provided,snapshot)=>(
                             <DragDiv  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={getItemStyle(snapshot.isDragging,provided.draggableProps.style)} >
                             <NoteBgColor id={id}  color={color}/>
-                            <NoteItem  whenToNotify={whenToNotify}  setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid}/> 
+                            <NoteItem  whenToNotify={whenToNotify}  setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid}permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/> 
                             </DragDiv>
                             )}
                             </Draggable>

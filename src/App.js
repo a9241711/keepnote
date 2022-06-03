@@ -7,7 +7,7 @@ import AuthState from "./store/AuthState";
 import AuthRequired from "./store/AuthRequired";
 import HeadLoadState from "./header/HeaderLoadState";
 import Archive from "./note/archive/Archive";
-
+import MemberShip from "./components/membership/MemberShip";
 
 function App() {
   return (
@@ -17,13 +17,12 @@ function App() {
       <HeadLoadState>
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/board" element={<Board />} />
-        <Route path="/try" element={<BoardTry />} /> */}
         <Route path="/login" element={<MemberSignIn />} />
         <Route path="/signup" element={<MemberSignUp/> }/>
         <Route element={<AuthRequired />}>
         <Route path="/boarding" element={<BoardIndex />} />
         <Route path="/archive" element={<Archive />} />
+        <Route path="/membership" element={<MemberShip />} />
         </Route>
       </Routes>   
       </HeadLoadState>

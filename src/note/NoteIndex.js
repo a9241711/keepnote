@@ -9,6 +9,7 @@ import NoteReducer from "./context/NoteReducer";
 import SearchContext from "../header/components/SearchContext";
 import Loading from "./components/loading/Loading";
 import { KeepLogo } from "../assets";
+import ArchivePop from "./archive/ArchivePop";
 
 
 
@@ -57,12 +58,13 @@ const InitialText=styled.div`
     line-height: 1.75rem;
 `
 const NotePage=({isLoggin})=>{
-    const uid=isLoggin["uid"]
+    const {uid,email}=isLoggin;
     const[textData,setTextData]=useState([]);
     const[isDataChange,setDataChanged]=useState(false);
     const{setIsLoading,isRefresh,setIsRefresh,isLoading}=useContext(HeaderLoadContext);
     const{getOriginData,filterData,errorData,clearFilterData,getFilterButDataChange}=useContext(SearchContext);
     const{isFilter}=filterData;
+    const[isArchive,setIsArchive]=useState({show:false,id:null});//是否有封存記事
 
     useEffect(()=>{
         setIsLoading(true);
@@ -78,17 +80,17 @@ const NotePage=({isLoggin})=>{
     return(
 
         <NoteContent>   
-            <NoteReducer>
-           
+            <NoteReducer> 
             {errorData!==null
-            ? <InitialDiv>                   
-            <InitialImg></InitialImg>
-            <InitialText>查無資料，請重新輸入關鍵字</InitialText>
+            ?<InitialDiv>                   
+                <InitialImg></InitialImg>
+                <InitialText>查無資料，請重新輸入關鍵字</InitialText>
              </InitialDiv>
-            :<> <NoteEdit setDataChanged={setDataChanged} addData={setTextData} setList={textData} uid={uid} />
+            :<> 
+            <NoteEdit  setDataChanged={setDataChanged} setList={textData} uid={uid} userEmail={email}/>
             {textData.length>0
             ?   <>
-                <NoteList isDataChange={isDataChange} setDataChanged={setDataChanged} setList={textData} addData={setTextData} deleteData={setTextData} updateData={setTextData} uid={uid}/>
+                <NoteList setIsArchive={setIsArchive} isDataChange={isDataChange} setDataChanged={setDataChanged} setList={textData} addData={setTextData} deleteData={setTextData} updateData={setTextData} uid={uid} userEmail={email}/>
                 </>
             :<>            
                 {isLoading
@@ -97,8 +99,10 @@ const NotePage=({isLoggin})=>{
                 <InitialDiv>
                     <InitialImg></InitialImg>
                     <InitialText>你新增的記事會顯示在這裡</InitialText>
-                </InitialDiv></>}
+                </InitialDiv>
             </>}
+            </>}
+            {isArchive.show?<ArchivePop id={isArchive.id}  uid={uid} setIsArchive={setIsArchive} setDataChanged={setDataChanged}/> :null}
             </NoteReducer>
         </NoteContent>
     )

@@ -1,7 +1,6 @@
 import { useState,useRef,useEffect, useContext } from "react";
 import styled from "styled-components";
 import NoteItem from "./NoteItem";
-import { v4 } from "uuid";
 import { updateListsPosition } from "../../store/HandleDb";
 import { Media_Query_MD, Media_Query_SM,Media_Query_SMD,Media_Query_LG } from "../../components/constant";
 import NoteTool from "./NoteTool";
@@ -35,7 +34,7 @@ const NoteListCol=styled(Masonry)`
     }
     }       
 `
-const NoteIconDiv=styled.div`//Tool Div
+const NoteIconDiv=styled.div`
     width: 100%;
     display:flex;
     align-items: center;
@@ -48,7 +47,7 @@ const NoteIconDiv=styled.div`//Tool Div
     box-sizing: border-box;
 `
 
-const NoteLists=styled.div`//
+const NoteLists=styled.div`
     width: 250px;
     box-sizing: border-box;
     height:auto;
@@ -76,14 +75,16 @@ const NoteLists=styled.div`//
             visibility:"visible";
         }
     }
-    &:active ${NoteIconDiv}{
-        visibility: hidden;
-    }
 `
+    /* &:active ${NoteIconDiv}{
+        visibility: hidden;
+    } */
 
-const NoteList=({isDataChange,setDataChanged,setList,uid,updateData})=>{
+
+const NoteList=({isDataChange,setDataChanged,setList,uid,userEmail,updateData,setIsArchive})=>{
             const[isDragged,setIsDragged]=useState(false);//拖曳
             const [selected, setSelected] = useState(false);//是否點擊特定貼文
+            const [clickTool,setClickTool]=useState(false);//是否點擊tool
             const dragOverItem=useRef();//拖曳進入的位置
             const dragItem=useRef();//設定被拖曳的position位置
             const draggedItem=useRef();//用來觀察被拖曳的item
@@ -158,35 +159,30 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,updateData})=>{
     setIsNotification(true);
     setPopValue({title,body,time,id});
     }
-    const breakPoints={//Masonry排版
-        default:4,
-        1023:3,
-        769:3,
-    }
 
     return(
         <>
         <NoteListsDiv>
-            <NoteListCol breakpointCols={breakPoints} className="my-masonry-grid" columnClassName="my-masonry-grid_column" onDrop={dragDrop}>
+            <NoteListCol breakpointCols={{default:4, 1023:3,769:3, }} className="my-masonry-grid" columnClassName="my-masonry-grid_column" onDrop={dragDrop}>
             { 
             setList.map((item,index)=>{
-                    const{id,noteText,noteTitle,image,time,color,whenToNotify=""}=item;
+                    const{id,noteText,noteTitle,image,time,color,whenToNotify="",permissionEmail,owner,targetEmail}=item;
                     const board=item.board;
-                    const key=v4();
-                    return( <NoteLists key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
+                    return( <NoteLists clickTool={clickTool} key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
                             <NoteBgColor id={id}  color={color}/>
-                            <NoteItem whenToNotify={whenToNotify}  setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid}/>                             
-                            <NoteIconDiv >
-                            <NoteTool  setList={setList}  id={id} uid={uid} setDataChanged={setDataChanged} noteText={noteText} noteTitle={noteTitle}  />
+                            <NoteItem whenToNotify={whenToNotify}  setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid} permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/>                             
+                            <NoteIconDiv  >
+                            <NoteTool setIsArchive={setIsArchive} setClickTool={setClickTool} setList={setList}  id={id} uid={uid} userEmail={userEmail} setDataChanged={setDataChanged} noteText={noteText} noteTitle={noteTitle}  permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail}/>
                             </NoteIconDiv>
                             </NoteLists>
                             )
             })}  
             </NoteListCol>
-            <NoteDragMb setIsDragged={setIsDragged} setSelected={setSelected}  setDataChanged={setDataChanged}setList={setList}uid={uid}updateData={updateData}/>
-            {selected ? <NoteModifyArea isDataChange={isDataChange} setDataChanged={setDataChanged} uid={uid} selected={selected} setSelected={setSelected}   />
+            <NoteDragMb setIsDragged={setIsDragged} setSelected={setSelected}  setDataChanged={setDataChanged}setList={setList}uid={uid}updateData={updateData} userEmail={userEmail}/>
+            {selected ? <NoteModifyArea setIsArchive={setIsArchive} isDataChange={isDataChange} setDataChanged={setDataChanged} uid={uid} selected={selected} setSelected={setSelected}   userEmail={userEmail}/>
                  : null}
                 {isNotification?<NotificationPop  setSelected={setSelected}  popValue={popValue} setList={setList} setIsNotification={setIsNotification}/>:null}
+               
         </NoteListsDiv>
         </>
             )
