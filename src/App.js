@@ -6,8 +6,8 @@ import { MemberSignUp } from "./pages/Member";
 import AuthState from "./store/AuthState";
 import AuthRequired from "./store/AuthRequired";
 import HeadLoadState from "./header/HeaderLoadState";
-import Archive from "./note/archive/Archive";
 import MemberShip from "./components/membership/MemberShip";
+import Archive from "./pages/Archive";
 
 function App() {
   return (

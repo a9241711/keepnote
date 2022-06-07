@@ -7,6 +7,7 @@ import CanvasTool from "./CanvasTool";
 import  { NotificationDeleteEdit } from "./notification/NotificationDelete";
 import SearchContext from "../../header/components/SearchContext";
 import { NoteModifyAreaMb } from "./modify/NoteModifyArea";
+import NoteEditMb from "./edit/NoteEditMb";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
 import HeaderLoadContext from "../../header/HeaderLoadContext";
 import PermissionItem from "../../components/permission/PermissionItem";
@@ -166,7 +167,7 @@ const NoteEdit=({uid,setDataChanged,userEmail})=>{
         ?<NoteModiEditBtn handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>:null}
         </NoteEditTool>
         </NoteDiv>
-        <NoteModifyAreaMb uid={uid} setDataChanged={setDataChanged} userEmail={userEmail}/> 
+        <NoteEditMb uid={uid} setDataChanged={setDataChanged} userEmail={userEmail}/> 
         </>
     )
 

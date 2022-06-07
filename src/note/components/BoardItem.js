@@ -100,4 +100,4 @@ const BoardItem=({board})=>{
 
 }
 
-export default BoardItem
+// export default BoardItem

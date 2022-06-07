@@ -11,6 +11,7 @@ import NoteModifyArea from "./modify/NoteModifyArea";
 import Masonry from 'react-masonry-css';
 import SearchContext from "../../header/components/SearchContext";
 import NoteDragMb from "./drag/NoteDragMb";
+import NoteContext from "../context/NoteContext";
 
 
 const NoteListsDiv=styled.div`//List Content Div
@@ -93,6 +94,7 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,userEmail,updateData,se
             const{filterData,dataList,filterButDataChange}=useContext(SearchContext);
             const{filterDataList,isFilter}=filterData;
             const originDataList= dataList["dataList"];//取得原資料
+            const {selectedItem} =useContext(NoteContext);//測試params
 
 
 
@@ -179,7 +181,11 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,userEmail,updateData,se
             })}  
             </NoteListCol>
             <NoteDragMb setIsDragged={setIsDragged} setSelected={setSelected}  setDataChanged={setDataChanged}setList={setList}uid={uid}updateData={updateData} userEmail={userEmail}/>
-            {selected ? <NoteModifyArea setIsArchive={setIsArchive} isDataChange={isDataChange} setDataChanged={setDataChanged} uid={uid} selected={selected} setSelected={setSelected}   userEmail={userEmail}/>
+            {selected ? 
+            // <Link to={`/${selectedItem.id}`}>
+                <NoteModifyArea setIsArchive={setIsArchive} isDataChange={isDataChange} setDataChanged={setDataChanged} uid={uid} selected={selected} setSelected={setSelected}   userEmail={userEmail}/>
+            // </Link>
+            
                  : null}
                 {isNotification?<NotificationPop  setSelected={setSelected}  popValue={popValue} setList={setList} setIsNotification={setIsNotification}/>:null}
                

@@ -51,8 +51,6 @@ const CanvasTool=({noteTitle ,noteText,uid,userEmail,titleClick,setNoteColor,not
   }
     return(
         <>
-        {/* {titleClick
-        ? */}
         <NodeToolDiv titleClick={titleClick}>
         <Link  to={"/boarding"} state={{id,uid}}>
         <BoardAdd onClick={handleSaveNoteToDb}><IconTipText>新增繪圖記事</IconTipText></BoardAdd>

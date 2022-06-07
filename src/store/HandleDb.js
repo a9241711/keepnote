@@ -25,7 +25,7 @@ export const updateUserImg=async(uid,url)=>{
     await updateDoc(userRef,updateData);
 }
 
-//讀取個人圖像
+//讀取個人圖像 With Uid
 export const queryUserImg=async(uid)=>{
     const userRef=doc(db,"user",uid);//使用者資料路徑
     const snapShot=await getDoc(userRef);
@@ -38,6 +38,37 @@ export const queryUserImg=async(uid)=>{
     }
 }
 
+//讀取個人圖像 With Email
+// export const queryUserImgByEmail=async(email,setEmailList)=>{
+//     console.log("email",email);
+//     const array=[];
+//     for(let i =0 ; i< email.length;i++){
+//         const userRef=query(collection(db,"user"),where("email","==",email[i]));
+//         const snapShot=await getDocs(userRef);
+//         snapShot.forEach(item=>{
+//             console.log(item.data()["profileUrl"]);
+//             if(!typeof item.data()["profileUrl"] ==="undefined"){
+//                 array.push(item.data());
+//             }else{
+//                 const reponse= item.data();
+//                 reponse["profileUrl"]=null;
+//                 array.push(reponse);
+//             }
+
+//         })
+//     }
+//     console.log(array,"array");
+//     setEmailList(array);
+//     // const userRef=doc(db,"user",uid);//使用者資料路徑
+//     // const snapShot=await getDoc(userRef);
+//     // const arrayDoc=
+//     // const response=snapShot.data();
+//     // if(!response.profileUrl){
+//     //     return null
+//     // }else{
+//     //     return {profileUrl:response.profileUrl}
+//     // }
+// }
 
 //Note Lists Data
 //save noteData

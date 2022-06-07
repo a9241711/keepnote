@@ -70,8 +70,8 @@ const ArchiveItem=({uid,id,image,noteText,noteTitle,whenToNotify,permissionEmail
         </NoteDiv>
         </NoteLists>
         <NoteAttitionDiv>
-        <PermissionItem permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/>
-        <ArchiveNotification  whenToNotify={whenToNotify}   />
+            <PermissionItem permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/>
+            <ArchiveNotification  whenToNotify={whenToNotify}   />
         </NoteAttitionDiv>
       </>
     )

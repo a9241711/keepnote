@@ -81,9 +81,9 @@ const NoteModiBtn=({uid,setSelected,setDataChanged,setIsArchive})=>{//popUp視�
       setSelected(false);
     },[isArchive]);
 
-    useEffect(()=>{//十秒自動關閉封存彈出視窗
+    useEffect(()=>{//60秒自動關閉封存彈出視窗
       setTimeout(()=>{
-        setIsArchive({show:false,id:null});setIsBeenArchive(false);},10000);
+        setIsArchive({show:false,id:null});setIsBeenArchive(false);},60000);
     },[isArchive]);
 
     return(

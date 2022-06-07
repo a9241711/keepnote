@@ -123,6 +123,9 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
         console.log("From Edit")
         getToken(messaging,{vapidKey:publicVapidKey})
         .then((currentToken) => {
+          console.log("currentToken",currentToken)
+          setTime("");
+          setDate("");
           return setNotification({timer,currentToken})
         })//傳回Edit頁面
       }
@@ -149,7 +152,7 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
         }
     }
       if(clickNotificate){
-          document.addEventListener("click",handleClickNotificationIcon);
+        document.addEventListener("click",handleClickNotificationIcon);
       }
       return ()=>{ document.removeEventListener("click",handleClickNotificationIcon)};//取消觀察
   },[clickNotificate])

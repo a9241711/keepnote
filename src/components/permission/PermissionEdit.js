@@ -14,7 +14,7 @@ const PermissionInputingDiv=styled.div`
 const PermissionInputIconDiv=styled.div`
     width: 40px;
     height: 40px;
-    border:1px solid #565656;
+    /* border:1px solid #565656; */
     border-radius:50%;
     display: flex;
     align-items: center;

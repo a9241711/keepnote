@@ -3,28 +3,28 @@ import { useEffect, useState,useContext } from "react";
 import styled from "styled-components";
 import { queryForEmail, savePermission } from "../../store/HandleDb";
 import { AddUser } from "../../assets";
-import { IconDiv,IconTipText,Media_Query_SM,Media_Query_SMD,LargerAnimate,Button,CloseButton,Text, Media_Query_MD, Media_Query_LG } from "../constant";
+import { IconDiv,IconTipText,Media_Query_SM,Media_Query_SMD,LargerAnimate,Button,CloseButton,Text, Media_Query_MD, Media_Query_LG, ListPopModifyBg } from "../constant";
 import {UserPermission} from "../../header/User";
 import PermissionEdit from "./PermissionEdit"
 import PermissionList from "./PermissionList";
 import NoteContext from "../../note/context/NoteContext";
 import { v4 } from "uuid";
 
-const NoteListModifyBg = styled.div`//修改文字的Fixed背景顏色，觸控版關閉
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(121, 122, 124, 0.6);
-    z-index: 999;
-    ${Media_Query_SMD}{
-      /* display: none; */
-    }
-    ${Media_Query_SM}{
-      /* display: none; */
-    }
-`;
+// const NoteListModifyBg = styled.div`//修改文字的Fixed背景顏色，觸控版關閉
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     height: 100vh;
+//     background-color: rgba(121, 122, 124, 0.6);
+//     z-index: 999;
+//     ${Media_Query_SMD}{
+//       /* display: none; */
+//     }
+//     ${Media_Query_SM}{
+//       /* display: none; */
+//     }
+// `;
 const PermissionIcon=styled(IconDiv)`
     background-image: url(${AddUser}) ;
     cursor: pointer;
@@ -186,50 +186,51 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
         <PermissionIcon onClick={()=>  {setClickPermission(!clickPermission)} }><IconTipText>協作者</IconTipText></PermissionIcon>   
         {clickPermission? 
         <>
-        <NoteListModifyBg></NoteListModifyBg>
+        <ListPopModifyBg />
+        {/* <NoteListModifyBg></NoteListModifyBg> */}
         <PermissionDiv>
-        <PermissionEditDiv>
-            <PermissionTitleDiv>
-                <PermissionTitleText>協作者</PermissionTitleText>
-            </PermissionTitleDiv>
-            <PermissionUserDiv>
-                {owner? 
+            <PermissionEditDiv>
+                <PermissionTitleDiv>
+                    <PermissionTitleText>協作者</PermissionTitleText>
+                </PermissionTitleDiv>
+                <PermissionUserDiv>
+                    {owner? 
+                    <>
+                    <UserPermission email={userEmail} /> 
+                    <TextEmail>{userEmail} (擁有者)</TextEmail> 
+                    </>
+                    :<>
+                    <UserPermission email={targetEmail} />
+                    <TextEmail>{targetEmail} (擁有者)</TextEmail> 
+                    </>
+                    }
+                </PermissionUserDiv>
+                {emailList.slice(1).map((email)=>{
+                        const id=v4();
+                        return(
+                            <PermissionList  key={id} id={id} userEmail={email} setEmailList={setEmailList} />
+                        )
+                    })}
+                <PermissionInputDiv>
+                    <PermissionEdit emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
+                    <EmailErrorText >{emailErrorMes}</EmailErrorText>
+                {emailError.length>0?
                 <>
-                <UserPermission email={userEmail} /> 
-                <TextEmail>{userEmail} (擁有者)</TextEmail> 
-                </>
-                :<>
-                <UserPermission email={targetEmail} />
-                <TextEmail>{targetEmail} (擁有者)</TextEmail> 
-                </>
-                }
-            </PermissionUserDiv>
-            {emailList.slice(1).map((email)=>{
+                    {emailError.map(error=> {
                     const id=v4();
                     return(
-                        <PermissionList  key={id} id={id} userEmail={email} setEmailList={setEmailList} />
-                    )
-                })}
-            <PermissionInputDiv>
-                <PermissionEdit emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
-                <EmailErrorText >{emailErrorMes}</EmailErrorText>
-            {emailError.length>0?
-            <>
-                {emailError.map(error=> {
-                const id=v4();
-                return(
-                <EmailErrorText key={id}>{error.error}</EmailErrorText>
-                    )
-                 })
-                }
-            </> 
-            :null}
-            </PermissionInputDiv>
-        </PermissionEditDiv>
-        <PermissionBtnDiv>
-                    <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
-                    <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
-        </PermissionBtnDiv>
+                    <EmailErrorText key={id}>{error.error}</EmailErrorText>
+                        )
+                     })
+                    }
+                </> 
+                :null}
+                </PermissionInputDiv>
+            </PermissionEditDiv>
+            <PermissionBtnDiv>
+                        <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
+                        <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
+            </PermissionBtnDiv>
         </PermissionDiv>
         </>
         :null}
@@ -240,9 +241,6 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
 export default Permission
 
 export const PermissionEditArea=({uid,userEmail,setEmailList,emailList})=>{//for Edit
-    // const[permissionEmail,setPermissionEmail]=useState("");
-    // const[emailList,setEmailList]=useState();
-
     const[emailError,setEmailError]=useState([]);//處理從db來的錯誤訊息顯示
     const[emailErrorMes,setEmailErrorMes]=useState();//處理信箱格式檢查的錯誤顯示
     const[clickPermission,setClickPermission]=useState(false);
@@ -266,7 +264,8 @@ export const PermissionEditArea=({uid,userEmail,setEmailList,emailList})=>{//for
         <PermissionIcon onClick={()=>  {setClickPermission(!clickPermission)} }><IconTipText>協作者</IconTipText></PermissionIcon>   
         {clickPermission? 
         <>
-        <NoteListModifyBg></NoteListModifyBg>
+        <ListPopModifyBg />
+        {/* <NoteListModifyBg></NoteListModifyBg> */}
         <PermissionDiv>
         <PermissionEditDiv>
             <PermissionTitleDiv>
@@ -317,7 +316,7 @@ const PermissionModifyDiv=styled.div`
     padding: 12px;
     position: fixed;
     width: 100%;
-    max-width: 610px;
+    /* max-width: 610px; */
     height: 100%;
     top:0;
     right: 0;
@@ -332,7 +331,7 @@ const PermissionModifyDiv=styled.div`
         padding: 0;
     }
     ${Media_Query_MD}{
-        justify-content: flex-start;
+        align-items: center;
     }
     ${Media_Query_SMD}{
         align-items: center;
@@ -344,6 +343,22 @@ const PermissionModifyDiv=styled.div`
         justify-content: center;
         height: 100%;
         padding:0;
+    }
+`
+const PermissionEditModifyDiv=styled(PermissionEditDiv)`
+    ${Media_Query_MD}{
+        max-width: 610px;
+    }
+    ${Media_Query_SMD}{
+        max-width: 610px;
+    }
+`
+const PermissionModifyBtnDiv=styled(PermissionBtnDiv)`
+    ${Media_Query_MD}{
+        max-width: 610px;
+    }
+    ${Media_Query_SMD}{
+        max-width: 610px;
     }
 `
 
@@ -368,29 +383,22 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
         setIsModify(true);
     }
     useEffect(()=>{
-        console.log("permissionEmail",permissionEmail)
         const handleEmailList=()=>{
             if(owner===true){
                 const permissionEmailCopy=permissionEmail.slice(0)
                 permissionEmailCopy.unshift(userEmail);
-                console.log("permissionEmailCopy",permissionEmailCopy)
                 const noRepeatValue=[...(new Set(permissionEmailCopy))]
-                console.log(noRepeatValue);
                 setEmailList(noRepeatValue);
             }else{
                 const permissionEmailCopy=permissionEmail.slice(0)
                 permissionEmailCopy.unshift(targetEmail);
-                console.log("permissionEmailCopy",permissionEmailCopy)
                 const noRepeatValue=[...(new Set(permissionEmailCopy))]
-                console.log(noRepeatValue);
                 setEmailList(noRepeatValue);
             }
         }
         handleEmailList();
         //載入資料庫permission資料
     },[])
-
-
 
     useEffect(()=>{
         if(!isModify) return
@@ -405,7 +413,7 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
         {clickPermission? 
         <>
         <PermissionModifyDiv>
-        <PermissionEditDiv>
+        <PermissionEditModifyDiv>
             <PermissionTitleDiv>
                 <PermissionTitleText>協作者</PermissionTitleText>
             </PermissionTitleDiv>
@@ -442,11 +450,11 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
             </> 
             :null}
             </PermissionInputDiv>
-        </PermissionEditDiv>
-        <PermissionBtnDiv>
+        </PermissionEditModifyDiv>
+            <PermissionModifyBtnDiv>
                     <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
                     <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>提交</PermissionBtn>
-            </PermissionBtnDiv>
+            </PermissionModifyBtnDiv>
         </PermissionModifyDiv>
         </>
         :null}

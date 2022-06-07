@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 import { User, PermissionClose } from "../../assets";
+import { queryUserImgByEmail } from "../../store/HandleDb";
 import { Text,IconDiv,Media_Query_SM } from "../constant";
 
 
@@ -37,14 +39,18 @@ const PermissionCheckIcon=styled(IconDiv)`
     cursor: pointer;
 `
 const PermissionList=({userEmail,id,setEmailList})=>{//Permission PopUp editing Area
-     
      const handleClose=(e)=>{
         console.log(e.target.classList.contains("close"));
         e.preventDefault();
         setEmailList(prev=> {
-            return prev.filter(item=> item!==e.target.previousSibling.innerText)
+            return prev.filter(item=> item!==e.target.previousSibling.innerText);
          })
      }
+    // console.log("userEmail",userEmail)
+    // useEffect(()=>{
+    //     console.log("userEmail",userEmail)
+    //     queryUserImgByEmail(userEmail);
+    // },[]);
 
     return(
         <PermissionUserDiv >

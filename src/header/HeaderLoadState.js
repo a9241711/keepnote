@@ -14,7 +14,6 @@ const handlePage=(state,action)=>{
         default :
             return state
     }
-
 }
 
 const HeadLoadState=(props)=>{
@@ -35,7 +34,6 @@ const HeadLoadState=(props)=>{
         })
     }
     const getNavClick=()=>{
-
         disNavClickPatch({
             type:"CLICK",
             payload:!navClick

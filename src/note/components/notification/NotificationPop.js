@@ -59,6 +59,10 @@ const NotifBtn=styled(Button)`
     height: auto;
     padding: 8px 24px;
     border-radius: 4px;
+    &:hover{
+        color: #FFF;
+        border:none;
+    }
     ${Media_Query_SMD}{
         background-color: transparent;
     }
@@ -70,6 +74,7 @@ const NotifIconDiv=styled(IconDiv)`
     background-repeat: no-repeat;
     background-position: center;
     background-image: url(${Close}) ;
+    cursor:pointer;
 `       
 const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{//前端，提醒訊息彈出視窗
     const{title,body,time}=popValue;
@@ -95,7 +100,7 @@ const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{//�
             <NotifDiv>
             <NotifText>{currentTime} - {title} - {body}</NotifText>
             <NotifBtn onClick={handlePopItem}>開啟記事</NotifBtn>
-            <NotifIconDiv onClick={()=>setIsNotification(false)}><IconTipText>關閉</IconTipText></NotifIconDiv>
+            <NotifIconDiv onClick={()=>setIsNotification(false)}></NotifIconDiv>
             </NotifDiv>
         </NotificationFixed>
         </>

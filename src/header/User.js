@@ -88,12 +88,16 @@ function User({isLoggin}) {
 
 export default User
 
+const UserPermmisionDiv=styled(UserDiv)`
+    width: 40px;
+`
+
 export function UserPermission({email}) {//for Permission page
   const userName= email.toUpperCase().slice(0,1);
 return (
-  <UserDiv>
+  <UserPermmisionDiv>
       {userName}
-  </UserDiv>
+  </UserPermmisionDiv>
 )
 }
 

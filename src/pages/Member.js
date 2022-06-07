@@ -109,11 +109,7 @@ const BackToIndex=styled.div`
 `
 
 const MemberSignIn = () => {//登入
-  const {
-    getSignIn,
-    getErrorMessage,
-    error,getResetPassword,reset
-  } = useContext(AuthContext);
+  const {getSignIn,getErrorMessage,error,getResetPassword,reset} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);//防止使用者重複點擊
   // const [isSignUp,setIsSignUp]=useState(false);//是否註冊
   const [isResetPassword,setIsResetPassword]=useState(false);//是否重設密碼
@@ -122,17 +118,19 @@ const MemberSignIn = () => {//登入
   const passwordRef = useRef();
   const currentUser = useAuth();
 
-  const handleLogin = async () => {//登入
+  const handleLogin = async () => {//登入fn
     setLoading(true);
     try {
       let response = await signIn(
         emailRef.current.value,
         passwordRef.current.value
       );
+      console.log("response",response)
       let user = {
         email: response["user"]["email"],
         token: response["user"]["accessToken"],
         uid: response["user"]["uid"],
+        photoURL: response["user"]["photoURL"]
       };
       getSignIn(user); //回呼disAutoPatch;
       localStorage.setItem("token",JSON.stringify(user));//存入uid到local storage
@@ -144,7 +142,7 @@ const MemberSignIn = () => {//登入
     setLoading(false);
   };
 
-  const handleReset=async()=>{//重設密碼
+  const handleReset=async()=>{//重設密碼 fn
     setLoading(true);
     try{
       await  resetPassword( emailRef.current.value);
@@ -161,79 +159,72 @@ const MemberSignIn = () => {//登入
     <>
     
     <MemberDiv>
-    <Link to={"/"}>
-    <BackToIndex></BackToIndex>
-    </Link>
-    <H1> KeepNote </H1>
-    <MemberInputDiv>
-    {/* 重設密碼區 */}
-    {isResetPassword 
-    ?
-    <>
-    <H3>重設密碼</H3>
-      <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
-      {/* 顯示錯誤文字 */}
-      {error ? <Text>{error}</Text> : null}
-      {/* 顯示重設密碼文字 */}
-      {reset ? <><Text>{reset}</Text> <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(false)}}> 點此登入帳號密碼</Plink> </>: null}
-      <BtnDiv>
-      {reset ?null
-      :<SignUpBtn  disabled={loading} onClick={handleReset}>
-      重設密碼
-      </SignUpBtn>}
-      <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(false)}}> 沒有帳戶？請點此註冊帳號</Plink>
-      </BtnDiv>
-    </>
-    :
-    <>
-    {/* 登入區 */}
-      <H3> {currentUser ?currentUser.email +" 已登入": "登入"}</H3>
-      {currentUser ?<>
-      <LoginLink  to={"/"}>回到首頁</LoginLink> 
-      </>
-      : 
+      <Link to={"/"}>
+        <BackToIndex></BackToIndex>
+      </Link>
+      <H1> KeepNote </H1>
+      <MemberInputDiv>
+      {/* 重設密碼區 */}
+      {isResetPassword 
+      ?
       <>
-      <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
-      <Plink style={{alignSelf:"flex-end"}} onClick={(e)=> {e.preventDefault();setIsResetPassword(true)}}> 忘記密碼？</Plink>
-      <InputDiv type="password" placeholder="輸入密碼" ref={passwordRef} />
-      {/* 顯示錯誤文字 */}
-      {error ? <Text>{error}</Text> : null}
-      <BtnDiv>
-      <LoginBtn disabled={loading} onClick={handleLogin }>
-        登入
-      </LoginBtn>
-      <LoginLink  to={"/signup"}>沒有帳戶？請點此註冊帳號</LoginLink> 
-      </BtnDiv>
-      <GoogleSign />
+      <H3>重設密碼</H3>
+        <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
+        {/* 顯示錯誤文字 */}
+        {error ? <Text>{error}</Text> : null}
+        {/* 顯示重設密碼文字 */}
+        {reset ? <><Text>{reset}</Text> <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(!isResetPassword)}}> 點此登入帳號密碼</Plink> </>: null}
+        <BtnDiv>
+        {reset ?null
+        :<SignUpBtn  disabled={loading} onClick={handleReset}>
+        重設密碼
+        </SignUpBtn>}
+        <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(!isResetPassword)}}> 沒有帳戶？請點此註冊帳號</Plink>
+        </BtnDiv>
+      </>
+      :
+      <>
+      {/* 登入區 */}
+        <H3> {currentUser ?currentUser.email +" 已登入": "登入"}</H3>
+        {currentUser ?<>
+        <LoginLink  to={"/"}>回到首頁</LoginLink> 
+        </>
+        : 
+        <>
+        <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
+        <Plink style={{alignSelf:"flex-end"}} onClick={(e)=> {e.preventDefault();setIsResetPassword(true)}}> 忘記密碼？</Plink>
+        <InputDiv type="password" placeholder="輸入密碼" ref={passwordRef} />
+        {/* 顯示錯誤文字 */}
+        {error ? <Text>{error}</Text> : null}
+        <BtnDiv>
+        <LoginBtn disabled={loading} onClick={handleLogin }>
+          登入
+        </LoginBtn>
+        <LoginLink  to={"/signup"}>沒有帳戶？請點此註冊帳號</LoginLink> 
+        </BtnDiv>
+        <GoogleSign />
+        </>
+        }
       </>
       }
-
-    </>
-    }
       </MemberInputDiv>
-      </MemberDiv>
+    </MemberDiv>
     </>
   );
 };
-
 export default MemberSignIn;
 
 
 
 
 export const MemberSignUp = () => {//註冊
-    const {
-      getSignUp,
-      getErrorMessage,
-      error,
-    } = useContext(AuthContext);
+    const {getSignUp,getErrorMessage,error,} = useContext(AuthContext);
     const [loading, setLoading] = useState(false);//防止使用者重複點擊
     const emailRef = useRef();
     const passwordRef = useRef();
     const currentUser = useAuth();
   
-  
-    const handleSignUp = async () => {//註冊
+    const handleSignUp = async () => {//註冊 fn
       setLoading(true);
       try {
         let response = await signUp(
@@ -245,7 +236,8 @@ export const MemberSignUp = () => {//註冊
           email: response["user"]["email"],
           token: response["user"]["accessToken"],
           uid: response["user"]["uid"],
-          providerId:"firebase"
+          providerId:"firebase",
+          photoURL: response["user"]["photoURL"]
         };
         await saveSignUpdData(user);//存入DB
         getSignUp(user);////回呼disAutoPatch
@@ -261,35 +253,32 @@ export const MemberSignUp = () => {//註冊
   
     return (
       <>
-      
       <MemberDiv>
-      <Link to={"/"}>
-      <BackToIndex></BackToIndex>
-      </Link>
-      <H1> KeepNote </H1>
-      <MemberInputDiv>
-      
-      {/* 註冊登入區 */}
-        <H3> {currentUser ?"註冊成功"+ currentUser.email : "註冊"}</H3>
-        {currentUser
-        ?<LoginLink  to={"/"}>回到首頁</LoginLink>
-        :<>
-        <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
-        <InputDiv type="password" placeholder="輸入密碼" ref={passwordRef} />
-        {/* 顯示錯誤文字 */}
-        {error ? <Text>{error}</Text> : null}
-        <BtnDiv>
-        <SignUpBtn  disabled={loading} onClick={handleSignUp}>
-          註冊
-        </SignUpBtn>
-        <LoginLink  to={"/login"}>已有帳號？點此登入</LoginLink>
-        </BtnDiv>
-        </>
-        }
-        
-  
+        <Link to={"/"}>
+          <BackToIndex></BackToIndex>
+        </Link>
+        <H1> KeepNote </H1>
+        <MemberInputDiv>
+
+        {/* 註冊登入區 */}
+          <H3> {currentUser ?"註冊成功"+ currentUser.email : "註冊"}</H3>
+          {currentUser
+          ?<LoginLink  to={"/"}>回到首頁</LoginLink>
+          :<>
+            <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
+            <InputDiv type="password" placeholder="請輸入至少6個字元密碼" ref={passwordRef} />
+            {/* 顯示錯誤文字 */}
+            {error ? <Text>{error}</Text> : null}
+            <BtnDiv>
+            <SignUpBtn  disabled={loading} onClick={handleSignUp}>
+              註冊
+            </SignUpBtn>
+            <LoginLink  to={"/login"}>已有帳號？點此登入</LoginLink>
+            </BtnDiv>
+          </>
+          } 
         </MemberInputDiv>
-        </MemberDiv>
+      </MemberDiv>
         
       </>
     );

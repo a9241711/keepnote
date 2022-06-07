@@ -29,7 +29,7 @@ export const mapAuthCodeToMessage=(state,action)=>{
         case "auth/email-already-in-use":
             return {error:"帳號已被使用，請重新註冊"}
         case "auth/weak-password":
-            return {error:"weak-password"}
+            return {error:"密碼至少須包含6個字元"}
         case "auth/user-not-found":
             return {error:"不存在此帳號"}
         default:

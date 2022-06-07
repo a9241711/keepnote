@@ -1,13 +1,11 @@
 import styled,{createGlobalStyle,keyframes} from "styled-components";
 
-
 export const Media_Query_SM='@media screen and (min-width: 320px) and (max-width: 480px) ';
 export const Media_Query_SMD='@media screen and (min-width: 481px) and (max-width: 768px) ';
 export const Media_Query_MD='@media screen and (min-width:769px) and (max-width: 1023.99px)';
 export const Media_Query_LG='@media screen and (min-width:1024px)';
 
-
-
+// 共用global 
 export const GlobalStyle=createGlobalStyle`
   *{
     margin:0;
@@ -26,6 +24,22 @@ export const GlobalStyle=createGlobalStyle`
   }
 
 `
+// 共用pop up bg fixed div
+export const ListPopModifyBg = styled.div`//修改文字的Fixed背景顏色，觸控版關閉
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(121, 122, 124, 0.6);
+    z-index: 999;
+    ${Media_Query_SMD}{
+      display: none;
+    }
+    ${Media_Query_SM}{
+      display: none;
+    }
+`;
 
 export const H1 = styled.h1`
   font-size: 36px;

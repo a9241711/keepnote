@@ -1,6 +1,6 @@
-import React,{ useState, useEffect, useRef, useContext, } from "react";
+import React,{  useRef, useContext, } from "react";
 import styled from "styled-components";
-import { Media_Query_MD, Text, } from "../../components/constant";
+import {  Media_Query_SM, Text, } from "../../components/constant";
 import NotificationDelete from "./notification/NotificationDelete";
 import NoteContext from "../context/NoteContext";
 import PermissionItem from "../../components/permission/PermissionItem";
@@ -54,6 +54,9 @@ const PermissionNotifiDiv=styled.div`//permission and notification shows div
     flex-wrap:wrap;
     align-items: center;
     padding:0 10px;
+    ${Media_Query_SM}{
+      padding:0 5px;
+    }
 `
 
 const NoteItem = ({
@@ -107,7 +110,6 @@ const heightTextRef=useRef();
       }
       getNoteHeight(heightObj.titleHeight,heightObj.textHeight) 
     }
-    
   }
 
 
@@ -131,8 +133,8 @@ const heightTextRef=useRef();
         </NoteDiv>
         </NoteLists>
       <PermissionNotifiDiv>
-      <NotificationDelete setDataChanged={setDataChanged} whenToNotify={whenToNotify}  id={id} uid={uid} />
-      <PermissionItem permissionEmail={permissionEmail}/>
+        <NotificationDelete setDataChanged={setDataChanged} whenToNotify={whenToNotify}  id={id} uid={uid} />
+        <PermissionItem permissionEmail={permissionEmail}/>
       </PermissionNotifiDiv>
     </>
   );

@@ -4,7 +4,6 @@ import { Close,Clock } from "../../../assets";
 import { useEffect, useState,useContext } from "react";
 import { deleteNotification,queryNotification, } from "../../../store/HandleDb";
 import NoteContext from "../../context/NoteContext";
-import HeaderLoadContext from "../../../header/HeaderLoadContext";
 
 
 const NotifDelete=styled(IconDiv)`
@@ -62,7 +61,6 @@ const NotifIcon=styled(IconDiv)`
 
 const NotificationDelete=({id, uid,whenToNotify,setDataChanged,})=>{
     const[notify,setNotify]=useState("");
-    console.log("uid id",uid,id)
     const handleDeleteNoti=async()=>{//刪除notification
         //List修改框
             const res=await deleteNotification(uid,id);

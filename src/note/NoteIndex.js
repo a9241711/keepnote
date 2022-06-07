@@ -78,9 +78,9 @@ const NotePage=({isLoggin})=>{
 
 
     return(
-
         <NoteContent>   
             <NoteReducer> 
+            {/* 搜尋錯誤結果顯示 */}
             {errorData!==null
             ?<InitialDiv>                   
                 <InitialImg></InitialImg>
@@ -88,10 +88,10 @@ const NotePage=({isLoggin})=>{
              </InitialDiv>
             :<> 
             <NoteEdit  setDataChanged={setDataChanged} setList={textData} uid={uid} userEmail={email}/>
+            {/* 記事列表顯示 */}
             {textData.length>0
-            ?   <>
+            ?   
                 <NoteList setIsArchive={setIsArchive} isDataChange={isDataChange} setDataChanged={setDataChanged} setList={textData} addData={setTextData} deleteData={setTextData} updateData={setTextData} uid={uid} userEmail={email}/>
-                </>
             :<>            
                 {isLoading
                 ?<Loading />
@@ -102,8 +102,9 @@ const NotePage=({isLoggin})=>{
                 </InitialDiv>
             </>}
             </>}
-            {isArchive.show?<ArchivePop id={isArchive.id}  uid={uid} setIsArchive={setIsArchive} setDataChanged={setDataChanged}/> :null}
-            </NoteReducer>
+                {/* 封存記事彈出視窗顯示 */}
+                {isArchive.show?<ArchivePop id={isArchive.id}  uid={uid} setIsArchive={setIsArchive} setDataChanged={setDataChanged}/> :null}
+                </NoteReducer>
         </NoteContent>
     )
 }

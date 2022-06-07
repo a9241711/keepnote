@@ -24,17 +24,23 @@ export function resetPassword(email){
 //更新密碼
 export async function  changePassword(oldPassword,password,setErrorPassword){
     const user = auth.currentUser;
-    console.log("user,newPassword",user,password)
     let credential = EmailAuthProvider.credential(
         auth.currentUser.email,
         oldPassword
       );
     reauthenticateWithCredential(user, credential)
-    .then(result => {
+    .then( async(result) => {
         console.log("result",result)
-        return updatePassword(user, password);
+        const res=await updatePassword(user, password);
+        if(typeof res ==="undefined"){
+            return setErrorPassword("密碼修改成功");
+        }
+        console.log("res",res)
     }).catch((error) => {
-        console.log("error",error);
+        console.log("error",error.code);
+        if(error.code==="auth/weak-password"){
+            return setErrorPassword("新密碼須至少包含6個字元");
+        }
         return setErrorPassword("舊密碼錯誤，請輸入正確密碼以變更密碼");
       });
 }

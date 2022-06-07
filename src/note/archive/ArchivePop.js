@@ -54,6 +54,10 @@ const NotifBtn=styled(Button)`
     height: auto;
     padding: 8px 24px;
     border-radius: 4px;
+    &:hover{
+        border: none;
+        color: #fff;
+    }
     ${Media_Query_SMD}{
         background-color: transparent;
     }
@@ -66,10 +70,16 @@ const NotifIconDiv=styled(IconDiv)`
     background-position: center;
     background-image: url(${Close}) ;
     cursor: pointer;
-`       
+    &:hover{
+        background-color: rgba(95,99,104,0.157);
+        opacity: 0.87;
+        border-radius: 50%;
+    }
+`
 
 
-const ArchivePop=({id,uid,setIsArchive,setDataChanged})=>{//Archive彈出視窗
+
+const ArchivePop=({id,uid,setIsArchive,setDataChanged})=>{//Archive彈出提醒視窗
 
     const updateItem = async () => {//恢復封存狀態
         console.log("id",id,"uid",uid)
@@ -83,7 +93,7 @@ const ArchivePop=({id,uid,setIsArchive,setDataChanged})=>{//Archive彈出視窗
             <NotifDiv>
             <NotifText>記事已封存</NotifText>
             <NotifBtn onClick={updateItem}>復原</NotifBtn>
-            <NotifIconDiv onClick={()=>setIsArchive(false)}><IconTipText>關閉</IconTipText></NotifIconDiv>
+            <NotifIconDiv onClick={()=>setIsArchive(false)}></NotifIconDiv>
             </NotifDiv>
         </NotificationFixed>
         </>

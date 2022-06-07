@@ -1,37 +1,16 @@
 import { useEffect, useState,useContext } from "react";
-import styled from "styled-components";
-import ArchiveItem from "./ArchiveItem";
-import { getAllArchiveLists } from "../../store/HandleDb";
 import Masonry from 'react-masonry-css';
-import { ArchiveTool } from "../components/NoteTool";
-import HeaderDiv,{HeaderArchiveDiv} from "../../header/Header";
 import { Media_Query_LG,Media_Query_MD,Media_Query_SMD,Media_Query_SM } from "../../components/constant";
-import HeaderLoadContext from "../../header/HeaderLoadContext";
-import { ArchiveBgColor } from "../components/color/NoteBgColor";
-import NavSideBar from "../../header/components/NavSideBar";
+import styled from "styled-components";
 import { ArchiveBg } from "../../assets";
+import ArchiveItem from "./ArchiveItem";
+import ArchiveTool from "./components/ArchiveTools";
+import { ArchiveBgColor } from "../components/color/NoteBgColor";
+import HeaderLoadContext from "../../header/HeaderLoadContext";
 
-const ArchiveContent=styled.div`
-    max-width:1200px;
-    width: 100%;
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 45px;
-    margin: 0 auto;
-    ${Media_Query_LG}{
-        padding-left: 80px;
-    }
-    ${Media_Query_MD}{
-        width:95%;
-    }
-    ${Media_Query_SMD}{
-        width:95%;
-    }
-    ${Media_Query_SM}{
-        width:95%;
-    } 
-`
+import { getAllArchiveLists } from "../../store/HandleDb";
+
+
 const ArchiveListsDiv=styled(Masonry)`
     &.my-masonry-grid{  
     width: 100%;
@@ -132,7 +111,7 @@ const InitialText=styled.div`
     line-height: 1.75rem;
 `
 
-const Archive=()=>{
+const ArchiveIndex=()=>{
     const isLoggin=JSON.parse(localStorage.getItem("token"));
     const uid=isLoggin["uid"];
     const userEmail=isLoggin["email"];
@@ -157,9 +136,6 @@ const Archive=()=>{
     }
     return(
         <>        
-        <HeaderArchiveDiv   isLoggin={isLoggin}/>
-        <ArchiveContent>
-        <NavSideBar />
         {archiveLists.length>0? 
         <ArchiveListsDiv breakpointCols={breakPoints}className="my-masonry-grid" columnClassName="my-masonry-grid_column">
             {archiveLists.map((item)=>{
@@ -169,7 +145,7 @@ const Archive=()=>{
                     <ArchiveBgColor id={id}  color={color}/>
                     <ArchiveItem  id={id} noteText={noteText}noteTitle={noteTitle}image={image}time={time}color={color}whenToNotify={whenToNotify}permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/>
                     <ArchiveIconDiv >
-                    <ArchiveTool  id={id} uid={uid} setDataChanged={setDataChanged} permissionEmail={permissionEmail}owner={owner} userEmail={userEmail}/>
+                    <ArchiveTool id={id} uid={uid} setDataChanged={setDataChanged} permissionEmail={permissionEmail}owner={owner} userEmail={userEmail}/>
                     </ArchiveIconDiv>
                     </ArchiveLists>
                  )
@@ -178,12 +154,11 @@ const Archive=()=>{
         </ArchiveListsDiv>
         :
         <InitialDiv>
-        <InitialImg></InitialImg>
-        <InitialText>你封存的記事會顯示在這裡</InitialText>
+            <InitialImg></InitialImg>
+            <InitialText>你封存的記事會顯示在這裡</InitialText>
         </InitialDiv>}
-        </ArchiveContent>
         </>
     )
 }
 
-export default Archive
+export default ArchiveIndex

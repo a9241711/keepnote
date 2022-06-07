@@ -20,6 +20,7 @@ const IntroDiv=styled.div`
     width: 100%;
     max-width: 1200px;
     position: relative;
+    margin: 0 auto;
 `
 const BannerDiv=styled.div`
     width: 100%;
@@ -78,7 +79,6 @@ const Home=()=>{
     return(
         <>
         <GlobalStyle/>
-
         <SearchReducer>
         <HeaderDiv   isLoggin={isLoggin}/>
 
@@ -89,22 +89,19 @@ const Home=()=>{
         <NotePage isLoggin={isLoggin} />
         </ContentDiv> 
         </>
-  
-
         : 
         <IntroDiv > 
-        <BannerDiv>
-            <MainDiv>
-            <Title>紀錄您的日常瑣事...</Title>
-            <SubTitle>輕鬆記住所有事情、忙碌的生活也不遺漏任何事。</SubTitle>
-            <Link  to={"/signup"} style={{textDecoration: "none"}}>
-            <SignUpBtn>免費註冊</SignUpBtn>
-            </Link>
-            {/* <Link  to={"/login"} style={{textDecoration: "none"}}> */}
-            <SingInLink  to={"/login"}>已經有帳戶嗎？登入</SingInLink>
-            {/* </Link> */}
-            </MainDiv>
-        </BannerDiv>
+            <BannerDiv>
+                <MainDiv>
+                <Title>KeepNote</Title>
+                <Title>直覺化的圖文記事工具</Title>
+                <SubTitle>紀錄您所有日常瑣事、忙碌的生活也不遺漏任何事</SubTitle>
+                <Link  to={"/signup"} style={{textDecoration: "none"}}>
+                <SignUpBtn>免費註冊</SignUpBtn>
+                </Link>
+                <SingInLink  to={"/login"}>已經有帳戶嗎？登入</SingInLink>
+                </MainDiv>
+            </BannerDiv>
         </IntroDiv>}
         </SearchReducer>
         </>

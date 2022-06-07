@@ -143,13 +143,9 @@ const MemberShip=()=>{
         if(password===confirmPassword){
             try{
                 await changePassword(oldPassword,password,setErrorPassword);
-                setErrorPassword("密碼修改成功，請使用新密碼登入");
             }
             catch (error){
-                const errorMessage = error.code;
-                if(errorMessage==="auth/weak-password"){
-                    setErrorPassword("密碼須包含6個字元");
-                }
+                console.log("error",error)
             }
         }
         else{

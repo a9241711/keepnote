@@ -31,6 +31,7 @@ const ColorInputDiv=styled(IconDiv)`
     padding: 5px 10px;
     box-shadow: 0 1px 2px 0 rgb(60 64 67/30%), 0 2px 6px 2px rgb(60 64 67 /15%);
     z-index: 5;
+    box-sizing: border-box;
     &:hover{
         background-color: #FFFFFF;
         border-radius:unset;
