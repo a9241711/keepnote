@@ -19,6 +19,27 @@ import MenuCheck from "./img/boardTool/menuCheck.png";
 import Banned from "./img/boardTool/ban.png";
 import EditBoard from "./img/editTool/paintbrush.png"
 import Loading from "./img/loading/loading.gif";
+import ColorPalette from "./img/editTool/colorPalette.png";
+import KeepLogo from "../assets/img/keepLogo.png";
+import Notification from "../assets/img/editTool/notification.png";
+import Close from "./img/editTool/close.png";
+import Clock from "./img/notification/clock.png";
+import SearchImg from "./img/search/search.png";
+import ReFresh from "./img/loading/refresh.png";
+import LeftArrow from "./img/editTool/left-arrow.png";
+import Plus from "./img/editTool/plus.png";
+import Google from "./img/member/google-symbol.png";
+import ArchiveImg from "./img/archive/archive.png";
+import ArchiveBack from "./img/archive/archiveback.png";
+import ArchiveBg from "./img/archive/archiveBg.png";
+import Nav from "./img/nav/menu.png";
+import Bulb from "./img/nav/bulb.png";
+import BulbCheck from "./img/nav/bulbCheck.png";
+import AddUser from "./img/editTool/adduser.png";
+import Check from "./img/permission/check.png";
+import User from "./img/permission/user.png";
+import UserS from "./img/permission/users.png";
+import PermissionClose from "./img/permission/close.png";
 
 export {
   Pencil,
@@ -41,5 +62,26 @@ export {
   MenuCheck,
   Banned,
   EditBoard,
-  Loading
+  Loading,
+  ColorPalette,
+  KeepLogo,
+  Notification,
+  Close,
+  Clock,
+  SearchImg,
+  ReFresh,
+  LeftArrow,
+  Plus,
+  Google,
+  ArchiveImg,
+  ArchiveBack,
+  ArchiveBg,
+  Nav,
+  Bulb,
+  BulbCheck,
+  AddUser,
+  Check,
+  PermissionClose,
+  User,
+  UserS
 };

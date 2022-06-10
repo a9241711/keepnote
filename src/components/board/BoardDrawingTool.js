@@ -1,18 +1,15 @@
 import styled, { keyframes } from "styled-components";
-import { useEffect, useState } from "react";
-import { BoardContext } from "./BoardIndex";
 import { Pencil,PencilCheck,Line,LineCheck,Rectangle,RectangleCheck,Selection,SelectionCheck, Arrow, ArrowCheck } from "../../assets";
 import { Link } from "react-router-dom";
 import { updateBoardData } from "../../store/HandleDb";
-import { async } from "@firebase/util";
 
 const backgoundColor=keyframes`
-from{
-  background-color:#999999;
-}
-to{
-  background-color:white;
-}
+    from{
+      background-color:#999999;
+    }
+    to{
+      background-color:white;
+    }
 `;
 
 const ToolDiv = styled.div`
@@ -21,7 +18,7 @@ const ToolDiv = styled.div`
   display:flex;
   position:relative;
   box-sizing:border-box;
-  margin: 10px 15px;
+  margin: 10px 0px;
 `;
 const ToolLabel = styled.label`
   display: flex;
@@ -46,7 +43,7 @@ const ToolLabel = styled.label`
   &:hover:before{
     cursor:pointer;
     background-image:url(${PencilCheck}) 
-    }
+  }
 `;
 const ToolBtn=styled.input`
     opacity: 0;
@@ -56,7 +53,7 @@ const ToolBtn=styled.input`
       :before{
       background-image:url(${PencilCheck}) 
         }
-      }
+    }
 `
 
 const RectLabel=styled(ToolLabel)`
@@ -64,14 +61,14 @@ const RectLabel=styled(ToolLabel)`
       background-image:url(${Rectangle})}
     &:hover:before{
       background-image:url(${RectangleCheck}) 
-      }
+    }
 `
 const RectangleToolBtn=styled(ToolBtn)`
     &:checked + ${RectLabel}{
     :before{
       background-image:url(${RectangleCheck}) 
       }
-      }
+    }
 
 `
 
@@ -94,20 +91,20 @@ const SelectionLabel=styled(ToolLabel)`
       background-image:url(${Selection})}
     &:hover:before{
       background-image:url(${SelectionCheck}) 
-      }
+    }
 `
 const SelectToolBtn=styled(ToolBtn)`
     &:checked + ${SelectionLabel}{
       :before{
         background-image:url(${SelectionCheck}) 
         }
-        }
+    }
 `
 const GoBackPrePageBtn=styled.button`
   width: 52px;
   height: 52px;
   box-sizing: border-box;
-  margin: 10px 20px;
+  margin: 10px 0px;
   background:none;
   border:none;
   &:hover{
@@ -129,24 +126,16 @@ const GoBackPrePageBtn=styled.button`
 `
 
 
-const BoardDrawingTool = ({tool,setTool,id ,elements,uid}) => {
+const BoardDrawingTool = ({tool,setTool,id ,uid}) => {
   const saveBoardToDb= async()=>{
-    // await updateBoardData()
     const canvas = document.getElementById("canvas");
     const url=canvas.toDataURL();
     await updateBoardData(id,url,uid);//存入base64
   }
 
- function refreshPage(){
-   setTimeout(()=>{
-    window.location.reload();
-   },500)
-   console.log('reload page');
-  }
-
   return (
     <>
-      <Link to={"/"} onClick={refreshPage}>
+      <Link to={"/"} >
       <GoBackPrePageBtn  onClick={saveBoardToDb}/>
         </Link>
       <ToolDiv>

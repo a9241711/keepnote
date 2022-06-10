@@ -1,44 +1,67 @@
+import { useContext, useReducer, useState,useRef, useEffect } from "react";
 import styled from "styled-components";
-import { NoteTitleInput,NoteTextInput } from "../../components/constant";
+import { NoteTitleInput,NoteTextInput,Text, Media_Query_SM } from "../../components/constant";
+import NoteContext from "../context/NoteContext";
 
 const NoteDiv=styled.div`
-width: 100%;
-display:flex;
-justify-content: flex-start;
-flex-direction: column;
+  width: 100%;
+  display:flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  ${Media_Query_SM}{
+    margin-top:50px;
+  }
 `
-const NoteInput=({setSelected,updateText,updateTitle,setUpdateTitle,setUpdateText})=>{
-  
+const NoteTime=styled(Text)`
+  font-size: 12px;
+  text-align: end;
+  margin: 10px 0;
+  padding-right: 10px;
+`
+
+
+const NoteInput=()=>{
+  const {selectedItem,getNoteUpdateTitle,getNoteUpdateText,noteHeight} =useContext(NoteContext);
+  const{id, noteText, noteTitle, index,image,color,time}=selectedItem;
+  const[updateTitle,setUpdateTitle]=useState(noteTitle);
+  const[updateText,setUpdateText]=useState(noteText);
+  const{titleHeight, textHeight}=noteHeight;//取得輸入框高度
+  // updateTextList(updateTitleRef.current.value,updateTextRef.currentvalue);
     //控制修改文字框的height
   const handleAutoHeight=(e)=>{
-    e.target.style.height=e.target.scrollHeight + "px"
+    if(!e.target.value){e.target.style.height= "auto"}
+    else{e.target.style.height=e.target.scrollHeight + "px";
+    }
   }
   //控制修改文字
   const handleUpdateTitle = (e) => {
     setUpdateTitle(e.target.value);
+    getNoteUpdateTitle(e.target.value);
     handleAutoHeight(e);
   };
   const handleUpdateText = (e) => {
     setUpdateText(e.target.value);
+    getNoteUpdateText(e.target.value);
     handleAutoHeight(e);
   };
-  const handleClickInside = () => {
-    setSelected(true);
-  };
 
-    return(
-        <NoteDiv  onClick={() => handleClickInside()}>    
+  return(
+      <>
+      <NoteDiv >    
         <NoteTitleInput
           value={updateTitle}
-          onChange={ handleUpdateTitle}
-        ></NoteTitleInput>
-        
+          style={{height:titleHeight+ "px"}}
+          onChange={ handleUpdateTitle}>
+        </NoteTitleInput>
         <NoteTextInput
-          value={updateText}
-          onChange={handleUpdateText}
-        ></NoteTextInput>
-        </NoteDiv>
-    )
+          value={updateText} 
+          style={{height:textHeight + "px"}}
+          onChange={handleUpdateText}>
+        </NoteTextInput>
+        <NoteTime>{time}</NoteTime>
+      </NoteDiv>
+      </>
+  )
 }
 
 export default NoteInput;

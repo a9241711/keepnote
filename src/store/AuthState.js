@@ -1,4 +1,4 @@
-import { useContext, useEffect,useReducer,createContext ,useState} from "react";
+import { useContext,useReducer} from "react";
 import AuthContext  from "./AuthContext";
 import {AuthReducer,mapAuthCodeToMessage} from "./AuthReducer";
 
@@ -16,7 +16,6 @@ const AuthState=(props)=>{
     const[error,disErrorPatch]=useReducer(mapAuthCodeToMessage,errorMes);
     //Login
     const getSignIn=(user)=>{
-        console.log(user);
         disAuthPatch({
             type:"LOGIN",
             payload:user
@@ -24,7 +23,6 @@ const AuthState=(props)=>{
     }
     //註冊
     const getSignUp=(user)=>{
-        console.log(user);
         disAuthPatch({
             type:"SIGNUP",
             payload:user
@@ -32,25 +30,29 @@ const AuthState=(props)=>{
     }
     //登出
     const getLogOut=()=>{
-        console.log();
         disAuthPatch({
             type:"SIGNUP",
         })
     }
+    //重設密碼 
+    const getResetPassword=(email)=>{
+        disAuthPatch({
+            type:"RESET",
+            payload:email
+        })
+    }
     //取得erroMessage
     const getErrorMessage=(errorCode)=>{
-        console.log(errorCode);
         disErrorPatch({type:errorCode})
     }
     return(
-        <AuthContext.Provider value={{user:authstate.user,isAuthented:authstate.isAuthented,error:error.error,getSignIn,getSignUp,getLogOut,getErrorMessage}} >
+        <AuthContext.Provider value={{user:authstate.user,isAuthented:authstate.isAuthented,error:error.error,getSignIn,getSignUp,getLogOut,getErrorMessage,getResetPassword,reset:authstate.reset}} >
             {props.children}
         </AuthContext.Provider>
         )
-
     }
 export default AuthState;
 
-export const useAuth=()=>{//把AuthContext包成function使用
-    return useContext(AuthContext)
-}
+// export const useAuth=()=>{//把AuthContext包成function使用
+//     return useContext(AuthContext)
+// }
