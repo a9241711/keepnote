@@ -1,6 +1,5 @@
 import styled from "styled-components"
-import {  useContext, useRef,  } from "react";
-import NoteContext from "../../context/NoteContext";
+import { useRef  } from "react";
 
 const NoteBgLists=styled.div`//NoteItem
     width:100%;
@@ -9,11 +8,10 @@ const NoteBgLists=styled.div`//NoteItem
     position: absolute;
     z-index: 0;
     border-radius: 8px;
-    /* border: 1px solid #e0e0e0; */
     box-sizing: border-box;
 `
 
-const NoteBgColor=({id,color})=>{
+const NoteBgColor=({id,color})=>{//main color bg
     const colorRef=useRef();
     return(
         <NoteBgLists color={color} id={id} ref={colorRef}></NoteBgLists>
@@ -24,7 +22,7 @@ const NoteBgColor=({id,color})=>{
 export default NoteBgColor
 
 
-export const ArchiveBgColor=({id,color})=>{
+export const ArchiveBgColor=({id,color})=>{//for Arichve page
 
     return(
         <NoteBgLists color={color} id={id} ></NoteBgLists>

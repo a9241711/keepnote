@@ -1,11 +1,11 @@
-import styled from "styled-components";
-import { signInGoogle } from "../AuthFirebase";
-import AuthContext from "../AuthContext";
 import { useContext } from "react";
-import { Text } from "../../components/constant";
 import { useNavigate } from "react-router-dom";
-import { saveSignUpdData } from "../HandleDb";
+import styled from "styled-components";
+import { Text } from "../../components/constant";
 import { Google } from "../../assets";
+import AuthContext from "../AuthContext";
+import { signInGoogle } from "../AuthFirebase";
+import { saveSignUpdData } from "../HandleDb";
 
 
 const GoogleDiv=styled.div`
@@ -38,14 +38,12 @@ const GoogleSign=()=>{
     const handleGoogle= async()=>{
         try {
           let response = await signInGoogle();
-          console.log(response);
           let user = {
             email: response["user"]["email"],
             token: response["user"]["accessToken"],
             uid: response["user"]["uid"],
             providerId:response["user"]["providerData"][0]["providerId"]
           };
-          console.log("user",user)
           await saveSignUpdData(user);//存入DB
           getSignIn(user);////回呼disAutoPatch
           localStorage.setItem("token",JSON.stringify(user));//存入uid到local storage

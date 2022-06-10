@@ -22,7 +22,6 @@ const NoteTime=styled(Text)`
 
 const NoteInput=()=>{
   const {selectedItem,getNoteUpdateTitle,getNoteUpdateText,noteHeight} =useContext(NoteContext);
-  // const myRef = useRef();//PopUp彈出框
   const{id, noteText, noteTitle, index,image,color,time}=selectedItem;
   const[updateTitle,setUpdateTitle]=useState(noteTitle);
   const[updateText,setUpdateText]=useState(noteText);
@@ -46,23 +45,23 @@ const NoteInput=()=>{
     handleAutoHeight(e);
   };
 
-    return(
-        <>
-        <NoteDiv >    
+  return(
+      <>
+      <NoteDiv >    
         <NoteTitleInput
           value={updateTitle}
           style={{height:titleHeight+ "px"}}
           onChange={ handleUpdateTitle}>
-          </NoteTitleInput>
+        </NoteTitleInput>
         <NoteTextInput
           value={updateText} 
           style={{height:textHeight + "px"}}
           onChange={handleUpdateText}>
-          </NoteTextInput>
+        </NoteTextInput>
         <NoteTime>{time}</NoteTime>
-        </NoteDiv>
-        </>
-    )
+      </NoteDiv>
+      </>
+  )
 }
 
 export default NoteInput;

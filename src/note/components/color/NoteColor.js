@@ -87,7 +87,7 @@ const ColorWhiteBtn=styled(ColorRedBtn)`
     background-color: #FFFFFF;
 `
 
-const NoteColor=({uid,id,setDataChanged,setNoteColor,isFromEdit,})=>{//EDit and List windows
+const NoteColor=({uid,id,setDataChanged,setNoteColor,isFromEdit,})=>{//EDit and List 
     const[clickColor,setClickColor]=useState(false);
     const currentRef=useRef();//用來判斷是否為該物件
     const colorIconRef=useRef();
@@ -122,17 +122,17 @@ const NoteColor=({uid,id,setDataChanged,setNoteColor,isFromEdit,})=>{//EDit and 
         <>
         <ColorDiv ref={colorIconRef}>
         <ColorIcon  onClick={()=>  setClickColor(!clickColor) }>
-        <IconTipText   >背景選項</IconTipText>
+            <IconTipText   >背景選項</IconTipText>
         </ColorIcon>
   
         {clickColor
         ?<ColorInputDiv ref={currentRef} >
-        <ColorWhiteBtn value="#FFFFFF" onClick={(e)=> handelClickColor(e)}><IconToolTipText>預設</IconToolTipText></ColorWhiteBtn>
-        <ColorRedBtn value="#F28B82" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紅色</IconToolTipText></ColorRedBtn>
-        <ColorYellowBtn value="#FFF475" onClick={(e)=> handelClickColor(e)}><IconToolTipText>黃色</IconToolTipText></ColorYellowBtn>
-        <ColorGreenBtn value="#CCFF90" onClick={(e)=> handelClickColor(e)}><IconToolTipText>綠色</IconToolTipText></ColorGreenBtn>
-        <ColorBlueBtn value="#AECBFA" onClick={(e)=> handelClickColor(e)}><IconToolTipText>藍色</IconToolTipText></ColorBlueBtn>
-        <ColorPurpleBtn value="#D7AEFB" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紫色</IconToolTipText></ColorPurpleBtn>
+            <ColorWhiteBtn value="#FFFFFF" onClick={(e)=> handelClickColor(e)}><IconToolTipText>預設</IconToolTipText></ColorWhiteBtn>
+            <ColorRedBtn value="#F28B82" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紅色</IconToolTipText></ColorRedBtn>
+            <ColorYellowBtn value="#FFF475" onClick={(e)=> handelClickColor(e)}><IconToolTipText>黃色</IconToolTipText></ColorYellowBtn>
+            <ColorGreenBtn value="#CCFF90" onClick={(e)=> handelClickColor(e)}><IconToolTipText>綠色</IconToolTipText></ColorGreenBtn>
+            <ColorBlueBtn value="#AECBFA" onClick={(e)=> handelClickColor(e)}><IconToolTipText>藍色</IconToolTipText></ColorBlueBtn>
+            <ColorPurpleBtn value="#D7AEFB" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紫色</IconToolTipText></ColorPurpleBtn>
         </ColorInputDiv>
         :null}
         </ColorDiv>
@@ -141,8 +141,8 @@ const NoteColor=({uid,id,setDataChanged,setNoteColor,isFromEdit,})=>{//EDit and 
 }
 export default NoteColor;
 
-//Color PopUp Icon div
-export const NoteColorElement=({setClickColor,clickColor})=>{
+
+export const NoteColorElement=({setClickColor,clickColor})=>{//Color PopUp Modify Icon div
 
     return(
         <ColorIcon  onClick={()=>  setClickColor(!clickColor) }>
@@ -150,6 +150,7 @@ export const NoteColorElement=({setClickColor,clickColor})=>{
         </ColorIcon>
     )
 }
+
 const NoteListColorDiv=styled.div`
     display: none;
     position: fixed;
@@ -213,24 +214,22 @@ const LeftArrowDiv=styled(IconDiv)`
 `
 
 export const NoteColorPopMb=({setClickColor,setNoteColor})=>{//彈出視窗PopUp Color Edit Mb
-
     const handelClickColor= async(e)=>{
-         setNoteColor(e.target.value)}//判斷是從note Edit來的，不是從List來的
-
+         setNoteColor(e.target.value)
+    }
 
     return(
         <>
             <NoteListColorDiv></NoteListColorDiv>
             <ColorInputPopDiv >
-            <LeftArrowDiv onClick={()=>setClickColor(false)}></LeftArrowDiv>
-            <ColorWhiteBtn value="#FFFFFF" onClick={(e)=> handelClickColor(e)}><IconToolTipText>預設</IconToolTipText></ColorWhiteBtn>
-            <ColorRedBtn value="#F28B82" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紅色</IconToolTipText></ColorRedBtn>
-            <ColorYellowBtn value="#FFF475" onClick={(e)=> handelClickColor(e)}><IconToolTipText>黃色</IconToolTipText></ColorYellowBtn>
-            <ColorGreenBtn value="#CCFF90" onClick={(e)=> handelClickColor(e)}><IconToolTipText>綠色</IconToolTipText></ColorGreenBtn>
-            <ColorBlueBtn value="#AECBFA" onClick={(e)=> handelClickColor(e)}><IconToolTipText>藍色</IconToolTipText></ColorBlueBtn>
-            <ColorPurpleBtn value="#D7AEFB" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紫色</IconToolTipText></ColorPurpleBtn>
+                <LeftArrowDiv onClick={()=>setClickColor(false)}></LeftArrowDiv>
+                <ColorWhiteBtn value="#FFFFFF" onClick={(e)=> handelClickColor(e)}><IconToolTipText>預設</IconToolTipText></ColorWhiteBtn>
+                <ColorRedBtn value="#F28B82" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紅色</IconToolTipText></ColorRedBtn>
+                <ColorYellowBtn value="#FFF475" onClick={(e)=> handelClickColor(e)}><IconToolTipText>黃色</IconToolTipText></ColorYellowBtn>
+                <ColorGreenBtn value="#CCFF90" onClick={(e)=> handelClickColor(e)}><IconToolTipText>綠色</IconToolTipText></ColorGreenBtn>
+                <ColorBlueBtn value="#AECBFA" onClick={(e)=> handelClickColor(e)}><IconToolTipText>藍色</IconToolTipText></ColorBlueBtn>
+                <ColorPurpleBtn value="#D7AEFB" onClick={(e)=> handelClickColor(e)}><IconToolTipText>紫色</IconToolTipText></ColorPurpleBtn>
             </ColorInputPopDiv>
- 
         </>
     )
 }

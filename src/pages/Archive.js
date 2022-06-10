@@ -1,7 +1,7 @@
-import { HeaderArchiveDiv } from "../header/Header";
 import styled from "styled-components";
 import { GlobalStyle,Media_Query_LG,Media_Query_MD,Media_Query_SMD,Media_Query_SM } from "../components/constant";
 import NavSideBar from "../header/components/NavSideBar";
+import { HeaderArchiveDiv } from "../header/Header";
 import ArchiveIndex from "../note/archive";
 
 const ArchiveContent=styled.div`
@@ -32,10 +32,10 @@ const Archive=()=>{
         <>
         <GlobalStyle/>
         <HeaderArchiveDiv  isLoggin={isLoggin}/>
-            <ArchiveContent>
-                <NavSideBar />
-                <ArchiveIndex />
-            </ArchiveContent>
+        <ArchiveContent>
+            <NavSideBar />
+            <ArchiveIndex />
+        </ArchiveContent>
         </>
 
     )

@@ -66,8 +66,7 @@ const ArchiveText=styled(Text)`
     font-size: 16px;
     margin-bottom: 20px;
 `
-const ArchivePopDelete=({id,uid,setDataChanged,setAlertText,setAlert,alertText})=>{//刪除確認彈出視窗
-
+const ArchivePopDelete=({id,uid,setDataChanged,setAlertText,setAlert,alertText})=>{//確認刪除的彈出視窗
     const handleDelete=async()=>{
         await deleteDbNote(id,uid);
         setDataChanged(true);

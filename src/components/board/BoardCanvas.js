@@ -102,43 +102,6 @@ const adjustElementCoordinates = (element) => {
 
 const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSelectedElement,action,setAction,setIsMouseUp,boardData})=>{
     const myRef=useRef();
-    const lastRef=useRef();
-    const[scrollTheEnd,setScrollTheEnd]=useState(false);
-    console.log("scrollTheEnd",scrollTheEnd,lastRef);
-    const options= useMemo(()=>{
-      return{
-      root:null,
-      rootMargin:"0px",
-      threshold:.5}
-    },[]);
-    const callBack=(entries)=>{
-      const entry=entries[0];
-      setScrollTheEnd(entry.isIntersecting)
-    }
-
-    useEffect(()=>{//endless scroll
-      console.log(myRef.current.height);
-
-      const observer= new IntersectionObserver(callBack,options);
-      if(lastRef.current) observer.observe(lastRef.current);
-      return()=>{
-        if(lastRef.current) observer.unobserve(lastRef.current)
-      }
-    },[lastRef])
-
-    useEffect(()=>{
-
-      if(!scrollTheEnd) return;
-      const addHeight= myRef.current.height + "px";
-      const canvas = document.getElementById("canvas");
-      // console.log(-canvas.height);
-      canvas.addEventListener("resize",(e)=>{
-        console.log("e",e)
-        canvas.height=canvas.height+770;
-      })
-      // canvas.innerHeight.=canvas.height+770+"px";
-      lastRef.current.style.bottom=-(canvas.height+770)+"px";
-    },[scrollTheEnd]);
 
     
     useEffect(()=>{//若是手機版，畫圖時把scroll event拿掉

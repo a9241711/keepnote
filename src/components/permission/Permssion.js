@@ -1,10 +1,10 @@
 
 import { useEffect, useState,useContext } from "react";
 import styled from "styled-components";
-import { queryForEmail, savePermission } from "../../store/HandleDb";
+import { queryForEmail, queryUserImgByEmail, savePermission } from "../../store/HandleDb";
 import { AddUser } from "../../assets";
 import { IconDiv,IconTipText,Media_Query_SM,Media_Query_SMD,LargerAnimate,Button,CloseButton,Text, Media_Query_MD, Media_Query_LG, ListPopModifyBg } from "../constant";
-import {UserPermission} from "../../header/User";
+import {UserEdit, UserPermission} from "../../header/User";
 import PermissionEdit from "./PermissionEdit"
 import PermissionList from "./PermissionList";
 import NoteContext from "../../note/context/NoteContext";
@@ -158,17 +158,17 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
         setIsModify(true);
     }
     useEffect(()=>{
-        const handleEmailList=()=>{
+        const handleEmailList=async()=>{
             if(owner===true){
-                const permissionEmailCopy=permissionEmail.slice(0)
+                const permissionEmailCopy=permissionEmail.slice(0);
                 permissionEmailCopy.unshift(userEmail);
-                const noRepeatValue=[...(new Set(permissionEmailCopy))]
-                setEmailList(noRepeatValue);
+                const noRepeatValue=[...(new Set(permissionEmailCopy))];
+                await queryUserImgByEmail(noRepeatValue,setEmailList);
             }else{
-                const permissionEmailCopy=permissionEmail.slice(0)
+                const permissionEmailCopy=permissionEmail.slice(0);
                 permissionEmailCopy.unshift(targetEmail);
-                const noRepeatValue=[...(new Set(permissionEmailCopy))]
-                setEmailList(noRepeatValue);
+                const noRepeatValue=[...(new Set(permissionEmailCopy))];
+                await queryUserImgByEmail(noRepeatValue,setEmailList);
             }
         }
         handleEmailList();
@@ -187,30 +187,31 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
         {clickPermission? 
         <>
         <ListPopModifyBg />
-        {/* <NoteListModifyBg></NoteListModifyBg> */}
+
         <PermissionDiv>
             <PermissionEditDiv>
                 <PermissionTitleDiv>
                     <PermissionTitleText>協作者</PermissionTitleText>
                 </PermissionTitleDiv>
                 <PermissionUserDiv>
-                    {owner? 
-                    <>
-                    <UserPermission email={userEmail} /> 
-                    <TextEmail>{userEmail} (擁有者)</TextEmail> 
-                    </>
-                    :<>
-                    <UserPermission email={targetEmail} />
-                    <TextEmail>{targetEmail} (擁有者)</TextEmail> 
-                    </>
-                    }
-                </PermissionUserDiv>
-                {emailList.slice(1).map((email)=>{
-                        const id=v4();
-                        return(
-                            <PermissionList  key={id} id={id} userEmail={email} setEmailList={setEmailList} />
-                        )
-                    })}
+                {emailList.slice(0,1).map((item)=>{
+                    const id=v4();
+                    const{email,profileUrl}=item;
+                    return(
+                        <>
+                        <UserPermission  key={id} id={id} email={email} profileUrl={profileUrl} />
+                        <TextEmail>{email} (擁有者)</TextEmail> 
+                        </>
+                    )
+                })}
+                </PermissionUserDiv> 
+                {emailList.slice(1).map((item)=>{
+                    const id=v4();
+                    const{email,profileUrl}=item;
+                    return(
+                        <PermissionList  key={id} id={id} userEmail={email} profileUrl={profileUrl} setEmailList={setEmailList} />
+                    )
+                })}
                 <PermissionInputDiv>
                     <PermissionEdit emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
                     <EmailErrorText >{emailErrorMes}</EmailErrorText>
@@ -248,59 +249,60 @@ export const PermissionEditArea=({uid,userEmail,setEmailList,emailList})=>{//for
     const handleSummit=async()=>{
         setLoading(true);
         const res=await queryForEmail(emailList);//query for email
-        if(typeof res !=="undefined"){
-            const getRes=res.filter(item=> item.error);
+        const getRes=res.filter(item=> item.error);
+        if(getRes.length >0){
             setEmailError( [...getRes]);
             setLoading(false);
             return
+        }else{
+            setLoading(false);
+            setClickPermission(false);
         }
-        setLoading(false);
-        setClickPermission(false);
     }
-
-
+ 
     return (
         <>
         <PermissionIcon onClick={()=>  {setClickPermission(!clickPermission)} }><IconTipText>協作者</IconTipText></PermissionIcon>   
         {clickPermission? 
         <>
         <ListPopModifyBg />
-        {/* <NoteListModifyBg></NoteListModifyBg> */}
+
         <PermissionDiv>
-        <PermissionEditDiv>
-            <PermissionTitleDiv>
-                <PermissionTitleText>協作者</PermissionTitleText>
-            </PermissionTitleDiv>
-            <PermissionUserDiv>
-                <UserPermission email={userEmail} /> 
-                <TextEmail>{userEmail} (擁有者)</TextEmail> 
-            </PermissionUserDiv>
-            {emailList.map((email)=>{
+            <PermissionEditDiv>
+                <PermissionTitleDiv>
+                    <PermissionTitleText>協作者</PermissionTitleText>
+                </PermissionTitleDiv>
+                <PermissionUserDiv>
+                    <UserEdit email={userEmail}  uid={uid}/> 
+                    <TextEmail>{userEmail} (擁有者)</TextEmail> 
+                </PermissionUserDiv>
+                {emailList.map((item)=>{
+                        const id=v4();
+                        const{email,profileUrl}=item;
+                        return(
+                            <PermissionList  key={id} id={id} userEmail={email} profileUrl={profileUrl} setEmailList={setEmailList} />
+                        )
+                })}
+                <PermissionInputDiv>
+                    <PermissionEdit  emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
+                    <EmailErrorText >{emailErrorMes}</EmailErrorText>
+                {emailError.length>0?
+                <>
+                    {emailError.map(error=> {
                     const id=v4();
                     return(
-                        <PermissionList  key={id} id={id} userEmail={email} setEmailList={setEmailList} />
-                    )
-                })}
-            <PermissionInputDiv>
-                <PermissionEdit  emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
-                <EmailErrorText >{emailErrorMes}</EmailErrorText>
-            {emailError.length>0?
-            <>
-                {emailError.map(error=> {
-                const id=v4();
-                return(
-                <EmailErrorText key={id}>{error.error}</EmailErrorText>
-                    )
-                 })
-                }
-            </> 
-            :null}
+                    <EmailErrorText key={id}>{error.error}</EmailErrorText>
+                        )
+                    })
+                    }
+                </> 
+                :null}
             </PermissionInputDiv>
-        </PermissionEditDiv>
-        <PermissionBtnDiv>
-                    <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
-                    <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
-        </PermissionBtnDiv>
+            </PermissionEditDiv>
+            <PermissionBtnDiv>
+                        <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
+                        <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
+            </PermissionBtnDiv>
         </PermissionDiv>
         </>
         :null}
@@ -383,17 +385,19 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
         setIsModify(true);
     }
     useEffect(()=>{
-        const handleEmailList=()=>{
+        const handleEmailList=async()=>{
             if(owner===true){
-                const permissionEmailCopy=permissionEmail.slice(0)
+                const permissionEmailCopy=permissionEmail.slice(0);
                 permissionEmailCopy.unshift(userEmail);
-                const noRepeatValue=[...(new Set(permissionEmailCopy))]
-                setEmailList(noRepeatValue);
+                const noRepeatValue=[...(new Set(permissionEmailCopy))];
+                await queryUserImgByEmail(noRepeatValue,setEmailList);
+                // setEmailList(noRepeatValue);
             }else{
-                const permissionEmailCopy=permissionEmail.slice(0)
+                const permissionEmailCopy=permissionEmail.slice(0);
                 permissionEmailCopy.unshift(targetEmail);
-                const noRepeatValue=[...(new Set(permissionEmailCopy))]
-                setEmailList(noRepeatValue);
+                const noRepeatValue=[...(new Set(permissionEmailCopy))];
+                await queryUserImgByEmail(noRepeatValue,setEmailList);
+                // setEmailList(noRepeatValue);
             }
         }
         handleEmailList();
@@ -417,24 +421,25 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
             <PermissionTitleDiv>
                 <PermissionTitleText>協作者</PermissionTitleText>
             </PermissionTitleDiv>
-            <PermissionUserDiv>
-                {owner? 
-                <>
-                <UserPermission email={userEmail} /> 
-                <TextEmail>{userEmail} (擁有者)</TextEmail> 
-                </>
-                :<>
-                <UserPermission email={targetEmail} />
-                <TextEmail>{targetEmail} (擁有者)</TextEmail> 
-                </>
-                }
-            </PermissionUserDiv>
-            {emailList.slice(1).map((email)=>{
+             <PermissionUserDiv>
+             {emailList.slice(0,1).map((item)=>{
                     const id=v4();
+                    const{email,profileUrl}=item;
                     return(
-                        <PermissionList  key={id} id={id} userEmail={email} setEmailList={setEmailList} />
+                        <>
+                        <UserPermission  key={id} id={id} email={email} profileUrl={profileUrl} />
+                        <TextEmail>{email} (擁有者)</TextEmail> 
+                        </>
                     )
                 })}
+            </PermissionUserDiv> 
+            {emailList.slice(1).map((item)=>{
+                    const id=v4();
+                    const{email,profileUrl}=item;
+                    return(
+                        <PermissionList  key={id} id={id} userEmail={email} profileUrl={profileUrl} setEmailList={setEmailList} />
+                    )
+            })}
             <PermissionInputDiv>
                 <PermissionEdit emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
                 <EmailErrorText >{emailErrorMes}</EmailErrorText>
@@ -453,7 +458,7 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
         </PermissionEditModifyDiv>
             <PermissionModifyBtnDiv>
                     <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
-                    <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>提交</PermissionBtn>
+                    <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
             </PermissionModifyBtnDiv>
         </PermissionModifyDiv>
         </>

@@ -1,9 +1,8 @@
 import styled,{keyframes} from"styled-components";
-import { KeepLogo } from "../../../assets";
 import { Media_Query_LG,Media_Query_MD } from "../../../components/constant";
 
 
-const bars6=keyframes`
+const bars6=keyframes`//Loading 特效
     0% {
       height: 5px;
       -webkit-transform: translateY(0px);
@@ -42,7 +41,6 @@ const LoadingAnimate=styled.div`
     display: block;
     position: fixed;
     top: 30%;
-
     width: 50px;
     ${Media_Query_LG}{
         margin-left: 10px;

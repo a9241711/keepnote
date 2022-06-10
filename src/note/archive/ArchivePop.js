@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { Close } from "../../assets";
-import { Media_Query_SM,Media_Query_SMD,Text,Button,IconDiv,IconTipText,bounceInLeft, } from "../../components/constant";
+import { Media_Query_SM,Media_Query_SMD,Text,Button,IconDiv,bounceInLeft, } from "../../components/constant";
 import { updateNoteStatusBack } from "../../store/HandleDb";
 
 const NotificationFixed=styled.div`
@@ -77,12 +77,9 @@ const NotifIconDiv=styled(IconDiv)`
     }
 `
 
-
-
 const ArchivePop=({id,uid,setIsArchive,setDataChanged})=>{//Archive彈出提醒視窗
 
     const updateItem = async () => {//恢復封存狀態
-        console.log("id",id,"uid",uid)
         await updateNoteStatusBack(id,uid); 
         setDataChanged(true);
         setIsArchive({show:false,id:null})

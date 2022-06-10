@@ -2,7 +2,7 @@ import { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { LargerAnimate,NoteTitleInput,NoteTextInput,Media_Query_SM,Media_Query_SMD,Media_Query_MD, IconDiv } from "../../../components/constant";
-import { NotificationDeleteEdit,NotificationPopUpDelete } from "../notification/NotificationDelete";
+import { NotificationDeleteEdit } from "../notification/NotificationDelete";
 import { Plus,EditBoard } from "../../../assets";
 import { NoteModiEditBtnMb } from "../modify/NoteModiBtn";
 import { NotificationEditMb,NotificationElement } from "../notification/NotificationIndex";
@@ -10,6 +10,7 @@ import { NoteColorPopMb,NoteColorElement } from "../color/NoteColor";
 import { PermissionEditArea } from "../../../components/permission/Permssion";
 import { saveNoteData } from "../../../store/HandleDb";
 import { v4 } from "uuid";
+import { PermissionItemEdit } from "../../../components/permission/PermissionItem";
 
 //For Edit Mobile
 const NoteListModify = styled.div`//修改內容的Div
@@ -140,15 +141,15 @@ const NoteListEditDiv=styled.div`
     align-items: center;
     margin: 0 auto;
     animation: ${LargerAnimate} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    ${Media_Query_MD}{
-      display: flex;
-    }
-    ${Media_Query_SMD}{
-      display: flex;
-    }
-    ${Media_Query_SM}{
-      display: flex;
-    }
+      ${Media_Query_MD}{
+        display: flex;
+      }
+      ${Media_Query_SMD}{
+        display: flex;
+      }
+      ${Media_Query_SM}{
+        display: flex;
+      }
 `
 const NoteListEditBm=styled.div`
     width: 100%;
@@ -160,15 +161,15 @@ const NoteListEditBm=styled.div`
     display: none;
     justify-content: center;
     z-index: 3500;
-    ${Media_Query_MD}{
-      display: flex;
-    }
-    ${Media_Query_SMD}{
-      display: flex;
-    }
-    ${Media_Query_SM}{
-      display: flex;
-    }
+      ${Media_Query_MD}{
+        display: flex;
+      }
+      ${Media_Query_SMD}{
+        display: flex;
+      }
+      ${Media_Query_SM}{
+        display: flex;
+      }
 `
 const NoteEditAddDiv=styled.div`
     width: 50px;
@@ -181,15 +182,15 @@ const NoteEditAddDiv=styled.div`
     border: 2;
     border: 5px solid #FFFFFF;
     justify-content: center;
-    ${Media_Query_MD}{
-      display: flex;
-    }
-    ${Media_Query_SMD}{
-      display: flex;
-    }
-    ${Media_Query_SM}{
-      display: flex;
-    }
+      ${Media_Query_MD}{
+        display: flex;
+      }
+      ${Media_Query_SMD}{
+        display: flex;
+      }
+      ${Media_Query_SM}{
+        display: flex;
+      }
 `
 const NoteEditAdd=styled(IconDiv)`
     background-repeat: no-repeat;
@@ -218,7 +219,7 @@ const NoteEditMb =({uid,setDataChanged,userEmail})=>{//forEdit in Mobile
     //auto height 輸入框
       //控制修改文字框的height
       const handleAutoHeight=(e)=>{
-        e.target.style.height=e.target.scrollHeight + "px"
+        e.target.style.height=e.target.scrollHeight + "px";
       }
   
       const getNodeTitleValue=(e)=>{
@@ -256,36 +257,37 @@ const NoteEditMb =({uid,setDataChanged,userEmail})=>{//forEdit in Mobile
         setNotification(1);
         setIsClose(false);
       },[isClose])
-    return(
-      <>
-      {isClickEdit?
-      <>
-        <NoteListEditDiv>
-            <NoteListModify  style={{background:noteColor}}  id={id}     >
+return(
+    <>
+    {isClickEdit?
+    <>
+      <NoteListEditDiv>
+          <NoteListModify  style={{background:noteColor}}  id={id}     >
             <NoteTitleInputDiv style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue}  ></NoteTitleInputDiv>
             <NoteTextInputDiv style={{backgroundColor: noteColor}}  value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv>
+            <PermissionItemEdit permissionEmail={emailList}/>
             <NotificationDeleteEdit   notification={notification} setNotification={setNotification} />
-            </NoteListModify>
-            <NodeToolDiv style={{background:noteColor}}>
-              <Link  to={"/boarding"} state={{id:id,uid}}>
-              <BoardAdd  onClick={handleSaveNoteToDb}></BoardAdd>
-              </Link>
-              <NotificationElement   setClickNotificate={setClickNotificate}/>
-              <NoteColorElement setClickColor={setClickColor} />
-              <PermissionEditArea uid={uid}userEmail={userEmail}setEmailList={setEmailList} emailList={emailList} />
-              <NoteModiEditBtnMb setIsClickEdit={setIsClickEdit} handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>
-              {clickNotificate?<NotificationEditMb setClickNotificate={setClickNotificate} setNotification={setNotification}/> :null}    
-              {clickColor? <NoteColorPopMb  setClickColor={setClickColor} setNoteColor={setNoteColor}/>:null}
-            </NodeToolDiv>
-        </NoteListEditDiv> 
-      </>
-      :<NoteListEditBm>
-        <NoteEditAddDiv>
+          </NoteListModify>
+          <NodeToolDiv style={{background:noteColor}}>
+            <Link  to={"/boarding"} state={{id:id,uid}}>
+            <BoardAdd  onClick={handleSaveNoteToDb}></BoardAdd>
+            </Link>
+            <NotificationElement   setClickNotificate={setClickNotificate}/>
+            <NoteColorElement setClickColor={setClickColor} />
+            <PermissionEditArea uid={uid}userEmail={userEmail}setEmailList={setEmailList} emailList={emailList} />
+            <NoteModiEditBtnMb setIsClickEdit={setIsClickEdit} handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>
+            {clickNotificate?<NotificationEditMb setClickNotificate={setClickNotificate} setNotification={setNotification}/> :null}    
+            {clickColor? <NoteColorPopMb  setClickColor={setClickColor} setNoteColor={setNoteColor}/>:null}
+          </NodeToolDiv>
+      </NoteListEditDiv> 
+    </>
+    :<NoteListEditBm>
+      <NoteEditAddDiv>
         <NoteEditAdd onClick={()=>setIsClickEdit(true)}></NoteEditAdd>
-        </NoteEditAddDiv>
-      </NoteListEditBm>
-          }
-      </>
-    )
-  }
+      </NoteEditAddDiv>
+    </NoteListEditBm>
+    }
+    </>
+  )
+}
 export default NoteEditMb

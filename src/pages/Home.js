@@ -1,12 +1,10 @@
-import { useState,useContext } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { GlobalStyle,H3,H1 } from "../components/constant";
 import HeaderDiv from "../header/Header";
 import NotePage from "../note/NoteIndex";
-import { GlobalStyle,H3,Text } from "../components/constant";
-import { H1 } from "../components/constant";
-import { Link } from "react-router-dom";
-import SearchReducer from "../header/components/SearchReducer";
 import NavSideBar from "../header/components/NavSideBar";
+import SearchReducer from "../header/components/SearchReducer";
 
 
 const ContentDiv=styled.div`
@@ -85,21 +83,21 @@ const Home=()=>{
         {isLoggin?
         <>        
         <ContentDiv>
-        <NavSideBar />
-        <NotePage isLoggin={isLoggin} />
+            <NavSideBar />
+            <NotePage isLoggin={isLoggin} />
         </ContentDiv> 
         </>
         : 
         <IntroDiv > 
             <BannerDiv>
                 <MainDiv>
-                <Title>KeepNote</Title>
-                <Title>直覺化的圖文記事工具</Title>
-                <SubTitle>紀錄您所有日常瑣事、忙碌的生活也不遺漏任何事</SubTitle>
-                <Link  to={"/signup"} style={{textDecoration: "none"}}>
-                <SignUpBtn>免費註冊</SignUpBtn>
-                </Link>
-                <SingInLink  to={"/login"}>已經有帳戶嗎？登入</SingInLink>
+                    <Title>KeepNote</Title>
+                    <Title>直覺化的圖文記事工具</Title>
+                    <SubTitle>紀錄您所有日常瑣事、忙碌的生活也不遺漏任何事</SubTitle>
+                    <Link  to={"/signup"} style={{textDecoration: "none"}}>
+                    <SignUpBtn>免費註冊</SignUpBtn>
+                    </Link>
+                    <SingInLink  to={"/login"}>已經有帳戶嗎？登入</SingInLink>
                 </MainDiv>
             </BannerDiv>
         </IntroDiv>}

@@ -118,20 +118,17 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
     
     const handleSave=async ()=>{
       const dateTime=date+"T"+time;
-      const timer=new Date(dateTime).getTime() //取得時間戳
+      const timer=new Date(dateTime).getTime(); //取得時間戳
       if(isFromEdit){
-        console.log("From Edit")
         getToken(messaging,{vapidKey:publicVapidKey})
         .then((currentToken) => {
-          console.log("currentToken",currentToken)
           setTime("");
           setDate("");
-          return setNotification({timer,currentToken})
+          return setNotification({timer,currentToken});
         })//傳回Edit頁面
       }
       else{//List視窗修改
-        const response=await requestForToken(uid,noteTitle,noteText,timer,id)//傳回uid跟token儲存回db
-        console.log("handleSave",response);
+        await requestForToken(uid,noteTitle,noteText,timer,id)//傳回uid跟token儲存回db
         setDataChanged(true);
       }
       setClickNotificate(false)
@@ -160,24 +157,24 @@ const NotificationIndex=({uid,id,noteText,noteTitle,setDataChanged,selected,setN
     return(
       <>
         <NotificationDiv ref={notificationIconRef}>
-        <NotificationIcon  onClick={()=>  setClickNotificate(!clickNotificate) }>
-        <IconTipText   >提醒我</IconTipText>
-        </NotificationIcon>
+          <NotificationIcon  onClick={()=>  setClickNotificate(!clickNotificate) }>
+            <IconTipText   >提醒我</IconTipText>
+          </NotificationIcon>
 
-        {clickNotificate
-        ?<NotificationInputDiv selected={selected}>
-        <NotificationTextDiv>
-        <NotificationText>選擇日期與時間</NotificationText>
-        </NotificationTextDiv>
-        <NotificationSelectDiv>
-        <InputDate  value={date} min={disablePastDate()} onChange={(e)=>setDate(e.target.value)}/> 
-        <InputTime    value={time} onChange={(e)=>setTime(e.target.value)}/>
-        </NotificationSelectDiv>
-        <BtnDiv date={date} time={time}>
-        <BtnSummit date={date} time={time} onClick={handleSave} className="confirm">儲存</BtnSummit>
-        </BtnDiv>
-        </NotificationInputDiv>
-        :null}
+          {clickNotificate
+          ?<NotificationInputDiv selected={selected}>
+            <NotificationTextDiv>
+              <NotificationText>選擇日期與時間</NotificationText>
+            </NotificationTextDiv>
+            <NotificationSelectDiv>
+              <InputDate  value={date} min={disablePastDate()} onChange={(e)=>setDate(e.target.value)}/> 
+              <InputTime    value={time} onChange={(e)=>setTime(e.target.value)}/>
+            </NotificationSelectDiv>
+            <BtnDiv date={date} time={time}>
+              <BtnSummit date={date} time={time} onClick={handleSave} className="confirm">儲存</BtnSummit>
+            </BtnDiv>
+          </NotificationInputDiv>
+          :null}
         </NotificationDiv>
       </>
     )
@@ -189,26 +186,26 @@ export const NotificationElement=({setClickNotificate,clickNotificate})=>{//單�
   const notificationIconRef=useRef();
   return(
     <NotificationDiv ref={notificationIconRef}>
-    <NotificationIcon  onClick={()=>  setClickNotificate(!clickNotificate) }>
-    <IconTipText   >提醒我</IconTipText>
-    </NotificationIcon>
+      <NotificationIcon  onClick={()=>  setClickNotificate(!clickNotificate) }>
+        <IconTipText   >提醒我</IconTipText>
+      </NotificationIcon>
     </NotificationDiv>
   )
 }
 
 const NoteListNotificationDiv = styled.div`//修改Notification文字的Fixed背景
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(121, 122, 124, 0.6);
-  z-index:999;
-  ${Media_Query_SM}{
-    display: block;
-    animation: ${scaleRight} linear .1s;
-  }
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(121, 122, 124, 0.6);
+    z-index:999;
+    ${Media_Query_SM}{
+      display: block;
+      animation: ${scaleRight} linear .1s;
+    }
 `;
 
 const NotificationPopUpInputDiv=styled.div`
@@ -277,17 +274,17 @@ export const NotificationEditMb=({setClickNotificate,setNotification})=>{//forPo
     <>        
     <NoteListNotificationDiv></NoteListNotificationDiv>
       <NotificationPopUpInputDiv >
-      <NotificationTextDiv>
-      <NotificationText>選擇日期與時間</NotificationText>
-      </NotificationTextDiv>
-      <NotificationSelectDiv>
-      <InputDate  value={date} min={disablePastDate()} onChange={(e)=>setDate(e.target.value)}/> 
-      <InputTime    value={time} onChange={(e)=>setTime(e.target.value)}/>
-      </NotificationSelectDiv>
-      <BtnDiv date={date} time={time}>
-      <BtnClose onClick={()=> setClickNotificate(false)} >取消</BtnClose>
-      <BtnSummit date={date} time={time} onClick={handleSave} >儲存</BtnSummit>
-      </BtnDiv>
+        <NotificationTextDiv>
+          <NotificationText>選擇日期與時間</NotificationText>
+        </NotificationTextDiv>
+        <NotificationSelectDiv>
+          <InputDate  value={date} min={disablePastDate()} onChange={(e)=>setDate(e.target.value)}/> 
+          <InputTime    value={time} onChange={(e)=>setTime(e.target.value)}/>
+        </NotificationSelectDiv>
+        <BtnDiv date={date} time={time}>
+          <BtnClose onClick={()=> setClickNotificate(false)} >取消</BtnClose>
+          <BtnSummit date={date} time={time} onClick={handleSave} >儲存</BtnSummit>
+        </BtnDiv>
       </NotificationPopUpInputDiv>
       </>
   )
@@ -297,7 +294,7 @@ export const NotificationEditMb=({setClickNotificate,setNotification})=>{//forPo
 export const NotificationEdit=({uid, selected, setDataChanged,notificationChange,setNotificationChange,setClickNotificate})=>{//forPopUp update
     const[date,setDate]=useState("");
     const[time,setTime]=useState("");
-    const{updateTitle,updateText,selectedItem,getNotificationUpdate}=useContext(NoteContext);
+    const{updateTitle,updateText,selectedItem}=useContext(NoteContext);
     
     const handleSave=async ()=>{
       const dateTime=date+"T"+time;
@@ -321,17 +318,17 @@ export const NotificationEdit=({uid, selected, setDataChanged,notificationChange
       <>        
       <NoteListNotificationDiv></NoteListNotificationDiv>
         <NotificationPopUpInputDiv >
-        <NotificationTextDiv>
-        <NotificationText>選擇日期與時間</NotificationText>
-        </NotificationTextDiv>
-        <NotificationSelectDiv>
-        <InputDate  value={date} min={disablePastDate()} onChange={(e)=>setDate(e.target.value)}/> 
-        <InputTime    value={time} onChange={(e)=>setTime(e.target.value)}/>
-        </NotificationSelectDiv>
-        <BtnDiv date={date} time={time}>
-        <BtnClose onClick={()=> setClickNotificate(false)} >取消</BtnClose>
-        <BtnSummit date={date} time={time} onClick={handleSave} >儲存</BtnSummit>
-        </BtnDiv>
+          <NotificationTextDiv>
+            <NotificationText>選擇日期與時間</NotificationText>
+          </NotificationTextDiv>
+          <NotificationSelectDiv>
+            <InputDate  value={date} min={disablePastDate()} onChange={(e)=>setDate(e.target.value)}/> 
+            <InputTime    value={time} onChange={(e)=>setTime(e.target.value)}/>
+          </NotificationSelectDiv>
+          <BtnDiv date={date} time={time}>
+            <BtnClose onClick={()=> setClickNotificate(false)} >取消</BtnClose>
+            <BtnSummit date={date} time={time} onClick={handleSave} >儲存</BtnSummit>
+          </BtnDiv>
         </NotificationPopUpInputDiv>
         </>
     )

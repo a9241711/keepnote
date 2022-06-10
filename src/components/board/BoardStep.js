@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useState,useRef } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { Undo,UndoCheck,Redo,RedoCheck, Menu, MenuCheck,Banned, Delete } from "../../assets";
 import { deleteBoard } from "../../store/HandleDb";
@@ -22,10 +21,6 @@ const BoardSetpDiv=styled.div`
       right:10px;
       bottom: 0;
     }
-    /* ${Media_Query_MD}{
-      right:10px;
-      bottom: 0;
-    } */
 `
 const UndoBtn=styled.div`
   display: flex;

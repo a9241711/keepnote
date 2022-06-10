@@ -59,27 +59,16 @@ const PermissionNotifiDiv=styled.div`//permission and notification shows div
     }
 `
 
-const NoteItem = ({
-    id,
-    noteText="null",
-    noteTitle="null",
-    image,
-    setList,
-    setDataChanged,
-    uid,
-    setSelected,whenToNotify="",
-    permissionEmail,owner,targetEmail,userEmail
-}) => {
-const{getSelectedItem,getColorUpdate,getNoteUpdateTitle,getNoteUpdateText,getNoteHeight,getPermissionItem}=useContext(NoteContext);
-const heightTitleRef=useRef();
-const heightTextRef=useRef();
+const NoteItem = ({uid,id,noteText="null",noteTitle="null",image,setList,setDataChanged,setSelected,whenToNotify="",permissionEmail,}) => {
+  const{getSelectedItem,getColorUpdate,getNoteUpdateTitle,getNoteUpdateText,getNoteHeight,getPermissionItem}=useContext(NoteContext);
+  const heightTitleRef=useRef();
+  const heightTextRef=useRef();
   //控制選擇的貼文
   const handleClickNote = (e) => {
     const clickImgId=e.target.parentNode.id;
     const { id, noteText, noteTitle, index,color,image,time,whenToNotify,board,permissionEmail,owner,targetEmail} = setList.find(
       (pre) => pre.id === e.target.id ||pre.id===clickImgId
     );
-    console.log(whenToNotify)
     getSelectedItem(id, noteText, noteTitle, index,image,time,color,whenToNotify,board );
     getColorUpdate(color);
     getNoteUpdateTitle(noteTitle);
@@ -89,16 +78,17 @@ const heightTextRef=useRef();
     setSelected(true);
   };
   const handleHeight=(heightTitleRef,heightTextRef)=>{//處理最小高度
-    const minHeight=28;
-    console.log(heightTitleRef.current, heightTextRef.current)
+    const minHeight=32;
     if(typeof heightTitleRef.current =="undefined" ||typeof heightTextRef.current =="undefined")
     {
-    const heightObj={titleHeight:minHeight,textHeight:minHeight}
-    return getNoteHeight(heightObj.titleHeight,heightObj.textHeight)}
+      const heightObj={titleHeight:minHeight,textHeight:minHeight}
+      return getNoteHeight(heightObj.titleHeight,heightObj.textHeight)
+    }
     else if( heightTitleRef.current ===null || heightTextRef.current ===null)
     {
-    const heightObj={titleHeight:minHeight,textHeight:minHeight}
-    return getNoteHeight(heightObj.titleHeight,heightObj.textHeight)}
+      const heightObj={titleHeight:minHeight,textHeight:minHeight}
+      return getNoteHeight(heightObj.titleHeight,heightObj.textHeight)
+    }
     else{
       const titleHeight=heightTitleRef.current.offsetHeight/2;
       const textHeight=heightTextRef.current.offsetHeight/2;
@@ -115,23 +105,23 @@ const heightTextRef=useRef();
 
   return (
     <>
-        <NoteLists  id={id} onClick={(e) => handleClickNote(e)}>
+      <NoteLists  id={id} onClick={(e) => handleClickNote(e)}>
         { image ?
         <BoardList>
             <BoardImg src={image}></BoardImg>
         </BoardList>
         : null }
         <NoteDiv >  
-        {!image && !noteTitle &&!noteText 
-        ?<NoteNone>空白記事</NoteNone>
-        :
-        <>
-        <NoteTitle ref={heightTitleRef}>{noteTitle}</NoteTitle>
-        <NoteText ref={heightTextRef}>{noteText}</NoteText>
-        </>
+          {!image && !noteTitle &&!noteText 
+          ?<NoteNone>空白記事</NoteNone>
+          :
+          <>
+          <NoteTitle ref={heightTitleRef}>{noteTitle}</NoteTitle>
+          <NoteText ref={heightTextRef}>{noteText}</NoteText>
+          </>
           }
         </NoteDiv>
-        </NoteLists>
+      </NoteLists>
       <PermissionNotifiDiv>
         <NotificationDelete setDataChanged={setDataChanged} whenToNotify={whenToNotify}  id={id} uid={uid} />
         <PermissionItem permissionEmail={permissionEmail}/>

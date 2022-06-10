@@ -110,7 +110,7 @@ const SubmmitDiv=styled.div`
 `
 const SubmmitBtn=styled(Button)``
 
-const MemberShip=()=>{
+const MemberShip=()=>{//個人資料修改頁
     const isLoggin=JSON.parse(localStorage.getItem("token"));
     const{email,uid,providerId}=isLoggin;
 
@@ -130,7 +130,7 @@ const MemberShip=()=>{
         if(file.type.match('image.*')){//check if png or jpg
             const reader=new FileReader();
             reader.onloadend=async()=>{
-                await updateUserImg(uid,reader.result)
+                await updateUserImg(uid,reader.result);
             }
             reader.readAsDataURL(file);
             setIsUpLoad(true);
@@ -145,7 +145,7 @@ const MemberShip=()=>{
                 await changePassword(oldPassword,password,setErrorPassword);
             }
             catch (error){
-                console.log("error",error)
+                console.log("error",error);
             }
         }
         else{

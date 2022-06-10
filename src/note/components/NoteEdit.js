@@ -6,11 +6,11 @@ import { saveNoteData } from "../../store/HandleDb";
 import CanvasTool from "./CanvasTool";
 import  { NotificationDeleteEdit } from "./notification/NotificationDelete";
 import SearchContext from "../../header/components/SearchContext";
-import { NoteModifyAreaMb } from "./modify/NoteModifyArea";
 import NoteEditMb from "./edit/NoteEditMb";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
 import HeaderLoadContext from "../../header/HeaderLoadContext";
-import PermissionItem from "../../components/permission/PermissionItem";
+import PermissionItem,{PermissionItemEdit} from "../../components/permission/PermissionItem";
+import { NoteEditTool } from "./NoteTool";
 
 const NoteDiv=styled.div`
     width: 50%;
@@ -49,7 +49,7 @@ const PermissionNotifiDiv=styled.div`//permission and notification shows div
     align-items: center;
     padding:0 10px;
 `
-const NoteEditTool=styled.div`
+const NoteEditToolDiv=styled.div`
     display: flex;
     justify-content: space-between;
 `
@@ -88,11 +88,8 @@ const NoteEdit=({uid,setDataChanged,userEmail})=>{
     }
 
     const handleClickOutofTarget=(e)=>{//檢查是否點到輸入框以外，是或否都改變isinput狀態
-        console.log(typingTitleRef);
         if(e.target.classList.contains("close") ||e.target.classList.contains("confirm"))return;//for  close and confrim icon
         else if(!typingTitleRef.current.contains(e.target) ){
-            console.log("Clikver out side",typingTitleRef.current,typingTextRef.current)
-            // setIsInput(false);
             setTitleClick(false);
         }
     }
@@ -113,7 +110,6 @@ const NoteEdit=({uid,setDataChanged,userEmail})=>{
             const timer=1; 
             const currentToken=1;
             await saveNoteData(id,noteTitle,noteText,uid,noteColor,timer,currentToken,emailList);
-            console.log(timer,currentToken);
             setIsClose(true);
             setDataChanged(true);
             setIsInput(false);
@@ -124,10 +120,7 @@ const NoteEdit=({uid,setDataChanged,userEmail})=>{
     useEffect(()=>{
         if(!titleClick) return
         document.addEventListener("click",handleClickOutofTarget);
-        console.log("clicking");
-
-        return () =>{document.removeEventListener("click",handleClickOutofTarget);} 
-        
+        return () =>{document.removeEventListener("click",handleClickOutofTarget);}   
     },[titleClick])
 
 
@@ -154,18 +147,18 @@ const NoteEdit=({uid,setDataChanged,userEmail})=>{
         <>
         {/* 桌機 */}
         <NoteDiv isFilter={isFilter} style={{backgroundColor: noteColor}} noteColor={noteColor} ref={typingTitleRef}>
-        <NoteTitleInputDiv   style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue} onClick={()=> setTitleClick(true)} ></NoteTitleInputDiv>
-        {titleClick
-        ? <NoteTextInputDiv style={{backgroundColor: noteColor}} value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv> :null}
-        <PermissionNotifiDiv titleClick={titleClick}>
-        <NotificationDeleteEdit isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} notification={notification} setNotification={setNotification} />
-        <PermissionItem permissionEmail={emailList}/>
-        </PermissionNotifiDiv>
-        <NoteEditTool >
-        <CanvasTool  setIsClose={setIsClose} setNotification={setNotification} isFromEdit={isFromEdit} setNoteColor={setNoteColor} noteColor={noteColor} titleClick={titleClick} noteTitle={noteTitle} noteText={noteText} uid={uid}userEmail={userEmail}setEmailList={setEmailList} emailList={emailList}notification={notification}/>
-        {titleClick
-        ?<NoteModiEditBtn handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>:null}
-        </NoteEditTool>
+            <NoteTitleInputDiv   style={{backgroundColor: noteColor}} value={noteTitle} onChange={getNodeTitleValue} onClick={()=> setTitleClick(true)} ></NoteTitleInputDiv>
+            {titleClick
+            ? <NoteTextInputDiv style={{backgroundColor: noteColor}} value={noteText} onChange={getNodeTextValue}  ></NoteTextInputDiv> :null}
+            <PermissionNotifiDiv titleClick={titleClick}>
+                <NotificationDeleteEdit isFromEdit={isFromEdit} setIsFromEdit={setIsFromEdit} notification={notification} setNotification={setNotification} />
+                <PermissionItemEdit permissionEmail={emailList}/>
+            </PermissionNotifiDiv>
+            <NoteEditToolDiv >
+                <NoteEditTool  setIsClose={setIsClose} setNotification={setNotification} isFromEdit={isFromEdit} setNoteColor={setNoteColor} noteColor={noteColor} titleClick={titleClick} noteTitle={noteTitle} noteText={noteText} uid={uid}userEmail={userEmail}setEmailList={setEmailList} emailList={emailList}notification={notification}/>
+                {titleClick
+                ?<NoteModiEditBtn handleSaveNoteToDb={handleSaveNoteToDb} setIsClose={setIsClose}/>:null}
+            </NoteEditToolDiv>
         </NoteDiv>
         <NoteEditMb uid={uid} setDataChanged={setDataChanged} userEmail={userEmail}/> 
         </>

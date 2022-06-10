@@ -1,16 +1,12 @@
 export const AuthReducer=(state,action)=>{
     switch(action.type){
         case "LOGIN":
-            console.log("action",action.payload)
             return {user:action.payload,isAuthented:true}
         case "LOGOUT":
-            console.log("action")
             return {user:null,isAuthented:false}
         case "SIGNUP":
-            console.log("action")
             return {user:action.payload,isAuthented:true}
         case "RESET":
-            console.log("reset")
             return {user:action.payload, isAuthented:false,reset:`密碼重設信件已寄出，請至${action.payload}收取重設信件`}
         default:
             return state

@@ -1,11 +1,10 @@
 import { db } from "./firebase";
-import { collection,updateDoc,doc, query, getDoc,where, getDocs,addDoc, setDoc, orderBy, collectionGroup,deleteDoc, increment, FieldValue,batch,deleteField, arrayUnion,Timestamp,limit, arrayRemove} from "firebase/firestore";
+import { collection,updateDoc,doc, query, getDoc,where, getDocs,addDoc, setDoc, orderBy,deleteDoc, FieldValue,deleteField, arrayUnion,Timestamp,limit, arrayRemove} from "firebase/firestore";
 import {getMessaging,getToken } from "firebase/messaging";
 import { mailPermissionSend } from "./thirdpary/permissionMail";
 
 //**userSignUp Memeber*/
 export const saveSignUpdData= async(user)=>{
-    console.log(user);
     let uid=user["uid"];
     let email=user["email"];
     let providerId=user["providerId"]
@@ -30,57 +29,78 @@ export const queryUserImg=async(uid)=>{
     const userRef=doc(db,"user",uid);//使用者資料路徑
     const snapShot=await getDoc(userRef);
     const response=snapShot.data();
-    console.log("respinse",response)
     if(!response.profileUrl){
-        return null
+        return null;
     }else{
-        return {profileUrl:response.profileUrl}
+        return {profileUrl:response.profileUrl};
     }
 }
 
 //讀取個人圖像 With Email
-// export const queryUserImgByEmail=async(email,setEmailList)=>{
-//     console.log("email",email);
-//     const array=[];
-//     for(let i =0 ; i< email.length;i++){
-//         const userRef=query(collection(db,"user"),where("email","==",email[i]));
-//         const snapShot=await getDocs(userRef);
-//         snapShot.forEach(item=>{
-//             console.log(item.data()["profileUrl"]);
-//             if(!typeof item.data()["profileUrl"] ==="undefined"){
-//                 array.push(item.data());
-//             }else{
-//                 const reponse= item.data();
-//                 reponse["profileUrl"]=null;
-//                 array.push(reponse);
-//             }
-
-//         })
-//     }
-//     console.log(array,"array");
-//     setEmailList(array);
-//     // const userRef=doc(db,"user",uid);//使用者資料路徑
-//     // const snapShot=await getDoc(userRef);
-//     // const arrayDoc=
-//     // const response=snapShot.data();
-//     // if(!response.profileUrl){
-//     //     return null
-//     // }else{
-//     //     return {profileUrl:response.profileUrl}
-//     // }
-// }
+export const querySingleUserImg=async(email,setEmailList)=>{
+    const userRef=query(collection(db,"user"),where("email","==",email));
+    const snapShot=await getDocs(userRef);
+    const response=[];
+    if(snapShot.empty){
+        const user={email,profileUrl:null};
+        response.push(user);
+    }else{
+        snapShot.forEach(item=>{
+            if(typeof item.data()["profileUrl"] !=="undefined"){
+                response.push(item.data());
+            }else{
+                const userData= item.data();
+                userData["profileUrl"]=null;
+                response.push(userData);
+            }
+        })
+    }
+    setEmailList(pre=>[...pre,response[0]]);
+}
+//讀取個人array emails圖像 With Email for permission item
+export const queryUserImgForItemByEmail=async(emailLists,setEmailList)=>{
+    const array=[];
+    for(let i =0 ; i< emailLists.length;i++){
+        const userRef=query(collection(db,"user"),where("email","==",emailLists[i]));
+        const snapShot=await getDocs(userRef);
+        snapShot.forEach(item=>{
+            if(typeof item.data()["profileUrl"] !=="undefined"){
+                array.push(item.data());
+            }else{
+                const reponse= item.data();
+                reponse["profileUrl"]=null;
+                array.push(reponse);
+            }
+        })
+    }
+    setEmailList(array);
+}
+//讀取個人array emails圖像 With Email for permission index
+export const queryUserImgByEmail=async(emailLists,setEmailList)=>{
+    const array=[];
+    for(let i =0 ; i< emailLists.length;i++){
+        const userRef=query(collection(db,"user"),where("email","==",emailLists[i]));
+        const snapShot=await getDocs(userRef);
+        snapShot.forEach(item=>{
+            if(typeof item.data()["profileUrl"] !=="undefined"){
+                array.push(item.data());
+            }else{
+                const reponse= item.data();
+                reponse["profileUrl"]=null;
+                array.push(reponse);
+            }
+        })
+    }
+    setEmailList(array);
+}
 
 //Note Lists Data
 //save noteData
 export const saveNoteData=async(id,noteTitle,noteText,uid,noteColor,timer,currentToken,emailList)=>{
-    console.log("emailList",emailList)
     const time=Timestamp.now();
     const refBoard=doc(db,"user",uid,"notelist",id);//創造自訂義的id並存入obj，未來可更新board資料用
-    // const noteCollection=query(collection(db,"user",uid,"notelist"));//
-    // const noteCollectionDocs=await getDocs(noteCollection);
     const noteStatus=0 //自訂note狀態，初始值為0，若封存為1
     if(timer!==1){//表示有設定notification
-        console.log("timer")
         const whenToNotify=new Date(timer);
         await setDoc(refBoard,{id,noteTitle,noteText,time,color:noteColor,
             token:currentToken,
@@ -127,17 +147,15 @@ export const saveNoteData=async(id,noteTitle,noteText,uid,noteColor,timer,curren
         })
         //處理email List
         for(let i =0; i<emailList.length;i++){
-            const userQ=query(collection(db,"user",),where("email","==",emailList[i]));//找到被分享對象
+            const userQ=query(collection(db,"user",),where("email","==",emailList[i]["email"]));//找到被分享對象
             const userCollectionDocs=await getDocs(userQ);//被分享對象
             const targetUserRef=[];
-            console.log("userCollectionDocs",userCollectionDocs,!userCollectionDocs.empty)
             userCollectionDocs.forEach(item=>{
                 targetUserRef.push(item.data());//該user的uid，若無註冊的用戶會回傳[]
             })
             //存入目標用戶的email
-            const updateData={permissionEmail:arrayUnion(emailList[i]),permissionUid:arrayUnion(targetUserRef[0]["uid"])}
+            const updateData={permissionEmail:arrayUnion(emailList[i]["email"]),permissionUid:arrayUnion(targetUserRef[0]["uid"])}
             await updateDoc(refBoard,updateData)//refBoard是擁有者的文件路徑
-            console.log(originUserRef[0]["email"],targetUserRef,updateData);
             //目標用戶的資料處理
             // const targetDataRef=doc(db,`user/${targetUserRef[0]["uid"]}/notelist/${id}`);//目標用戶的資料ref
             const permissionListsRef=doc(db,"user",targetUserRef[0]["uid"],"permissionLists",id);
@@ -171,7 +189,6 @@ export const getAllArchiveLists=async(setArchiveLists,uid)=>{
     let refNotelists=doc(db,"notelists",uid);
     let notelistSnap=await getDoc(refNotelists);
     let result=notelistSnap.data();
-    console.log(result)
     if(result ===undefined ) {//若無資料
         setArchiveLists([]);
         return}
@@ -181,7 +198,6 @@ export const getAllArchiveLists=async(setArchiveLists,uid)=>{
         const listRef=result["orderlists"][i];
         const getListData=await getDoc(listRef);
         const getListId=getListData.data().id;//取得id，為了檢查是否permissionList有資料
-        console.log(typeof getListData);
         //permission，要先找到目前帳戶內是否有該id在permissionList裡面，若有，則透過路徑找到資料
         const permissionQ=query(collection(db,"user",uid,"permissionLists"),where("id","==",getListId));//若有該id表示是被分享權限
         const permissionDocShop =await getDocs(permissionQ);
@@ -246,7 +262,6 @@ export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,set
                 //取得whenToNotify from notifications
                 const q=query(collection(db,"user",uid,"notifications"),where("id","==",getListId),orderBy("whenToNotify","desc"));//
                 const docShop =await getDocs(q);
-                console.log(getListId,docShop,originList)
                 if(!docShop.empty){
                     docShop.forEach(item=> {
                         const notification=item.data()["whenToNotify"];
@@ -267,7 +282,6 @@ export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,set
                 if(!docShop.empty){
                     docShop.forEach(item=> {
                         const notification=item.data()["whenToNotify"];
-                        console.log("notification",notification);
                         orginData["whenToNotify"]=notification;
                         })
                     }
@@ -285,7 +299,6 @@ export const getAllLists=async(getFilterButDataChange,isFilter,getOriginData,set
                 if(!docShop.empty){
                     docShop.forEach(item=> {
                         const notification=item.data()["whenToNotify"];
-                        console.log("notification",notification);
                         orginData["whenToNotify"]=notification;
                         })
                     }
@@ -349,15 +362,12 @@ export const updateListsPosition= async (setList,uid)=>{
                 originData.push(item.data());
             });
             const originRef=originData[0]["originDataRef"];
-            console.log("originRef",originRef);
             return originRef
         }else{
             const refData=doc(db,"user",uid,"notelist",id);
-            console.log("refData",refData);
             return refData
         }
     }))
-    console.log("setListDocs",setListDocs)
     await setDoc(refNotelists, {orderlists:setListDocs});//用更新後的位置覆蓋掉原本的資料
 }
 
@@ -367,7 +377,6 @@ export const updateBoardData=async(id,url,uid)=>{
      const permissionQ=query(collection(db,"user",uid,"permissionLists"),where("id","==",id));//若有該id表示是被分享權限
      const permissionDocShop =await getDocs(permissionQ);
      if(!permissionDocShop.empty){//若確定有該id，則執行以下
-        console.log("HERE")
         const originData=[];
         permissionDocShop.forEach(item=>{
             originData.push(item.data());
@@ -384,7 +393,6 @@ export const updateBoardData=async(id,url,uid)=>{
             await setDoc(refNotelists,{orderlists:arrayUnion(originRef)});
         }
     }else{//若無該id則非permission
-        console.log("HEREFOR IMAGE")
         const updateRef=doc(db, "user", uid,"notelist",id);
         const updateData={image:url};
         await updateDoc(updateRef,updateData);//存入image
@@ -409,9 +417,8 @@ export const queryImageData=async(id,uid)=>{
         permissionDocShop.forEach(item=>{
             originData.push(item.data());
         });
-        console.log("originData",originData,originData[0]["originDataRef"]);
         const originQ=await getDoc(originData[0]["originDataRef"]);
-        console.log(originQ.data());//處理image
+        //處理image
         if(!originQ.data().image){return {error:null}}
         else{
             return {image:originQ.data().image};
@@ -465,7 +472,7 @@ export const updateNoteStatus = async(id,uid)=>{
         const noteStatus=1;
         await updateDoc(updateDbNote, {noteStatus:noteStatus});//找到要更新的路徑更新status為1
     }else{
-        console.log(id,"id");//更新status為1
+        //更新status為1
         const updateDbNote = doc(db,"user",uid,"notelist",id);
         const noteStatus=1;
         await updateDoc(updateDbNote,{noteStatus:noteStatus});
@@ -482,7 +489,7 @@ export const updateNoteStatusBack= async(id,uid)=>{
         const noteStatus=0;
         await updateDoc(updateDbNote, {noteStatus:noteStatus});//找到要更新的路徑更新status為0
     }else{
-        console.log(id,"id");//更新status為0
+        //更新status為0
         const updateDbNote = doc(db,"user",uid,"notelist",id);
         const noteStatus=0;
         await updateDoc(updateDbNote,{noteStatus:noteStatus});
@@ -491,7 +498,6 @@ export const updateNoteStatusBack= async(id,uid)=>{
 
 //deleteNoteData+ deleteBoard subcollection
 export const deleteDbNote = async(id,uid)=>{
-    console.log(id,uid,)
     //permission，要先找到目前帳戶內是否有該id在permissionList裡面，若有，則透過路徑找到資料
     const permissionQ=query(collection(db,"user",uid,"permissionLists"),where("id","==",id));//若有該id表示是被分享權限
     const permissionDocShop =await getDocs(permissionQ);
@@ -508,7 +514,6 @@ export const deleteDbNote = async(id,uid)=>{
             // deleteDoc(originRef);//刪除原始資料文件
         });
         const originRef=originData[0]["originDataRef"];//原始資料路徑
-        console.log("originData",originData,userEmail);
         await updateDoc(originRef,{permissionUid:arrayRemove(userUid),permissionEmail:arrayRemove(userEmail)});//刪除targetEmail
 
         //刪掉noteList的內容
@@ -516,10 +521,8 @@ export const deleteDbNote = async(id,uid)=>{
         const notelistSnap=await getDoc(refNotelists);
         const result=notelistSnap.data();
         const setListDocs=result["orderlists"].filter((item)=>{//過濾掉要刪除的項目
-            console.log(item,id)
             return item.id !==id
         })
-        console.log("setListDocs",setListDocs)
         await setDoc(refNotelists, {orderlists:setListDocs});//用刪除後的array覆蓋掉原本的資料
     }else{//刪除擁有者自己的資料
         const originDbNote = doc(db,"user",uid,"notelist",id);
@@ -537,11 +540,8 @@ export const deleteDbNote = async(id,uid)=>{
                     return item.id !==id
                 })
                 await setDoc(refPermissionLists, {orderlists:setListDocs});//用刪除後的array覆蓋掉原本的資料
-                console.log("setListDocs",setListDocs,"permissionDoc",permissionDoc)
             }
-            console.log(permissionUid)
         }
-        console.log(id,"id");//刪掉擁有者user內容所有內容
         const deleteDbNote = doc(db,"user",uid,"notelist",id);
         const deleteBoardRef=collection(db,`user/${uid}/notelist/${id}/board`);
         await deleteDoc(deleteDbNote);
@@ -595,7 +595,6 @@ export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件�
     const permissionDocShop =await getDocs(permissionQ);
     const drawElement=async (element)=>{//存入畫板相關
         if(!permissionDocShop.empty){//若確定有該id，則執行以下
-            console.log("HERE")
             const originData=[]
             permissionDocShop.forEach(item=>{
                 originData.push(item.data());
@@ -610,7 +609,6 @@ export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件�
                 await addDoc(ref,{id,type,color,range,points:pointsCopy })
             }
         }else{
-            console.log("HERE")
             const ref=collection(db,"user",uid,"notelist",id,"board")//board的儲存位置
             if(element.type !=="pencil" ) {
                 const {id, x1, y1, x2, y2, type, color,range}=element;
@@ -625,7 +623,6 @@ export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件�
         
     const time=Timestamp.now();
     if(!permissionDocShop.empty){//若確定有該id，則執行以下
-        console.log("HEREBoard");
         const originData=[]
         permissionDocShop.forEach(item=>{
             originData.push(item.data());
@@ -649,7 +646,6 @@ export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件�
     }
     else{//若無該id，則繼續執行以下
         const refBoard=doc(db,"user",uid,"notelist",id);
-        console.log("here")
         let snapShot=await getDoc(refBoard)
         if(snapShot.exists()){//若已有文字記事，則更新圖片記事
             drawElement( elements);
@@ -657,7 +653,6 @@ export const saveBoardData= async (elements,id,uid)=>{//存放DrawElement物件�
         }else{//若沒有建立文字記事，則直接建立圖片記事    
             await setDoc(refBoard,{id,noteTitle:"",noteText:"",time,color:"#FFFFFF",noteStatus:0});
         }
-    
         //存入notelists，方便做listpage的排序跟顯示
         let refNotelists=doc(db,"notelists",uid);
         let notelistSnap=await getDoc(refNotelists);
@@ -726,11 +721,8 @@ export const requestForToken=async(uid,noteTitle,noteText,timer,id)=>{//取得to
         return getToken(messaging,{vapidKey:publicVapidKey})
         .then((currentToken) => {
           if (currentToken) {
-            console.log(currentToken)
             const time=new Date(timer);
-            console.log("uid,id,time,currentToken,noteTitle,noteText",uid,id,time,currentToken,noteTitle,noteText)
             const response= saveNotification(uid,id,time,currentToken,noteTitle,noteText);
-            console.log(uid,id,time,currentToken,noteTitle,noteText,response)
             return response
           } else {
             // Show permission request UI
@@ -745,7 +737,6 @@ export const requestForToken=async(uid,noteTitle,noteText,timer,id)=>{//取得to
 
 //save notitfication data to db
 const saveNotification= async(uid,id,time,currentToken,noteTitle,noteText)=>{
-    console.log(uid,id,time,currentToken,noteTitle,noteText)
     const q=query(collection(db,"user",uid,"notifications"),where("id","==",id));
     const docShop=await getDocs(q);
     if(!docShop.empty){
@@ -773,15 +764,11 @@ const saveNotification= async(uid,id,time,currentToken,noteTitle,noteText)=>{
              });
     }
     //更新noteList主資料區
-    // const updateRef=doc(db, "user", uid,"notelist",id);
-    // const updateData={whenToNotify:time};
-    // await updateDoc(updateRef,updateData);//存入NotifyTime，in order to show in fronted
     return {message:true};
 }
 
 //Search if notification reservation 查詢指定ID的預定notification
 export const queryNotification=async(uid,id)=>{
-    console.log("queryNotification")
     //permission，要先找到目前帳戶內是否有該id在permissionList裡面，若有，則透過路徑找到資料
      const permissionQ=query(collection(db,"user",uid,"permissionLists"),where("id","==",id));//若有該id表示是被分享權限
     const permissionDocShop =await getDocs(permissionQ);
@@ -798,12 +785,10 @@ export const queryNotification=async(uid,id)=>{
             docShop.forEach(item=> {
                 const data=item.data();
                 const timeStampDate = data["whenToNotify"]["seconds"];
-                console.log(typeof timeStampDate =="undefined",timeStampDate,data)
                 if(typeof timeStampDate =="undefined") {
                     response.push( {error:"no data"})
                     return
                 }
-                console.log(typeof timeStampDate =="undefined",timeStampDate,data)
                 // const dateInMillis  = timeStampDate * 1000;
                 // const whenToNotify =new Date(dateInMillis).toLocaleDateString(undefined,{month:"short",day:"numeric"})+" " +  new Date(dateInMillis).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
                 response.push( {whenToNotify:timeStampDate,uid,id})
@@ -820,12 +805,10 @@ export const queryNotification=async(uid,id)=>{
         docShop.forEach(item=> {
             const data=item.data();
             const timeStampDate = data["whenToNotify"]["seconds"];
-            console.log(typeof timeStampDate =="undefined",timeStampDate,data)
             if(typeof timeStampDate =="undefined") {
                 response.push( {error:"no data"})
                 return
             }
-            console.log(typeof timeStampDate =="undefined",timeStampDate,data)
             // const dateInMillis  = timeStampDate * 1000;
             // const whenToNotify =new Date(dateInMillis).toLocaleDateString(undefined,{month:"short",day:"numeric"})+" " +  new Date(dateInMillis).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
             response.push( {whenToNotify:timeStampDate,uid,id})
@@ -838,19 +821,11 @@ export const queryNotification=async(uid,id)=>{
   
 //DELETE notification reservation 刪除預定時間
 export const deleteNotification=async (uid,id)=>{
-    console.log("uid,id",uid,id)
     const q=query(collection(db,"user",uid,"notifications"),where("id","==",id)) ;
     const docShop =await getDocs(q);
-    console.log(docShop);
     docShop.forEach(item=>{
         deleteDoc(item.ref)
     });
-    // //permission，要先找到目前帳戶內是否有該id在permissionList裡面，若有，則透過路徑找到資料
-    // const permissionQ=query(collection(db,"user",uid,"permissionLists"),where("id","==",id));//若有該id表示是被分享權限
-    // const permissionDocShop =await getDocs(permissionQ);
-    // if(!permissionDocShop.empty){//若確定有該id，則不需更新原資料的time
-    //     return {success:true}
-    // }
     //更新noteList主資料區
     const updateRef=doc(db, "user", uid,"notelist",id);
     const time=Timestamp.now();
@@ -860,7 +835,6 @@ export const deleteNotification=async (uid,id)=>{
 
 //**Permission */
 export const savePermission=async(uid,id,emailList)=>{
-    console.log("emailList",emailList)
     //每次都先清空資料
     //permission，要先找到目前帳戶內是否有該id在permissionList裡面，若有，則透過路徑找到資料
     const permissionQ=query(collection(db,"user",uid,"permissionLists"),where("id","==",id));//若有該id表示是被分享權限
@@ -874,7 +848,6 @@ export const savePermission=async(uid,id,emailList)=>{
         // await deleteDoc(updateDbNote);//找到要刪除的target uid 的 permission data
         const originUidRef=originData[0]["targetUid"];//擁有者Uid
         const originEmailRef=originData[0]["targetEmail"];//擁有者Email
-        // console.log("originData",originData,userEmail);
         // await updateDoc(originRef,{permissionUid:arrayRemove(userUid),permissionEmail:arrayRemove(userEmail)});//刪除targetEmail
         const originDbNote = doc(db,"user",originUidRef,"notelist",id);//找到擁有者的記事路徑
         const userData=await getDoc(originDbNote);//要找到notelist
@@ -891,28 +864,23 @@ export const savePermission=async(uid,id,emailList)=>{
                     return item.id !==id
                 })
                 await setDoc(refPermissionLists, {orderlists:setListDocs});//用刪除後的array覆蓋掉原本的資料
-                console.log("setListDocs",setListDocs,"permissionDoc",permissionDoc)
             }
-            console.log(permissionUid);
             await updateDoc(originDbNote,{permissionUid:deleteField(),permissionEmail:deleteField()});//刪除targetEmail
         }
-        console.log("emailList",emailList,originEmailRef,originUidRef)
         let response=[]
         //處理email List
         for(let i =0; i<emailList.length;i++){
-            if(emailList[i] ==originEmailRef) {continue};//若要分享者跟擁有者相同則Jump to next i++
-            const userQ=query(collection(db,"user",),where("email","==",emailList[i]));//找到被分享對象
+            if(emailList[i]["email"] ==originEmailRef) {continue};//若要分享者跟擁有者相同則Jump to next i++
+            const userQ=query(collection(db,"user",),where("email","==",emailList[i]["email"]));//找到被分享對象
             const userCollectionDocs=await getDocs(userQ);//被分享對象
             const targetUserRef=[];
-            console.log("userCollectionDocs",emailList[i],!userCollectionDocs.empty)
             if(!userCollectionDocs.empty){
                 userCollectionDocs.forEach(item=>{
                     targetUserRef.push(item.data());//該user的uid，若無註冊的用戶會回傳[]
                 })
                 //存入目標用戶的email
-                const updateData={permissionEmail:arrayUnion(emailList[i]),permissionUid:arrayUnion(targetUserRef[0]["uid"])}
+                const updateData={permissionEmail:arrayUnion(emailList[i]["email"]),permissionUid:arrayUnion(targetUserRef[0]["uid"])}
                 await updateDoc(originDbNote,updateData)
-                console.log(originEmailRef,targetUserRef,originUidRef);
                 //目標用戶的資料處理
                 // const targetDataRef=doc(db,`user/${targetUserRef[0]["uid"]}/notelist/${id}`);//目標用戶的資料ref
                 const permissionListsRef=doc(db,"user",targetUserRef[0]["uid"],"permissionLists",id);
@@ -928,10 +896,9 @@ export const savePermission=async(uid,id,emailList)=>{
                 }
                 response.push({ success:"已分享權限"})  
             }else{
-                response.push({ error:`${emailList[i]} 該帳號非KeepNote用戶，無法分享權限`})
+                response.push({ error:`${emailList[i]["email"]} 該帳號非KeepNote用戶，無法分享權限`})
             }
         }
-        console.log("SEMD MAiL")
         mailPermissionSend(originEmailRef,emailList);
         return response
     }else{//更新擁有者自己的資料與被分享者的資料刪除
@@ -950,9 +917,7 @@ export const savePermission=async(uid,id,emailList)=>{
                     return item.id !==id
                 })
                 await setDoc(refPermissionLists, {orderlists:setListDocs});//用刪除後的array覆蓋掉原本的資料
-                console.log("setListDocs",setListDocs,"permissionDoc",permissionDoc)
             }
-            console.log(permissionUid);
             await updateDoc(originDbNote,{permissionUid:deleteField(),permissionEmail:deleteField()});//刪除targetEmail
         }
         //使用者的uid id //要授予權限的使用者email
@@ -962,23 +927,20 @@ export const savePermission=async(uid,id,emailList)=>{
         originUser.forEach((item)=>{
             originUserRef.push(item.data());
         })
-        console.log("emailList",emailList.length,emailList)
-        let response=[]
+        let response=[];
         //處理email List
         for(let i =0; i<emailList.length;i++){
-            if(emailList[i]===originUserRef[0]["email"]) continue;//若要分享者跟擁有者相同則Jump to next i++
-            const userQ=query(collection(db,"user",),where("email","==",emailList[i]));//找到被分享對象
+            if(emailList[i]["email"]===originUserRef[0]["email"]) continue;//若要分享者跟擁有者相同則Jump to next i++
+            const userQ=query(collection(db,"user",),where("email","==",emailList[i]["email"]));//找到被分享對象
             const userCollectionDocs=await getDocs(userQ);//被分享對象
             const targetUserRef=[];
-            console.log("userCollectionDocs",userCollectionDocs,!userCollectionDocs.empty)
             if(!userCollectionDocs.empty){
                 userCollectionDocs.forEach(item=>{
                     targetUserRef.push(item.data());//該user的uid，若無註冊的用戶會回傳[]
                 })
                 //存入目標用戶的email
-                const updateData={permissionEmail:arrayUnion(emailList[i]),permissionUid:arrayUnion(targetUserRef[0]["uid"])}
+                const updateData={permissionEmail:arrayUnion(emailList[i]["email"]),permissionUid:arrayUnion(targetUserRef[0]["uid"])}
                 await updateDoc(originDataRef,updateData)
-                console.log(originUserRef[0]["email"],targetUserRef,updateData);
                 //目標用戶的資料處理
                 // const targetDataRef=doc(db,`user/${targetUserRef[0]["uid"]}/notelist/${id}`);//目標用戶的資料ref
                 const permissionListsRef=doc(db,"user",targetUserRef[0]["uid"],"permissionLists",id);
@@ -994,10 +956,9 @@ export const savePermission=async(uid,id,emailList)=>{
                 }
                 response.push({ success:"已分享權限"})  
             }else{
-                response.push({ error:`${emailList[i]} 該帳號非KeepNote用戶，無法分享權限`})
+                response.push({ error:`${emailList[i]["email"]} 該帳號非KeepNote用戶，無法分享權限`})
             }
         }
-        console.log("SEMD MAiL")
         mailPermissionSend(originUserRef[0]["email"],emailList);
         return response
     }
@@ -1008,12 +969,12 @@ export const queryForEmail=async(emailList)=>{
         let response=[]
         //處理email List
         for(let i =0; i<emailList.length;i++){
-            const userQ=query(collection(db,"user",),where("email","==",emailList[i]));//找到被分享對象
+            const userQ=query(collection(db,"user",),where("email","==",emailList[i]["email"]));//找到被分享對象
             const userCollectionDocs=await getDocs(userQ);//被分享對象
             if(!userCollectionDocs.empty){
-                return 
+                response.push({ success:`${emailList[i]["email"]} 該帳號是KeepNote用戶`})
             }else{
-                response.push({ error:`${emailList[i]} 該帳號非KeepNote用戶，無法分享權限`})
+                response.push({ error:`${emailList[i]["email"]} 該帳號非KeepNote用戶，無法分享權限`})
             }
         }
         return response

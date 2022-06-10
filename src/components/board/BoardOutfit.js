@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Media_Query_SM,Media_Query_MD,Media_Query_SMD } from "../constant";
+import { Media_Query_SM,Media_Query_SMD } from "../constant";
 
 
 const OutFitDiv=styled.div`
@@ -18,13 +18,6 @@ const OutFitDiv=styled.div`
         left:10px;
         bottom:0;
     }
-    /* ${Media_Query_MD}{
-        width: 100%;
-        background-color: #FFFFFF;
-        position:fixed;
-        left:10px;
-        bottom:0;
-    } */
 `
 const ToolDiv=styled.div`
     width: 52px;

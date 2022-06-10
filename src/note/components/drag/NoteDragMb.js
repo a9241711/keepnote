@@ -38,11 +38,11 @@ const DragDiv=styled.div`
 `
 
 const NoteDragMb=({setIsDragged,setDataChanged,setList,uid,updateData,setSelected,userEmail})=>{
+
       async function handleDragEnd(result){
       if(!result.destination) return;
       const sourceIndex=result.source.index;//被拿取的位置
       const destinationIndex=result.destination.index;//最後被放置的位置
-      console.log(result);
       const setListCopy=[...setList];//取得所有lists;
       const dragedItem=setListCopy[sourceIndex];//取得被拖曳item的值;
       setListCopy.splice(sourceIndex,1);//刪掉被拖曳item的值
@@ -64,7 +64,7 @@ const getItemStyle=(isDragging,draggableStyle)=>({
                 {(provided,snapshot)=>(
                 <NoteListsMbDiv  {...provided.droppableProps} ref={provided.innerRef} style={{...provided.droppableProps.style}}>
             {
-            setList.map((item,index)=>{
+                setList.map((item,index)=>{
                     const{id,noteText,noteTitle,image,time,color,whenToNotify="",permissionEmail,owner,targetEmail}=item;
                     const board=item.board;
                     return(  <Draggable key={id} draggableId={id} index={index} >
@@ -75,15 +75,14 @@ const getItemStyle=(isDragging,draggableStyle)=>({
                             </DragDiv>
                             )}
                             </Draggable>
-                            )
+                        )
                 })
              }   
                 {provided.placeholder}
                 </NoteListsMbDiv>
             )}
             </Droppable>
-        </DragDropContext>
-        
+        </DragDropContext>  
     )
 }
 

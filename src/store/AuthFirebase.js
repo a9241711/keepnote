@@ -30,14 +30,11 @@ export async function  changePassword(oldPassword,password,setErrorPassword){
       );
     reauthenticateWithCredential(user, credential)
     .then( async(result) => {
-        console.log("result",result)
         const res=await updatePassword(user, password);
         if(typeof res ==="undefined"){
             return setErrorPassword("密碼修改成功");
         }
-        console.log("res",res)
     }).catch((error) => {
-        console.log("error",error.code);
         if(error.code==="auth/weak-password"){
             return setErrorPassword("新密碼須至少包含6個字元");
         }
@@ -48,8 +45,8 @@ export async function  changePassword(oldPassword,password,setErrorPassword){
 export function useAuth(){
     const[currentUser,setCurrentUser]=useState();
     useEffect(()=>{
-    let unsub=onAuthStateChanged(auth, user=> setCurrentUser(user));
-    return unsub
+        let unsub=onAuthStateChanged(auth, user=> setCurrentUser(user));
+        return unsub
     },[])
     return currentUser;
 }
@@ -57,5 +54,4 @@ export function useAuth(){
 //Google SignIn
 export function signInGoogle(){
     return signInWithPopup(auth,provider) 
-
 }

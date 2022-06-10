@@ -1,10 +1,6 @@
 import styled from "styled-components"
 import { Text,Button,IconDiv,IconTipText,bounceInLeft,LargerAnimate, Media_Query_SM,Media_Query_SMD } from "../../../components/constant";
 import { Close } from "../../../assets";
-import { Link } from "react-router-dom";
-import NoteInput from "../NoteInput";
-import NoteColor from "../color/NoteColor";
-import NoteMotiBtn from "../modify/NoteModiBtn";
 import { useContext } from "react";
 import NoteContext from "../../context/NoteContext";
 
@@ -98,9 +94,9 @@ const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{//�
         <>
         <NotificationFixed>
             <NotifDiv>
-            <NotifText>{currentTime} - {title} - {body}</NotifText>
-            <NotifBtn onClick={handlePopItem}>開啟記事</NotifBtn>
-            <NotifIconDiv onClick={()=>setIsNotification(false)}></NotifIconDiv>
+                <NotifText>{currentTime} - {title} - {body}</NotifText>
+                <NotifBtn onClick={handlePopItem}>開啟記事</NotifBtn>
+                <NotifIconDiv onClick={()=>setIsNotification(false)}></NotifIconDiv>
             </NotifDiv>
         </NotificationFixed>
         </>

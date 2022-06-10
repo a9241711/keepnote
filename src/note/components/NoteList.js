@@ -83,19 +83,17 @@ const NoteLists=styled.div`
 
 
 const NoteList=({isDataChange,setDataChanged,setList,uid,userEmail,updateData,setIsArchive})=>{
-            const[isDragged,setIsDragged]=useState(false);//拖曳
-            const [selected, setSelected] = useState(false);//是否點擊特定貼文
-            const [clickTool,setClickTool]=useState(false);//是否點擊tool
-            const dragOverItem=useRef();//拖曳進入的位置
-            const dragItem=useRef();//設定被拖曳的position位置
-            const draggedItem=useRef();//用來觀察被拖曳的item
-            const[popValue,setPopValue]=useState("");//notificaiton通知value設定
-            const[isNotification,setIsNotification]=useState(false);//檢查是否有通知，onMessage使用
-            const{filterData,dataList,filterButDataChange}=useContext(SearchContext);
-            const{filterDataList,isFilter}=filterData;
-            const originDataList= dataList["dataList"];//取得原資料
-            const {selectedItem} =useContext(NoteContext);//測試params
-
+        const[isDragged,setIsDragged]=useState(false);//拖曳
+        const [selected, setSelected] = useState(false);//是否點擊特定貼文
+        const [clickTool,setClickTool]=useState(false);//是否點擊tool
+        const dragOverItem=useRef();//拖曳進入的位置
+        const dragItem=useRef();//設定被拖曳的position位置
+        const draggedItem=useRef();//用來觀察被拖曳的item
+        const[popValue,setPopValue]=useState("");//notificaiton通知value設定
+        const[isNotification,setIsNotification]=useState(false);//檢查是否有通知，onMessage使用
+        const{filterData,dataList,filterButDataChange}=useContext(SearchContext);
+        const{filterDataList,isFilter}=filterData;
+        const originDataList= dataList["dataList"];//取得原資料
 
 
     const handleDragStart=(e,position)=>{
@@ -104,9 +102,6 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,userEmail,updateData,se
         dragItem.current=position;
         draggedItem.current.style.boxShadow="rgb(65 69 73 / 30%) 0px 1px 1px 0px,rgb(65 69 73 / 15%) 0px 1px 3px 1px;"
     } 
-    const handleDragEnd=(e)=>{
-        // console.log("dragEnd",e.target.parentNode)
-      }
 
     const dragOver=(e)=>{
         e.preventDefault();
@@ -154,12 +149,12 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,userEmail,updateData,se
     //處理pop up notification message
     const messaging = getMessaging();//前端取得push nitification通知，監聽messsaging，傳入nitificationPop
     onMessage(messaging, (payload) => {
-    const {title,body,time,id}=payload.data;
-    captureNotif(time,id,title,body);
+        const {title,body,time,id}=payload.data;
+        captureNotif(time,id,title,body);
     });
     const captureNotif =(time,id,title,body)=>{
-    setIsNotification(true);
-    setPopValue({title,body,time,id});
+        setIsNotification(true);
+        setPopValue({title,body,time,id});
     }
 
     return(
@@ -170,29 +165,26 @@ const NoteList=({isDataChange,setDataChanged,setList,uid,userEmail,updateData,se
             setList.map((item,index)=>{
                     const{id,noteText,noteTitle,image,time,color,whenToNotify="",permissionEmail,owner,targetEmail}=item;
                     const board=item.board;
-                    return( <NoteLists clickTool={clickTool} key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)} onDragEnd={handleDragEnd}>
-                            <NoteBgColor id={id}  color={color}/>
-                            <NoteItem whenToNotify={whenToNotify}  setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid} permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/>                             
-                            <NoteIconDiv  >
-                            <NoteTool setIsArchive={setIsArchive} setClickTool={setClickTool} setList={setList}  id={id} uid={uid} userEmail={userEmail} setDataChanged={setDataChanged} noteText={noteText} noteTitle={noteTitle}  permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail}/>
-                            </NoteIconDiv>
+                    return( <NoteLists clickTool={clickTool} key={id} ref={draggedItem} onDragLeave={dragLeave} onDragOver={dragOver} id={id} onDragEnter={(e)=>dragEnter(e,index)}  draggable={true}  onDragStart={(e)=>handleDragStart(e,index)}>
+                                <NoteBgColor id={id}  color={color}/>
+                                <NoteItem whenToNotify={whenToNotify}  setSelected={setSelected}  setDataChanged={setDataChanged}   board={board} key={id} id={id} noteText={noteText} noteTitle={noteTitle} image={image} setList={setList}  uid={uid} permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} userEmail={userEmail}/>                             
+                                <NoteIconDiv  >
+                                <NoteTool setIsArchive={setIsArchive} setClickTool={setClickTool} setList={setList}  id={id} uid={uid} userEmail={userEmail} setDataChanged={setDataChanged} noteText={noteText} noteTitle={noteTitle}  permissionEmail={permissionEmail}owner={owner}targetEmail={targetEmail} image={image} board={board}/>
+                                </NoteIconDiv>
                             </NoteLists>
                             )
             })}  
             </NoteListCol>
             <NoteDragMb setIsDragged={setIsDragged} setSelected={setSelected}  setDataChanged={setDataChanged}setList={setList}uid={uid}updateData={updateData} userEmail={userEmail}/>
-            {selected ? 
-            // <Link to={`/${selectedItem.id}`}>
-                <NoteModifyArea setIsArchive={setIsArchive} isDataChange={isDataChange} setDataChanged={setDataChanged} uid={uid} selected={selected} setSelected={setSelected}   userEmail={userEmail}/>
-            // </Link>
-            
-                 : null}
-                {isNotification?<NotificationPop  setSelected={setSelected}  popValue={popValue} setList={setList} setIsNotification={setIsNotification}/>:null}
-               
+            {selected 
+            ? <NoteModifyArea setIsArchive={setIsArchive} isDataChange={isDataChange} setDataChanged={setDataChanged} uid={uid} selected={selected} setSelected={setSelected}   userEmail={userEmail}/>
+            : null}
+            {isNotification
+            ?<NotificationPop  setSelected={setSelected}  popValue={popValue} setList={setList} setIsNotification={setIsNotification}/>
+            :null}
         </NoteListsDiv>
         </>
-            )
+        )
 }       
-
 
 export default NoteList

@@ -1,17 +1,15 @@
 import { useContext, useEffect,useState } from "react";
 import styled from "styled-components";
+import {Media_Query_LG, Media_Query_SM,Media_Query_MD,Media_Query_SMD } from "../components/constant";
+import { KeepLogo } from "../assets";
 import NoteEdit from "./components/NoteEdit";
 import NoteList from "./components/NoteList";
-import { getAllLists, getTextData } from "../store/HandleDb";
-import {Media_Query_LG, Media_Query_SM,Media_Query_MD,Media_Query_SMD ,H3} from "../components/constant";
-import HeaderLoadContext from "../header/HeaderLoadContext";
 import NoteReducer from "./context/NoteReducer";
-import SearchContext from "../header/components/SearchContext";
 import Loading from "./components/loading/Loading";
-import { KeepLogo } from "../assets";
 import ArchivePop from "./archive/ArchivePop";
-
-
+import SearchContext from "../header/components/SearchContext";
+import HeaderLoadContext from "../header/HeaderLoadContext";
+import { getAllLists, getTextData } from "../store/HandleDb";
 
 
 const NoteContent=styled.div`
@@ -20,7 +18,6 @@ const NoteContent=styled.div`
     display:flex;
     flex-direction: column;
     align-items: center;
-
     ${Media_Query_MD}{
         width:95%;
     }
@@ -58,7 +55,7 @@ const InitialText=styled.div`
     line-height: 1.75rem;
 `
 const NotePage=({isLoggin})=>{
-    const {uid,email}=isLoggin;
+    const {uid,email,}=isLoggin;
     const[textData,setTextData]=useState([]);
     const[isDataChange,setDataChanged]=useState(false);
     const{setIsLoading,isRefresh,setIsRefresh,isLoading}=useContext(HeaderLoadContext);

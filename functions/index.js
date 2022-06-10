@@ -16,16 +16,13 @@ exports.sendNotificationAsia=functions.pubsub.schedule("* * * * *").onRun(async(
         const{title,text,token,id,whenToNotify}=snapshop.data();
         const timer  = whenToNotify.seconds * 1000;
         sendNotification(title,text,token,id,timer);
-        console.log(snapshop.data());
         await snapshop.ref.update({"notificationSent":true});
     })
     function sendNotification(title,text,token,id,timer){
-        console.log("title,text,token,timer,id",title,text,token,timer,id);
         const message={
             data:{title:title, body:text,time:String(timer),id:id,click_action:"https://keepproject-e7d2b.web.app"},
             token:token,
         }
-        console.log(message)
         admin.messaging().send(message).then(res=>console.log("Suceess",res)).catch(e=>console.log(e))
     }
     return console.log("end of function")
@@ -44,7 +41,6 @@ exports.deleteNotificationAsia=functions.pubsub.schedule("0 8 * * sun").onRun(as
 
 exports.deleteMail=functions.pubsub.schedule("0 8 * * sun").onRun(async(context)=>{
     const query=await database.collection("mail").where("delivery","!=",null).get();
-    console.log("query",query)
     query.forEach(async snapshop=>{
         await snapshop.ref.delete();
     })

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { savePermission } from "../../store/HandleDb";
+import { querySingleUserImg } from "../../store/HandleDb";
 import { AddUser,Check } from "../../assets";
-import { IconDiv,IconTipText,Media_Query_SM,Media_Query_SMD,LargerAnimate,Button,CloseButton,Text, H3 } from "../constant";
+import { IconDiv,Media_Query_SM } from "../constant";
 
 
 const PermissionInputingDiv=styled.div`
@@ -28,8 +28,7 @@ const PermissionInputIcon=styled(IconDiv)`
     height: 16px;
 `
 const PermissionInput=styled.input.attrs({
-    placeholder: "共用對象的姓名或電子郵件地址",
-
+    placeholder: "請輸入共用對象的電子郵件地址",
     })`
     width: 90%;
     height: auto;
@@ -61,8 +60,7 @@ const PermissionCheckIcon=styled(IconDiv)`
 
 const PermissionEdit=({emailList,setEmailList,setEmailErrorMes,setEmailError,})=>{
     const[permissionEmail,setPermissionEmail]=useState("");
-    const handleCheckEmail=(e)=>{
-        console.log(e.target)
+    const handleCheckEmail=async(e)=>{
         e.preventDefault();
         const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
         if(emailList.includes(permissionEmail)){
@@ -72,8 +70,8 @@ const PermissionEdit=({emailList,setEmailList,setEmailErrorMes,setEmailError,})=
             setEmailErrorMes("電子信箱格式錯誤");     
         }
         else{//電箱格式正確且無重複
-
-            setEmailList(pre=>[...pre,permissionEmail]);
+            await querySingleUserImg(permissionEmail,setEmailList);
+            // setEmailList(pre=>[...pre,permissionEmail]);
             setPermissionEmail("");
         }
     }

@@ -1,13 +1,13 @@
-import { H3,H1, Media_Query_SM } from "../components/constant";
-import { useState, useRef, useContext, useEffect } from "react";
-import AuthContext from "../store/AuthContext";
-import { signIn, signUp, logOutUser, useAuth,resetPassword } from "../store/AuthFirebase";
-import { saveSignUpdData } from "../store/HandleDb";
-import { Button,Text } from "../components/constant";
+
+import { useState, useRef, useContext } from "react";
 import { useNavigate,Link } from "react-router-dom";
 import styled from "styled-components";
+import { H3,H1, Media_Query_SM,Button,Text } from "../components/constant";
 import { LeftArrow } from "../assets";
 import GoogleSign from "../store/thirdpary/GoogleSign";
+import { signIn, signUp, useAuth,resetPassword } from "../store/AuthFirebase";
+import { saveSignUpdData } from "../store/HandleDb";
+import AuthContext from "../store/AuthContext";
 
 const MemberDiv=styled.div`
   display: flex;
@@ -81,37 +81,36 @@ const Plink=styled(Text)`
     }
 `
 const LoginLink=styled(Link)`
-    text-decoration: none;
-    text-decoration: underline;
-    display: block;
-    transition: all ease-in .2s;
-    color: #202124;
-    font-weight: 400;
-    font-family: Roboto, Arial, sans-serif;
-    margin: 10px 0;
-    &:hover{
-        cursor:pointer;
-          color: #FBBC04;
-          text-decoration: underline;
-    }
+  text-decoration: none;
+  text-decoration: underline;
+  display: block;
+  transition: all ease-in .2s;
+  color: #202124;
+  font-weight: 400;
+  font-family: Roboto, Arial, sans-serif;
+  margin: 10px 0;
+  &:hover{
+      cursor:pointer;
+        color: #FBBC04;
+        text-decoration: underline;
+  }
 `
 const BackToIndex=styled.div`
-    position: absolute;
-    left:5%;
-    top:5%;
-    width: 32px;
-    height: 32px;
-    background: no-repeat;
-    background-image: url(${LeftArrow});
-    &:hover{
-      cursor: pointer;
-    }
+  position: absolute;
+  left:5%;
+  top:5%;
+  width: 32px;
+  height: 32px;
+  background: no-repeat;
+  background-image: url(${LeftArrow});
+  &:hover{
+    cursor: pointer;
+  }
 `
 
 const MemberSignIn = () => {//登入
   const {getSignIn,getErrorMessage,error,getResetPassword,reset} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);//防止使用者重複點擊
-  // const [isSignUp,setIsSignUp]=useState(false);//是否註冊
   const [isResetPassword,setIsResetPassword]=useState(false);//是否重設密碼
   const navigation=useNavigate();
   const emailRef = useRef();
@@ -125,7 +124,6 @@ const MemberSignIn = () => {//登入
         emailRef.current.value,
         passwordRef.current.value
       );
-      console.log("response",response)
       let user = {
         email: response["user"]["email"],
         token: response["user"]["accessToken"],
@@ -157,56 +155,55 @@ const MemberSignIn = () => {//登入
 
   return (
     <>
-    
     <MemberDiv>
       <Link to={"/"}>
         <BackToIndex></BackToIndex>
       </Link>
       <H1> KeepNote </H1>
       <MemberInputDiv>
-      {/* 重設密碼區 */}
-      {isResetPassword 
-      ?
-      <>
-      <H3>重設密碼</H3>
-        <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
-        {/* 顯示錯誤文字 */}
-        {error ? <Text>{error}</Text> : null}
-        {/* 顯示重設密碼文字 */}
-        {reset ? <><Text>{reset}</Text> <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(!isResetPassword)}}> 點此登入帳號密碼</Plink> </>: null}
-        <BtnDiv>
-        {reset ?null
-        :<SignUpBtn  disabled={loading} onClick={handleReset}>
-        重設密碼
-        </SignUpBtn>}
-        <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(!isResetPassword)}}> 沒有帳戶？請點此註冊帳號</Plink>
-        </BtnDiv>
-      </>
-      :
-      <>
-      {/* 登入區 */}
-        <H3> {currentUser ?currentUser.email +" 已登入": "登入"}</H3>
-        {currentUser ?<>
-        <LoginLink  to={"/"}>回到首頁</LoginLink> 
-        </>
-        : 
+        {/* 重設密碼區 */}
+        {isResetPassword 
+        ?
         <>
-        <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
-        <Plink style={{alignSelf:"flex-end"}} onClick={(e)=> {e.preventDefault();setIsResetPassword(true)}}> 忘記密碼？</Plink>
-        <InputDiv type="password" placeholder="輸入密碼" ref={passwordRef} />
-        {/* 顯示錯誤文字 */}
-        {error ? <Text>{error}</Text> : null}
-        <BtnDiv>
-        <LoginBtn disabled={loading} onClick={handleLogin }>
-          登入
-        </LoginBtn>
-        <LoginLink  to={"/signup"}>沒有帳戶？請點此註冊帳號</LoginLink> 
-        </BtnDiv>
-        <GoogleSign />
+        <H3>重設密碼</H3>
+          <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
+          {/* 顯示錯誤文字 */}
+          {error ? <Text>{error}</Text> : null}
+          {/* 顯示重設密碼文字 */}
+          {reset ? <><Text>{reset}</Text> <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(!isResetPassword)}}> 點此登入帳號密碼</Plink> </>: null}
+          <BtnDiv>
+          {reset ?null
+          :<SignUpBtn  disabled={loading} onClick={handleReset}>
+          重設密碼
+          </SignUpBtn>}
+          <Plink  onClick={(e)=> {e.preventDefault();setIsResetPassword(!isResetPassword)}}> 沒有帳戶？請點此註冊帳號</Plink>
+          </BtnDiv>
+        </>
+        :
+        <>
+        {/* 登入區 */}
+          <H3> {currentUser ?currentUser.email +" 已登入": "登入"}</H3>
+          {currentUser ?<>
+          <LoginLink  to={"/"}>回到首頁</LoginLink> 
+          </>
+          : 
+          <>
+          <InputDiv type="email" placeholder="輸入帳號" ref={emailRef} />
+          <Plink style={{alignSelf:"flex-end"}} onClick={(e)=> {e.preventDefault();setIsResetPassword(true)}}> 忘記密碼？</Plink>
+          <InputDiv type="password" placeholder="輸入密碼" ref={passwordRef} />
+          {/* 顯示錯誤文字 */}
+          {error ? <Text>{error}</Text> : null}
+          <BtnDiv>
+          <LoginBtn disabled={loading} onClick={handleLogin }>
+            登入
+          </LoginBtn>
+          <LoginLink  to={"/signup"}>沒有帳戶？請點此註冊帳號</LoginLink> 
+          </BtnDiv>
+          <GoogleSign />
+          </>
+          }
         </>
         }
-      </>
-      }
       </MemberInputDiv>
     </MemberDiv>
     </>
@@ -231,7 +228,6 @@ export const MemberSignUp = () => {//註冊
           emailRef.current.value,
           passwordRef.current.value
         );
-        console.log("response",response)
         let user = {
           email: response["user"]["email"],
           token: response["user"]["accessToken"],
@@ -250,8 +246,7 @@ export const MemberSignUp = () => {//註冊
       setLoading(false);
     };
   
-  
-    return (
+  return (
       <>
       <MemberDiv>
         <Link to={"/"}>
@@ -278,9 +273,8 @@ export const MemberSignUp = () => {//註冊
           </>
           } 
         </MemberInputDiv>
-      </MemberDiv>
-        
+      </MemberDiv>   
       </>
-    );
-  };
+  );
+};
 

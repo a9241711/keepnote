@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Close,SearchImg } from "../assets";
-import { IconTipText, Media_Query_LG, Media_Query_MD, Media_Query_SM,Media_Query_SMD,scaleRight} from "../components/constant";
+import { IconTipText, Media_Query_LG, Media_Query_MD, Media_Query_SM,Media_Query_SMD} from "../components/constant";
 import SearchContext from "./components/SearchContext";
 import { IconDiv } from "../components/constant";
 
@@ -128,7 +128,7 @@ const DeleteIcon = styled(IconDiv)`
   background-color: transparent;
 `;
 
-const Search = () => {
+const Search = () => {//搜尋框
   const[searchWord,setSearchWord]=useState("");//Search Word
   const[isFocus,setIsFocus]=useState(false);
   const{dataList,getFilterData,clearFilterData,filterData,getErrorData,errorData,filterButDataChange,getFilterButDataChange}=useContext(SearchContext);//取得所有list data
@@ -183,7 +183,7 @@ const Search = () => {
       </SearchIcon>
       <SearchInput show={show} value={searchWord} onKeyDown={handleInputFilter} onChange={handleInut} onFocus={()=>setIsFocus(true)} onBlur={()=>setIsFocus(false)}></SearchInput>
       <SearchIcon2   isFilter={isFilter}  onClick={()=> {setShow(!show); setIsFocus(false);}}>
-      <IconTipText>搜尋</IconTipText>
+        <IconTipText>搜尋</IconTipText>
       </SearchIcon2>
       {isFilter ||errorData!==null? 
       <DeleteIcon onClick={handleClear}>

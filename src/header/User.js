@@ -50,7 +50,7 @@ const UserImgDiv=styled(UserDiv)`
     background-color: transparent;
 `
 
-function User({isLoggin}) {
+function User({isLoggin}) {//home header
     const{email,uid}=isLoggin;
     const userName= email.toUpperCase().slice(0,1);
     const[img,setImg]=useState(null);
@@ -58,11 +58,8 @@ function User({isLoggin}) {
     useEffect(()=>{
       const handleQueryImg=async()=>{
           const response=await queryUserImg(uid);
-          console.log(response)
           if(response){
-              console.log("response",response)
               const{profileUrl}=response;
-              console.log("profileUrl",profileUrl)
               setImg(profileUrl);
           }
       }
@@ -88,17 +85,55 @@ function User({isLoggin}) {
 
 export default User
 
+
 const UserPermmisionDiv=styled(UserDiv)`
     width: 40px;
 `
-
-export function UserPermission({email}) {//for Permission page
+const UserImg=styled.img`
+    height:32px;
+    border-radius: 50%;
+`
+export function UserPermission({email,profileUrl}) {//for Permission page
   const userName= email.toUpperCase().slice(0,1);
 return (
-  <UserPermmisionDiv>
-      {userName}
-  </UserPermmisionDiv>
-)
+  < >
+        {profileUrl!==null?
+          <UserImgDiv >
+            <UserImg src={profileUrl}></UserImg>
+          </UserImgDiv>
+        :
+        <UserPermmisionDiv>
+            {userName}
+        </UserPermmisionDiv>}
+  </>
+  )
+}
+
+export function UserEdit({uid,email}) {//for Edit page
+  const userName= email.toUpperCase().slice(0,1);
+  const[img,setImg]=useState(null);
+  useEffect(()=>{
+    const handleQueryImg=async()=>{
+        const response=await queryUserImg(uid);
+        if(response){
+            const{profileUrl}=response;
+            setImg(profileUrl);
+        }
+    }
+    handleQueryImg();
+  },[img])
+  return (
+    < >
+          {img!==null?
+            <UserImgDiv >
+              <UserImg src={img}></UserImg>
+            </UserImgDiv>
+          :
+          <UserPermmisionDiv>
+              {userName}
+          </UserPermmisionDiv>}
+    </>
+  )
 }
 
 

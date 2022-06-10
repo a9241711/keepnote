@@ -1,4 +1,4 @@
-import React,{ useState,createContext, useEffect }  from "react";
+import React,{ useState, useEffect }  from "react";
 import BoardDrawingTool from "./BoardDrawingTool";
 import BoardStep from "./BoardStep";
 import styled from "styled-components";
@@ -6,16 +6,9 @@ import BoardOutfit from "./BoardOutfit";
 import BoardCanvas from "./BoardCanvas";
 import { saveBoardData,getBoardData,updateBoardData } from "../../store/HandleDb";
 import {useLocation, useNavigate} from "react-router-dom";
-import { GlobalStyle } from "../constant";
 
 
-export const BoardContext=createContext({name:"guest"})
 
-const BoardDiv = styled.div`
-  width: 100%;
-  height: 100%;
-  background:#FFFFFF;
-`;
 const ToolNav=styled.div`
   position:fixed;
   display:flex;
@@ -52,26 +45,25 @@ const useHistoryPosition = (initialState) => {
       }     
   }; 
   const undo = () => {
-    return index > 0 && setIndex((prev) => prev - 1);
+      return index > 0 && setIndex((prev) => prev - 1);
   };
   const redo = () => {
-    return index < history.length - 1 && setIndex((prev) => prev + 1);
+      return index < history.length - 1 && setIndex((prev) => prev + 1);
   };
   //clear all
   const clear = () => {
-    if (history.length !== 1) {
-      setState([]);
-    }
-    return;
+      if (history.length !== 1) {
+        setState([]);
+      }
+      return;
   };
-  // console.log(",history[index]", history, setState, undo, redo);
   return [history[index],index, setState, undo, redo, clear];
 };
 
 const BoardIndex =()=>{
+    const location=useLocation();//從noteTool傳id,uid board data過來
+    const{id,board,uid}=location["state"]//取得id,uid board 
 
-    const location=useLocation();//從CanvasTool或NoteItem傳text/title/board data過來
-    const{id,board,uid}=location["state"]//取得noteTitle 跟noteText跟color
     const [elements,currentIndex, setElements, undo, redo, clear]=useHistoryPosition([]); //使用customHook
     //設定action動作
     const [action, setAction] = useState("none");
@@ -122,24 +114,21 @@ const BoardIndex =()=>{
         const url=canvas.toDataURL();
         await updateBoardData(id,url,uid);//存入base64
       }
-      const handler = (e) => {
+      const handler =async (e) => {
         e.preventDefault();
-        e.returnValue=true;
-        console.log(e.returnValue,e)
-        saveBoardToDb();
+        e.returnValue=true;//彈出訊息提醒，並重新導向，防止重新整理頁面導致資料遺失
+        await saveBoardToDb();
         setTimeout(() => {
-          navigate("/",{ replace: true })
-        }, 500)
+          navigate("/boarding",{ replace: true },{state:{id,board,uid}})
+        }, 500);
       };
   
       window.addEventListener("beforeunload", handler);
       return () => window.removeEventListener("beforeunload", handler);
-    }, []);
+    }, [elements]);
 
     return(
         <>
-            <GlobalStyle/>
-            <BoardDiv>
             <ToolNav>
             <BoardDrawToollDiv>
             <BoardDrawingTool id={id} tool={tool} setTool={setTool} elements={elements} uid={uid}/>
@@ -148,7 +137,6 @@ const BoardIndex =()=>{
             <BoardStep undo={undo} redo={redo} clear={clear} id={id} currentIndex={currentIndex} uid={uid}/>
             </ToolNav>
             <BoardCanvas elements={elements} setElements={setElements} tool={tool} color={color} range={range} selectedElement={selectedElement} setSelectedElement={setSelectedElement}action={action} setAction={setAction} setIsMouseUp={setIsMouseUp} boardData={boardData}/>
-            </BoardDiv>
         </>
     )
 }
