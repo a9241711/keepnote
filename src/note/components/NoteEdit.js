@@ -3,7 +3,6 @@ import styled from "styled-components";
 import {NoteTitleInput,NoteTextInput,Media_Query_MD,Media_Query_SM,Media_Query_SMD} from "../../components/constant"
 import { v4 } from "uuid";
 import { saveNoteData } from "../../store/HandleDb";
-import CanvasTool from "./CanvasTool";
 import  { NotificationDeleteEdit } from "./notification/NotificationDelete";
 import SearchContext from "../../header/components/SearchContext";
 import NoteEditMb from "./edit/NoteEditMb";
