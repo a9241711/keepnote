@@ -8,12 +8,13 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 - [Skills Structure](#skills-structure)
 
 - [Features](#features)
-  - [#1 Add/Edit Text](#add/Edit-text)
-  - [#2 Keyword Search & Filter](#2%EF%B8%8F⃣-keyword-search--filter)
-  - [#3 Member System](#3%EF%B8%8F⃣-member-system)
-  - [#4 View Attractions](#4%EF%B8%8F⃣-view-attractions)
-  - [#5 Scheduled Route](#5%EF%B8%8F⃣-scheduled-route)
-  - [#6 Responsive Web Design](#6%EF%B8%8F⃣-responsive-web-design-rwd)
+  - [#1 Add Text and Background color](#1️⃣-add-text-and-background-color)
+  - [#2 Drawing Board](#2️⃣-drawing-board)
+  - [#3 Note Notification](#3️⃣-note-notification)
+  - [#4 Share Note Permission](#4️⃣-share-note-permission)
+  - [#5 Keyword Search](#5️⃣-keyword-search)
+  - [#6 Member System](#6️⃣-member-system)
+  - [#7 Drag n Drop](#7️⃣-drag-n-drop)
 - [Backend Technique]
     - [Firebase](#firebase)
 - [Frontend Technique](#frontend-technique)
@@ -21,9 +22,8 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
     - [React (hook)](#react-hook)
     - [React Router Dom](#react-router-dom)
     - [Styled-Components](#styled-components)
-    - [Third-Party Modules](#third-party-library-1)
-    - [Cloud Services](#cloud-services-1)
-
+    - [Third-Party Library](#third-party-library)
+- [Contact](#contact)
   
 ## Live Demo
 [Link](https://keepproject-e7d2b.web.app/)
@@ -38,37 +38,38 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 
 
 ## Features
-### :one: Add/Edit Text 
-新增、修改純文字記事
+### 1️⃣ Add Text and Background color
 ![Imgur](https://i.imgur.com/Tbp8WOY.gif)
-  
-### :two: Add/Edit Note Background
 ![Imgur](https://i.imgur.com/412lJ6m.png)
-  
-### :three: Drawing Board
+
+### 2️⃣ Drawing Board
   
 提供多種畫版工具，讓使用者可以新增、修改畫版，下載圖片檔並儲存圖畫  
 Provide Multiple tools for users to create and redo the pattern drawn by themselves. 
 After finished, users can download the pattern as an image file and save the pattern on the website.
 ![Imgur](https://i.imgur.com/Offview.gif)
   
-### :four: Note Notification
+### 3️⃣ Note Notification
 桌機版訊息通知，結合firebase cloud message 和 cloud function，時間到彈出視窗提醒  
 Note Notifications for desktop computers. Integrated firebase cloud message and cloud function, 
 automatically sending notifications to users while time is up.
 
  
-### :five: Share Note Permission
+### 4️⃣ Share Note Permission
 分享權限給其他人，共同編輯記事，僅擁有者可刪除記事  
 Share permission and cooperate with other people to co-editing  the note. Only note owner allowed to delete.
   
 ![Imgur](https://i.imgur.com/dwJUrPz.png)
-  
-### :six: Member System
+
+### 5️⃣ Keyword Search
+![Imgur](https://i.imgur.com/Ic8jYxG.png)
+
+### 6️⃣ Member System
 整合firebase authentification第三方服務，可用Google登入  
 Integrated Firebase authentification allows users log in with Google account.
 
-### :seven: Drag n Drop
+### 7️⃣ Drag n Drop
+![Imgur](https://i.imgur.com/L4mmPKn.gif)
 
 ## Backend Technique
 ### firebase
@@ -100,4 +101,6 @@ Integrated Firebase authentification allows users log in with Google account.
 - React-Masonry-Css
 - Sendgrid
 
-
+# Contact
+Tony Chou
+E-mail : a9241711@gmail.com
