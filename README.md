@@ -82,16 +82,16 @@ Integrated Firebase authentification allows users log in with Google account.
 
 ### React (hook)
 - SPA with functional components
+
 ### Components Structure
 ![Imgur](https://i.imgur.com/xCgdHoR.png)
 
 ### React Router Dom
-
 - SPA routing
 
 ### Styled-Components
 
-- simply maintainable and easy scalability
+- Maintainable and easy scalability
 
 ### Third Party Library
 
