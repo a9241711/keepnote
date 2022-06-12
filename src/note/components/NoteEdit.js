@@ -8,7 +8,6 @@ import SearchContext from "../../header/components/SearchContext";
 import NoteEditMb from "./edit/NoteEditMb";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
 import HeaderLoadContext from "../../header/HeaderLoadContext";
-import PermissionItem,{PermissionItemEdit} from "../../components/permission/PermissionItem";
 import { NoteEditTool } from "./NoteTool";
 
 const NoteDiv=styled.div`
