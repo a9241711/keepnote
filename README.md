@@ -1,12 +1,12 @@
 # KeepNote 
 
-KeepNote is an user-friendly and  Note website letting user add various elements to their notes.
+KeepNote is an user-friendly note-taking website letting user capture ideas in all applications.
 
 KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平板還是電腦，所有裝置皆可使用。
 ## Catalog
 - [Live Demo](#live-demo)
 - [Skills Structure](#skills-structure)
-- [Components Structure](#components-structure)
+
 - [Features](#features)
   - [#1 Add/Edit Text](#add/Edit-text)
   - [#2 Keyword Search & Filter](#2%EF%B8%8F⃣-keyword-search--filter)
@@ -14,6 +14,16 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
   - [#4 View Attractions](#4%EF%B8%8F⃣-view-attractions)
   - [#5 Scheduled Route](#5%EF%B8%8F⃣-scheduled-route)
   - [#6 Responsive Web Design](#6%EF%B8%8F⃣-responsive-web-design-rwd)
+- [Backend Technique]
+    - [Firebase](#firebase)
+- [Frontend Technique](#frontend-technique)
+    - [Components Structure](#components-structure)
+    - [React (hook)](#react-hook)
+    - [React Router Dom](#react-router-dom)
+    - [Styled-Components](#styled-components)
+    - [Third-Party Modules](#third-party-library-1)
+    - [Cloud Services](#cloud-services-1)
+
   
 ## Live Demo
 [Link](https://keepproject-e7d2b.web.app/)
@@ -26,23 +36,68 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 ## Skills Structure
 ![Imgur](https://i.imgur.com/z8hOy13.png)
 
-## Components Structure
-![Imgur](https://i.imgur.com/xCgdHoR.png)
 
 ## Features
 ### :one: Add/Edit Text 
 新增、修改純文字記事
 ![Imgur](https://i.imgur.com/Tbp8WOY.gif)
+  
 ### :two: Add/Edit Note Background
 ![Imgur](https://i.imgur.com/412lJ6m.png)
+  
 ### :three: Drawing Board
-提供多種畫版工具，讓使用者可以新增、修改畫版，下載圖片檔並儲存圖畫
-Provide Multiple tools for the user to create and redo the pattern drawn by themselves. 
-After finished, the user can download the pattern as an image file and save the pattern on the website.
+  
+提供多種畫版工具，讓使用者可以新增、修改畫版，下載圖片檔並儲存圖畫  
+Provide Multiple tools for users to create and redo the pattern drawn by themselves. 
+After finished, users can download the pattern as an image file and save the pattern on the website.
 ![Imgur](https://i.imgur.com/Offview.gif)
+  
 ### :four: Note Notification
-桌機版訊息通知，結合firebase cloud message 和 cloud function，時間到彈出視窗提醒
-Note Notifications for a website. Integrated firebase cloud message and cloud function, 
+桌機版訊息通知，結合firebase cloud message 和 cloud function，時間到彈出視窗提醒  
+Note Notifications for desktop computers. Integrated firebase cloud message and cloud function, 
 automatically sending notifications to users while time is up.
-### :five: Share Note to others
+
+ 
+### :five: Share Note Permission
+分享權限給其他人，共同編輯記事，僅擁有者可刪除記事  
+Share permission and cooperate with other people to co-editing  the note. Only note owner allowed to delete.
+  
+![Imgur](https://i.imgur.com/dwJUrPz.png)
+  
+### :six: Member System
+整合firebase authentification第三方服務，可用Google登入  
+Integrated Firebase authentification allows users log in with Google account.
+
+### :seven: Drag n Drop
+
+## Backend Technique
+### firebase
+##### Cloud Services
+- Cloud message
+- Cloud Function
+- Authentification
+- Cloud Storage for frontend SPA
+
+# Frontend Technique
+
+### React (hook)
+- SPA with functional components
+### Components Structure
+![Imgur](https://i.imgur.com/xCgdHoR.png)
+
+### React Router Dom
+
+- SPA routing
+
+### Styled-Components
+
+- simply maintainable and easy scalability
+
+### Third Party Library
+
+- rough.js
+- React-Beautiful-Dnd
+- React-Masonry-Css
+- Sendgrid
+
 
