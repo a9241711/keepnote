@@ -9,6 +9,7 @@ import NoteEditMb from "./edit/NoteEditMb";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
 import HeaderLoadContext from "../../header/HeaderLoadContext";
 import { NoteEditTool } from "./NoteTool";
+import {PermissionItemEdit} from "../../components/permission/PermissionItem";
 
 const NoteDiv=styled.div`
     width: 50%;
