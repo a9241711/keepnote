@@ -11,7 +11,6 @@ import NoteModifyArea from "./modify/NoteModifyArea";
 import Masonry from 'react-masonry-css';
 import SearchContext from "../../header/components/SearchContext";
 import NoteDragMb from "./drag/NoteDragMb";
-import NoteContext from "../context/NoteContext";
 
 
 const NoteListsDiv=styled.div`//List Content Div
