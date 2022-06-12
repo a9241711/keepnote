@@ -52,7 +52,3 @@ const AuthState=(props)=>{
         )
     }
 export default AuthState;
-
-// export const useAuth=()=>{//把AuthContext包成function使用
-//     return useContext(AuthContext)
-// }
