@@ -1,6 +1,6 @@
 # KeepNote 
 
-KeepNote is an user-friendly note-taking website letting user capture ideas in all applications.
+KeepNote is a user-friendly note-taking website letting users capture ideas in all applications.
 
 KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平板還是電腦，所有裝置皆可使用。
 ## Catalog
