@@ -72,7 +72,6 @@ Integrate Firebase authentification allowing users to log in with a Google accou
 
 ## Backend Technique
 ### firebase
-##### Cloud Services
 - Cloud message
 - Cloud Function
 - Authentification
