@@ -34,7 +34,7 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 | Password | 123456 |
 
 ## Skills Structure
-![Imgur](https://i.imgur.com/z8hOy13.png)
+![Imgur](https://i.imgur.com/9wTfBh9.png)
 
 
 ## Features
