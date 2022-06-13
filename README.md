@@ -57,7 +57,7 @@ automatically sending notifications to users while time is up.
  
 ### 4️⃣ Share Note Permission
 分享權限給其他人，共同編輯記事，僅擁有者可刪除記事  
-Share permission and cooperate with other people to co-editing  the note. Only note owner allowed to delete.
+Share permission and cooperate with other people to co-editing the note. Only note owner allowed to delete.
 ![Imgur](https://i.imgur.com/dwJUrPz.png)
 
 ### 5️⃣ Keyword Search
@@ -65,7 +65,7 @@ Share permission and cooperate with other people to co-editing  the note. Only n
 
 ### 6️⃣ Member System
 整合firebase authentification第三方服務，可用Google登入  
-Integrated Firebase authentification allows users log in with Google account.
+Integrate Firebase authentification allowing users to log in with a Google account.
 
 ### 7️⃣ Drag n Drop
 ![Imgur](https://i.imgur.com/L4mmPKn.gif)
