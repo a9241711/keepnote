@@ -1,16 +1,18 @@
 import { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
+import { v4 } from "uuid";
 import styled from "styled-components";
 import { LargerAnimate,NoteTitleInput,NoteTextInput,Media_Query_SM,Media_Query_SMD,Media_Query_MD, IconDiv } from "../../../components/constant";
-import { NotificationDeleteEdit } from "../notification/NotificationDelete";
 import { Plus,EditBoard } from "../../../assets";
+import { NotificationDeleteEdit } from "../notification/NotificationDelete";
 import { NoteModiEditBtnMb } from "../modify/NoteModiBtn";
 import { NotificationEditMb,NotificationElement } from "../notification/NotificationIndex";
 import { NoteColorPopMb,NoteColorElement } from "../color/NoteColor";
 import { PermissionEditArea } from "../../../components/permission/Permssion";
-import { saveNoteData } from "../../../store/HandleDb";
-import { v4 } from "uuid";
 import { PermissionItemEdit } from "../../../components/permission/PermissionItem";
+import { saveNoteData } from "../../../store/HandleDb";
+
+
 
 //For Edit Mobile
 const NoteListModify = styled.div`//修改內容的Div
@@ -179,7 +181,6 @@ const NoteEditAddDiv=styled.div`
     background: #f0f0f0f7;
     border-radius: 15px 15px;
     align-items: center;
-    border: 2;
     border: 5px solid #FFFFFF;
     justify-content: center;
       ${Media_Query_MD}{

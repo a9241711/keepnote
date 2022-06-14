@@ -74,7 +74,7 @@ const NotificationDelete=({id, uid,whenToNotify,setDataChanged,})=>{//For List
         setNotify(notifyByTime);
     }
     useEffect(()=>{
-        if(whenToNotify==1 || whenToNotify==""){return setNotify("");}
+        if(whenToNotify===1 || whenToNotify===""){return setNotify("");}
         handleTimeFromDb(whenToNotify);
     },[whenToNotify]);
  
@@ -98,8 +98,7 @@ export default  NotificationDelete;
 //From PopUp Midify
 export const NotificationPopUpDelete=({selected,uid,setDataChanged,notificationChange,setNotificationChange})=>{
     const[notify,setNotify]=useState("");
-    const{selectedItem,getNotificationUpdate}=useContext(NoteContext);
-    const{whenToNotify}=selectedItem;
+    const{selectedItem}=useContext(NoteContext);
     const handleDeleteNoti=async()=>{//刪除notification
         const{id}=selectedItem;
         const res=await deleteNotification(uid,id);
@@ -170,7 +169,7 @@ export const ArchiveNotification=({whenToNotify})=>{//for Archive page
         setNotify(notifyByTime);
     }
     useEffect(()=>{
-        if(whenToNotify==1 || whenToNotify==""){return setNotify("");}
+        if(whenToNotify===1 || whenToNotify===""){return setNotify("");}
         handleTimeFromDb(whenToNotify);
     },[whenToNotify]);
  

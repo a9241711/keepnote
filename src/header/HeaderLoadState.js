@@ -9,7 +9,6 @@ const handlePage=(state,action)=>{
         case "ARCHIVE":
             return {home:false,archive:true};
         case "CLICK":
-            console.log(state,action,"Click")
             return action.payload;
         default :
             return state

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import {IconTipText} from "../../src/components/constant";
 import { useState,useEffect } from 'react';
 import { queryUserImg } from '../store/HandleDb';
 

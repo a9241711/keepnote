@@ -1,13 +1,10 @@
 import rough from "roughjs/bundled/rough.esm";
-import { useEffect, useState,useRef,useMemo } from "react";
+import { useEffect, useState,useRef } from "react";
 import styled from "styled-components";
 
 const BoardCanvasArea=styled.canvas`
     width: 100%;
     height: 100%;
-    /* width:1200px;
-    height:500px; */
-    /* display: block; */
     position: absolute;
 `
 
@@ -43,7 +40,6 @@ const nearPoint = (x, y, postionX, positionY, name) => {
 };
 
 const positionWithinElement = (x, y, element) => {
-  console.log("positionWithinElement", x, y, element);
   //檢查物件是否是該物件
   const { type, x1, x2, y1, y2 } = element;
   if (type === "rectangle") {
@@ -52,7 +48,6 @@ const positionWithinElement = (x, y, element) => {
     const bottomLeft = nearPoint(x, y, x1, y2, "bl");
     const bottomRight = nearPoint(x, y, x2, y2, "br");
     const inside = x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
-    // console.log(topLeft || topRight || bottomLeft || bottomRight || inside);
     return topLeft || topRight || bottomLeft || bottomRight || inside;
   } else {
     const a = { x: x1, y: y1 };
@@ -114,8 +109,6 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
     useEffect(() => {//畫圖
         const canvas = document.getElementById("canvas");
         const context = canvas.getContext("2d");
-        // canvas.style.height=canvas.height+"px";
-        // canvas.style.width=canvas.width+"px";
         context.clearRect(0, 0, canvas.width, canvas.height);
         const roughCanvas = rough.canvas(canvas);
         elements.forEach((element) => {
@@ -126,7 +119,6 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
               stroke:element.color.strokeColor,
               strokeWidth: element.range,
             });
-            // console.log("linearPathElement",linearPathElement);
             roughCanvas.draw(linearPathElement)
           }
         }); 
@@ -193,7 +185,6 @@ const BoardCanvas=({elements,setElements,tool,color, range,selectedElement,setSe
 
     const handleMouseDown = (event) => {
         const { clientX, clientY } = event; //Event是一個物件，因此透過物件解構賦值把clientX 跟clientY的值指定回去//
-        console.log(event, clientX, clientY )
         if (tool === "selection") {
           //如果選擇selection工具
           //可以moving移動物件

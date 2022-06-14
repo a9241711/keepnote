@@ -1,14 +1,10 @@
 
 import { initializeApp } from "firebase/app";
-import {collection, getFirestore, setDoc,addDoc, Timestamp} from "firebase/firestore";
+import { getFirestore} from "firebase/firestore";
 import {getAuth} from "firebase/auth";
-import {getMessaging,getToken } from "firebase/messaging";
 
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+//  web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCWPZxWnposbvVw0WH_SUD7pqVEIueob-M",
     authDomain: "keepproject-e7d2b.firebaseapp.com",

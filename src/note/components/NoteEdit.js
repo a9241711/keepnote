@@ -1,15 +1,15 @@
 import { useEffect, useState,useRef,useContext } from "react";
 import styled from "styled-components";
-import {NoteTitleInput,NoteTextInput,Media_Query_MD,Media_Query_SM,Media_Query_SMD} from "../../components/constant"
 import { v4 } from "uuid";
-import { saveNoteData } from "../../store/HandleDb";
+import {NoteTitleInput,NoteTextInput,Media_Query_MD,Media_Query_SM,Media_Query_SMD} from "../../components/constant"
 import  { NotificationDeleteEdit } from "./notification/NotificationDelete";
-import SearchContext from "../../header/components/SearchContext";
 import NoteEditMb from "./edit/NoteEditMb";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
-import HeaderLoadContext from "../../header/HeaderLoadContext";
 import { NoteEditTool } from "./NoteTool";
 import {PermissionItemEdit} from "../../components/permission/PermissionItem";
+import { saveNoteData } from "../../store/HandleDb";
+import HeaderLoadContext from "../../header/HeaderLoadContext";
+import SearchContext from "../../header/components/SearchContext";
 
 const NoteDiv=styled.div`
     width: 50%;
@@ -65,7 +65,6 @@ const NoteEdit=({uid,setDataChanged,userEmail})=>{
     const[debouncedText,setDebouncedText]=useState("");//控制取得typying title text資料
     const[isClose,setIsClose]=useState(false);//檢查是否按關閉
     const typingTitleRef=useRef();
-    const typingTextRef=useRef();
     const{filterData}=useContext(SearchContext);//取得所有filter data
     const{isFilter}=filterData;
     const{setIsLoading}=useContext(HeaderLoadContext);
@@ -73,7 +72,7 @@ const NoteEdit=({uid,setDataChanged,userEmail})=>{
     //auto height 輸入框
     //控制修改文字框的height
     const handleAutoHeight=(e)=>{
-      e.target.style.height=e.target.scrollHeight + "px"
+      e.target.style.height=e.target.scrollHeight + "px";
     }
 
     const getNodeTitleValue=(e)=>{

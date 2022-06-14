@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Text,Button,IconDiv,IconTipText,bounceInLeft,LargerAnimate, Media_Query_SM,Media_Query_SMD } from "../../../components/constant";
+import { Text,Button,IconDiv,bounceInLeft, Media_Query_SM,Media_Query_SMD } from "../../../components/constant";
 import { Close } from "../../../assets";
 import { useContext } from "react";
 import NoteContext from "../../context/NoteContext";
