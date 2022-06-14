@@ -19,7 +19,6 @@ const ArchiveTool=({setDataChanged,uid,id,permissionEmail,owner,userEmail })=>{/
     const[alert,setAlert]=useState(false);
     //刪除DB&&state
     const handleClickDelete = async () => {//刪除fn
-      console.log("owner",owner,"permissionEmail",permissionEmail)
       if(owner ){//如果是貼文擁有者且permissionEmail有值,跳出訊息告警直接刪除
         setAlert(true);
         setAlertText("所有共用對象將無法再看到刪除的記事");

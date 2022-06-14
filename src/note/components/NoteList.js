@@ -76,15 +76,12 @@ const NoteLists=styled.div`
         }
     }
 `
-    /* &:active ${NoteIconDiv}{
-        visibility: hidden;
-    } */
 
 
 const NoteList=({isDataChange,setDataChanged,setList,uid,userEmail,updateData,setIsArchive})=>{
         const[isDragged,setIsDragged]=useState(false);//拖曳
-        const [selected, setSelected] = useState(false);//是否點擊特定貼文
-        const [clickTool,setClickTool]=useState(false);//是否點擊tool
+        const[selected, setSelected] = useState(false);//是否點擊特定貼文
+        const[clickTool,setClickTool]=useState(false);//是否點擊tool
         const dragOverItem=useRef();//拖曳進入的位置
         const dragItem=useRef();//設定被拖曳的position位置
         const draggedItem=useRef();//用來觀察被拖曳的item

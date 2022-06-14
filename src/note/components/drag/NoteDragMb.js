@@ -1,5 +1,5 @@
 import { DragDropContext,Droppable,Draggable } from 'react-beautiful-dnd';
-import styled from "styled-components"
+import styled from "styled-components";
 import NoteItem from '../NoteItem';
 import { Media_Query_SM,Media_Query_SMD} from '../../../components/constant';
 import NoteBgColor from '../color/NoteBgColor';

@@ -9,7 +9,7 @@ import Loading from "./components/loading/Loading";
 import ArchivePop from "./archive/ArchivePop";
 import SearchContext from "../header/components/SearchContext";
 import HeaderLoadContext from "../header/HeaderLoadContext";
-import { getAllLists, getTextData } from "../store/HandleDb";
+import { getAllLists } from "../store/HandleDb";
 
 
 const NoteContent=styled.div`

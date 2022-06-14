@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useState,useRef, useEffect, useContext } from "react";
 import { Button,CloseButton, IconDiv,IconTipText,Text,Media_Query_SM,Media_Query_SMD,Media_Query_MD,scaleRight } from "../../../components/constant";
 import { Notification } from "../../../assets";
-import { getMessaging,onMessage,getToken } from "firebase/messaging";
+import { getMessaging,getToken } from "firebase/messaging";
 import NoteContext from "../../context/NoteContext";
 
 const NotificationDiv=styled.div`
@@ -90,11 +90,11 @@ const BtnDiv=styled.div`
   align-self: end;
   margin: 15px 0;
     &:hover{
-    cursor:${(props)=> { return props.time =="" || props.date ==""?"not-allowed":"pointer"}} ;
+    cursor:${(props)=> { return props.time ==="" || props.date ===""?"not-allowed":"pointer"}} ;
   }
 `
 const BtnSummit=styled(Button)`
-    pointer-events: ${(props)=> { return props.time =="" || props.date ==""?"none":"auto"}} ;
+    pointer-events: ${(props)=> { return props.time ==="" || props.date ===""?"none":"auto"}} ;
     ${Media_Query_SM}{
       border-radius: 40px 40px;
       background-color: #FBBC04;

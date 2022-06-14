@@ -106,13 +106,11 @@ const NoteColor=({uid,id,setDataChanged,setNoteColor,isFromEdit,})=>{//EDit and 
 
     useEffect(()=>{//觀察是否click到非color icon
         const handleClickColorIcon=(e)=>{
-            console.log(e.target,colorIconRef.current.contains(e.target));
             if(!colorIconRef.current.contains(e.target)){
                 return setClickColor(false);
             }
         }
         if(clickColor){
-            console.log("click colorIcon",colorIconRef.current,);
             document.addEventListener("click",handleClickColorIcon);
         }
         return ()=>{ document.removeEventListener("click",handleClickColorIcon)};//取消觀察

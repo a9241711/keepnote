@@ -1,4 +1,4 @@
-import { useContext, useReducer, useState,useRef, useEffect } from "react";
+import { useContext, useState, } from "react";
 import styled from "styled-components";
 import { NoteTitleInput,NoteTextInput,Text, Media_Query_SM } from "../../components/constant";
 import NoteContext from "../context/NoteContext";
@@ -22,7 +22,7 @@ const NoteTime=styled(Text)`
 
 const NoteInput=()=>{
   const {selectedItem,getNoteUpdateTitle,getNoteUpdateText,noteHeight} =useContext(NoteContext);
-  const{id, noteText, noteTitle, index,image,color,time}=selectedItem;
+  const{ noteText, noteTitle, time}=selectedItem;
   const[updateTitle,setUpdateTitle]=useState(noteTitle);
   const[updateText,setUpdateText]=useState(noteText);
   const{titleHeight, textHeight}=noteHeight;//取得輸入框高度

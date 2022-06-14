@@ -1,12 +1,12 @@
 import {  useEffect, useContext } from "react";
 import styled from "styled-components";
-import {  H3, IconDiv, IconTipText, Text } from "../components/constant";
+import { Link } from "react-router-dom";
+import { KeepLogo, Loading, ReFresh,Nav } from "../assets";
+import {  H3, IconDiv, IconTipText } from "../components/constant";
 import Search from "./Search";
 import LogOut from "./LogOut";
 import LogIn from "./LogIn";
 import User from "./User";
-import { Link } from "react-router-dom";
-import { KeepLogo, Loading, ReFresh,Nav } from "../assets";
 import HeaderLoadContext from "./HeaderLoadContext";
 
 

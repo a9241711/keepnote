@@ -81,24 +81,24 @@ const NoteItem = ({uid,id,noteText="null",noteTitle="null",image,setList,setData
     const minHeight=32;
     if(typeof heightTitleRef.current =="undefined" ||typeof heightTextRef.current =="undefined")
     {
-      const heightObj={titleHeight:minHeight,textHeight:minHeight}
-      return getNoteHeight(heightObj.titleHeight,heightObj.textHeight)
+      const heightObj={titleHeight:minHeight,textHeight:minHeight};
+      return getNoteHeight(heightObj.titleHeight,heightObj.textHeight);
     }
     else if( heightTitleRef.current ===null || heightTextRef.current ===null)
     {
-      const heightObj={titleHeight:minHeight,textHeight:minHeight}
-      return getNoteHeight(heightObj.titleHeight,heightObj.textHeight)
+      const heightObj={titleHeight:minHeight,textHeight:minHeight};
+      return getNoteHeight(heightObj.titleHeight,heightObj.textHeight);
     }
     else{
       const titleHeight=heightTitleRef.current.offsetHeight/2;
       const textHeight=heightTextRef.current.offsetHeight/2;
-      const heightObj={titleHeight,textHeight}
+      const heightObj={titleHeight,textHeight};
       if(titleHeight<minHeight){
         heightObj.titleHeight=minHeight;
       }if(textHeight<minHeight){
         heightObj.textHeight=minHeight;
       }
-      getNoteHeight(heightObj.titleHeight,heightObj.textHeight) 
+      getNoteHeight(heightObj.titleHeight,heightObj.textHeight);
     }
   }
 
@@ -130,4 +130,4 @@ const NoteItem = ({uid,id,noteText="null",noteTitle="null",image,setList,setData
   );
 };
 
-export default React.memo(NoteItem) ;
+export default NoteItem ;

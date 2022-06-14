@@ -21,7 +21,7 @@ const NoteListModifyDiv=styled.div`
     padding: 16px;
     position: fixed;
     width: fit-content;
-    top:20%;
+    top:15%;
     right: 0;
     left: 0;
     z-index: 4001;

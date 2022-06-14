@@ -126,7 +126,6 @@ const MemberShip=()=>{//個人資料修改頁
 
     const handleUpload=(e)=>{
         const file=e.target.files[0];
-        console.log(e,"file",file);
         if(file.type.match('image.*')){//check if png or jpg
             const reader=new FileReader();
             reader.onloadend=async()=>{
