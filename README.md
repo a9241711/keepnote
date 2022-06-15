@@ -44,7 +44,7 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 
 ### 2️⃣ Drawing Board
   
-提供多種畫版工具，讓使用者可以新增、修改畫版，下載圖片檔並儲存圖畫  
+提供多種畫板工具，讓使用者可以新增、修改畫版，下載圖片檔並儲存圖畫  
 Provide Multiple tools for users to create and redo the pattern drawn by themselves. 
 After finished, users can download the pattern as an image file and save the pattern on the website.
 ![Imgur](https://i.imgur.com/Offview.gif)
