@@ -85,7 +85,7 @@ Integrate Firebase authentification allowing users to log in with a Google accou
 ### Custom Hook
 useHistoryPosition for the UndoRedo feature for drawing board.
 ### Components Structure
-![Imgur](https://i.imgur.com/M38nyLN.png)
+![Imgur](https://i.imgur.com/PBRgeie.png)
 
 ### React Router
 - SPA routing
