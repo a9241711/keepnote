@@ -5,7 +5,6 @@ KeepNote is a user-friendly note-taking website letting users capture ideas in a
 KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平板還是電腦，所有裝置皆可使用。
 ## Catalog
 - [Live Demo](#live-demo)
-- [Skills Structure](#skills-structure)
 
 - [Features](#features)
   - [#1 Add Text and Background color](#1️⃣-add-text-and-background-color)
@@ -15,12 +14,13 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
   - [#5 Keyword Search](#5️⃣-keyword-search)
   - [#6 Member System](#6️⃣-member-system)
   - [#7 Drag n Drop](#7️⃣-drag-n-drop)
-- [Backend Technique](#end-technique)
+- [Skills Structure](#skills-structure)
+- [Backend Technique](#backend-technique)
     - [Firebase](#firebase)
 - [Frontend Technique](#frontend-technique)
     - [Components Structure](#components-structure)
     - [React (hook)](#react-hook)
-    - [React Router Dom](#react-router-dom)
+    - [React Router](#react-router)
     - [Styled-Components](#styled-components)
     - [Third-Party Library](#third-party-library)
 - [Contact](#contact)
@@ -33,8 +33,6 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 | Account | test@gmail.com |
 | Password | 123456 |
 
-## Skills Structure
-![Imgur](https://i.imgur.com/9wTfBh9.png)
 
 
 ## Features
@@ -70,6 +68,9 @@ Integrate Firebase authentification allowing users to log in with a Google accou
 ### 7️⃣ Drag n Drop
 ![Imgur](https://i.imgur.com/L4mmPKn.gif)
 
+## Skills Structure
+![Imgur](https://i.imgur.com/Q3OWy23.png)
+
 ## Backend Technique
 ### firebase
 - Cloud message
@@ -81,21 +82,21 @@ Integrate Firebase authentification allowing users to log in with a Google accou
 
 ### React (hook)
 - SPA with functional components
+### Custom Hook
+useHistoryPosition for the UndoRedo feature for drawing board
 
 ### Components Structure
 ![Imgur](https://i.imgur.com/xCgdHoR.png)
 
-### React Router Dom
+### React Router
 - SPA routing
 
 ### Styled-Components
-
-- Maintainable and easy scalability
+- Maintainable and easy scalability for CSS
 
 ### Third Party Library
-
-- rough.js
-- React-Beautiful-Dnd
+- rough.js for Canvas used
+- React-Beautiful-Dnd for Drag n Drop on Modile device
 - React-Masonry-Css
 - Sendgrid
 
