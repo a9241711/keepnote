@@ -72,7 +72,7 @@ Integrate Firebase authentification allowing users to log in with a Google accou
 ![Imgur](https://i.imgur.com/Q3OWy23.png)
 
 ## Backend Technique
-### firebase
+### Firebase
 - Cloud message
 - Cloud Function
 - Authentification
@@ -83,7 +83,7 @@ Integrate Firebase authentification allowing users to log in with a Google accou
 ### React (hook)
 - SPA with functional components
 ### Custom Hook
-useHistoryPosition for the UndoRedo feature for drawing board
+useHistoryPosition for the UndoRedo feature for drawing board.
 
 ### Components Structure
 ![Imgur](https://i.imgur.com/pfYPybu.png)
