@@ -5,7 +5,7 @@ import { Text } from "../../components/constant";
 import { Google } from "../../assets";
 import AuthContext from "../AuthContext";
 import { signInGoogle } from "../AuthFirebase";
-import { saveSignUpdData } from "../HandleDb";
+import { saveSignUpdData } from "../handledb/MemberDb";
 
 
 const GoogleDiv=styled.div`

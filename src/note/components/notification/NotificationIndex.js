@@ -1,10 +1,10 @@
-import { requestForToken } from "../../../store/HandleDb";
 import styled from "styled-components";
 import { useState,useRef, useEffect, useContext } from "react";
 import { Button,CloseButton, IconDiv,IconTipText,Text,Media_Query_SM,Media_Query_SMD,Media_Query_MD,scaleRight } from "../../../components/constant";
 import { Notification } from "../../../assets";
 import { getMessaging,getToken } from "firebase/messaging";
 import NoteContext from "../../context/NoteContext";
+import { requestForToken } from "../../../store/handledb/NotificationDb";
 
 const NotificationDiv=styled.div`
   position: relative;

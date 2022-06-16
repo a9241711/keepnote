@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { Pencil,PencilCheck,Line,LineCheck,Rectangle,RectangleCheck,Selection,SelectionCheck, Arrow, ArrowCheck } from "../../assets";
 import { Link } from "react-router-dom";
-import { updateBoardData } from "../../store/HandleDb";
+import { updateBoardData } from "../../store/handledb/BoardDb";
 
 const backgoundColor=keyframes`
     from{

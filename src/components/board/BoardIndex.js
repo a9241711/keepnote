@@ -4,10 +4,9 @@ import BoardStep from "./BoardStep";
 import styled from "styled-components";
 import BoardOutfit from "./BoardOutfit";
 import BoardCanvas from "./BoardCanvas";
-import { saveBoardData,getBoardData,updateBoardData } from "../../store/HandleDb";
 import {useLocation, useNavigate} from "react-router-dom";
 import useHistoryPosition from "./hooks/useHistory";
-
+import { saveBoardData,getBoardData,updateBoardData } from "../../store/handledb/BoardDb";
 
 
 const ToolNav=styled.div`

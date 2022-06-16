@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { Close } from "../../assets";
 import { Media_Query_SM,Media_Query_SMD,Text,Button,IconDiv,bounceInLeft, } from "../../components/constant";
-import { updateNoteStatusBack } from "../../store/HandleDb";
+import { updateNoteStatusBack } from "../../store/handledb/ArchiveDb";
 
 const NotificationFixed=styled.div`
     max-width: 512px;

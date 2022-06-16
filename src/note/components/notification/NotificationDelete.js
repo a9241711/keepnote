@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { Text,IconDiv ,Media_Query_SM,Media_Query_SMD,Media_Query_MD,Media_Query_LG} from "../../../components/constant";
 import { Close,Clock } from "../../../assets";
 import { useEffect, useState,useContext } from "react";
-import { deleteNotification,queryNotification, } from "../../../store/HandleDb";
 import NoteContext from "../../context/NoteContext";
+import { deleteNotification,queryNotification} from "../../../store/handledb/NotificationDb";
 
 
 const NotifDelete=styled(IconDiv)`

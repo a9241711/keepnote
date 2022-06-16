@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { querySingleUserImg } from "../../store/HandleDb";
 import { AddUser,Check } from "../../assets";
 import { IconDiv,Media_Query_SM } from "../constant";
+import { querySingleUserImg } from "../../store/handledb/MemberDb";
 
 
 const PermissionInputingDiv=styled.div`

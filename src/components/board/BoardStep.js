@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Undo,UndoCheck,Redo,RedoCheck, Menu, MenuCheck,Banned, Delete } from "../../assets";
-import { deleteBoard } from "../../store/HandleDb";
+import { UndoCheck,RedoCheck, Menu, MenuCheck, Delete } from "../../assets";
 import { ClickIconAnimate, Media_Query_MD, Media_Query_SM,Media_Query_SMD  } from "../constant";
+import { deleteBoard } from "../../store/handledb/BoardDb";
 
 
 

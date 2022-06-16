@@ -9,10 +9,10 @@ import { useContext, useEffect,useState } from "react";
 import NoteContext from "../../context/NoteContext";
 import { LargerAnimate,IconDiv,IconTipText,Media_Query_MD, Media_Query_SM,Media_Query_SMD, Media_Query_LG, ListPopModifyBg } from "../../../components/constant";
 import { EditBoard,DeleteCheck } from "../../../assets";
-import { updateNoteData,deleteBoard,queryImageData,saveNoteData } from "../../../store/HandleDb";
 import { PermissionItemModi } from "../../../components/permission/PermissionItem";
-import { PermissionModify } from "../../../components/permission/Permssion";
-
+import { PermissionModify } from "../../../components/permission/Permission";
+import { updateNoteData,queryImageData} from "../../../store/handledb/NoteDb";
+import { deleteBoard } from "../../../store/handledb/BoardDb";
 
 
 const NoteListModifyDiv=styled.div`
@@ -198,7 +198,7 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange,use
     const[clickColor,setClickColor]=useState(false);//是否點擊colorIcon;
     const[notificationChange,setNotificationChange]=useState(false);//是否更新NotificationIcon;
     const[image,setImage]=useState("");
-    const {selectedItem,updateColor,updateTitle,updateText,updateNotification} =useContext(NoteContext);
+    const {selectedItem,updateColor,updateTitle,updateText} =useContext(NoteContext);
     const{id,board=null}=selectedItem;
     
     const handleUpdateSubmmit =async  () => {

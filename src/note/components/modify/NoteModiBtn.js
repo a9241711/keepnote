@@ -2,9 +2,10 @@ import { useContext,useState,useEffect } from "react";
 import styled from "styled-components";
 import { Button,CloseButton, Media_Query_SM,Media_Query_SMD, Media_Query_MD} from "../../../components/constant";
 import NoteContext from "../../context/NoteContext";
-import { updateNoteStatus,updateNoteData, } from "../../../store/HandleDb";
 import { LeftArrow } from "../../../assets";
 import HeaderLoadContext from "../../../header/HeaderLoadContext";
+import { updateNoteStatus } from "../../../store/handledb/ArchiveDb";
+import { updateNoteData } from "../../../store/handledb/NoteDb";
 
 const NoteModifyDiv=styled.div`
   display: flex;

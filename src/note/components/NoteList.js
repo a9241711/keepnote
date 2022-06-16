@@ -1,7 +1,6 @@
 import { useState,useRef,useEffect, useContext } from "react";
 import styled from "styled-components";
 import NoteItem from "./NoteItem";
-import { updateListsPosition } from "../../store/HandleDb";
 import { Media_Query_MD, Media_Query_SM,Media_Query_SMD,Media_Query_LG } from "../../components/constant";
 import NoteTool from "./NoteTool";
 import NoteBgColor from "./color/NoteBgColor";
@@ -11,6 +10,7 @@ import NoteModifyArea from "./modify/NoteModifyArea";
 import Masonry from 'react-masonry-css';
 import SearchContext from "../../header/components/SearchContext";
 import NoteDragMb from "./drag/NoteDragMb";
+import { updateListsPosition } from "../../store/handledb/NoteDb";
 
 
 const NoteListsDiv=styled.div`//List Content Div

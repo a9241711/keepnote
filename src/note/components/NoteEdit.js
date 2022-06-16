@@ -7,9 +7,9 @@ import NoteEditMb from "./edit/NoteEditMb";
 import { NoteModiEditBtn } from "./modify/NoteModiBtn";
 import { NoteEditTool } from "./NoteTool";
 import {PermissionItemEdit} from "../../components/permission/PermissionItem";
-import { saveNoteData } from "../../store/HandleDb";
 import HeaderLoadContext from "../../header/HeaderLoadContext";
 import SearchContext from "../../header/components/SearchContext";
+import { saveNoteData } from "../../store/handledb/NoteDb";
 
 const NoteDiv=styled.div`
     width: 50%;

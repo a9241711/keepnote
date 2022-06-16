@@ -1,10 +1,10 @@
 import { Button, H3,Text,GlobalStyle } from "../constant";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { updateUserImg,queryUserImg } from "../../store/HandleDb";
 import NavSideBar from "../../header/components/NavSideBar";
 import { HeaderArchiveDiv } from "../../header/Header";
 import { changePassword } from "../../store/AuthFirebase";
+import { updateUserImg,queryUserImg } from "../../store/handledb/MemberDb";
 
 
 const MemberShipDiv=styled.div`
