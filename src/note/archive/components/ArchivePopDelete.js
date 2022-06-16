@@ -97,3 +97,4 @@ const ArchivePopDelete=({id,uid,setDataChanged,setAlertText,setAlert,alertText})
 }
 
 export default ArchivePopDelete
+

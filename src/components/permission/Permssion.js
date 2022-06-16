@@ -140,13 +140,12 @@ const EmailErrorText=styled(Text)`
 `
 
 const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataChanged})=>{//for List 
-    // const[permissionEmail,setPermissionEmail]=useState("");
     const[emailList,setEmailList]=useState();
     const[emailError,setEmailError]=useState([]);//處理從db來的錯誤訊息顯示
     const[emailErrorMes,setEmailErrorMes]=useState();//處理信箱格式檢查的錯誤顯示
     const[clickPermission,setClickPermission]=useState(false);
     const[isModify,setIsModify]=useState(false);
-    const [loading, setLoading] = useState(false);//防止使用者重複點擊
+    const[loading, setLoading] = useState(false);//防止使用者重複點擊
     const handleSummit=async()=>{
         setLoading(true);
         const res=await savePermission(uid,id,emailList);
@@ -198,10 +197,10 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
                     const id=v4();
                     const{email,profileUrl}=item;
                     return(
-                        <>
-                        <UserPermission  key={id} id={id} email={email} profileUrl={profileUrl} />
+                        <div key={id} >
+                        <UserPermission   id={id} email={email} profileUrl={profileUrl} />
                         <TextEmail>{email} (擁有者)</TextEmail> 
-                        </>
+                        </div>
                     )
                 })}
                 </PermissionUserDiv> 
@@ -213,7 +212,7 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
                     )
                 })}
                 <PermissionInputDiv>
-                    <PermissionEdit emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
+                    <PermissionEdit  emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
                     <EmailErrorText >{emailErrorMes}</EmailErrorText>
                 {emailError.length>0?
                 <>
@@ -229,8 +228,8 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
                 </PermissionInputDiv>
             </PermissionEditDiv>
             <PermissionBtnDiv>
-                        <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
-                        <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
+                    <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
+                    <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
             </PermissionBtnDiv>
         </PermissionDiv>
         </>
@@ -391,13 +390,11 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
                 permissionEmailCopy.unshift(userEmail);
                 const noRepeatValue=[...(new Set(permissionEmailCopy))];
                 await queryUserImgByEmail(noRepeatValue,setEmailList);
-                // setEmailList(noRepeatValue);
             }else{
                 const permissionEmailCopy=permissionEmail.slice(0);
                 permissionEmailCopy.unshift(targetEmail);
                 const noRepeatValue=[...(new Set(permissionEmailCopy))];
                 await queryUserImgByEmail(noRepeatValue,setEmailList);
-                // setEmailList(noRepeatValue);
             }
         }
         handleEmailList();
@@ -426,10 +423,10 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
                     const id=v4();
                     const{email,profileUrl}=item;
                     return(
-                        <>
-                        <UserPermission  key={id} id={id} email={email} profileUrl={profileUrl} />
+                        <div key={id}> 
+                        <UserPermission   id={id} email={email} profileUrl={profileUrl} />
                         <TextEmail>{email} (擁有者)</TextEmail> 
-                        </>
+                        </div>
                     )
                 })}
             </PermissionUserDiv> 

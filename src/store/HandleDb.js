@@ -980,7 +980,7 @@ export const savePermission=async(uid,id,emailList)=>{
             }
         }
         mailPermissionSend(originUserRef[0]["email"],emailList);
-        return response
+        return response;
     }
 }
 
