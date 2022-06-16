@@ -4,6 +4,7 @@ import { IconDiv,IconTipText } from "../../../components/constant";
 import { DeleteCheck,ArchiveBack } from "../../../assets";
 import styled from "styled-components";
 import { updateNoteStatusBack } from "../../../store/handledb/ArchiveDb";
+import { deleteDbNote } from "../../../store/handledb/NoteDb";
 
 const DeleteIcon=styled(IconDiv)`
   background-image: url(${DeleteCheck}) ;
@@ -19,7 +20,7 @@ const ArchiveTool=({setDataChanged,uid,id,permissionEmail,owner,userEmail })=>{/
     const[alert,setAlert]=useState(false);
     //刪除DB&&state
     const handleClickDelete = async () => {//刪除fn
-      if(owner ){//如果是貼文擁有者且permissionEmail有值,跳出訊息告警直接刪除
+      if(owner && typeof permissionEmail !=="undefined" ){//如果是貼文擁有者且permissionEmail有值,跳出訊息告警直接刪除
         setAlert(true);
         setAlertText("所有共用對象將無法再看到刪除的記事");
         }
@@ -27,6 +28,9 @@ const ArchiveTool=({setDataChanged,uid,id,permissionEmail,owner,userEmail })=>{/
         {
           setAlert(true);
           setAlertText("這則記事將不再與您共用")
+        }else{
+          await deleteDbNote(id,uid);
+          setDataChanged(true);
         }
     }
     const updateItem = async () => {//恢復封存狀態 fn
