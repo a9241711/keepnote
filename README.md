@@ -69,7 +69,7 @@ Integrate Firebase authentification allowing users to log in with a Google accou
 ![Imgur](https://i.imgur.com/L4mmPKn.gif)
 
 ## Skills Structure
-![Imgur](https://i.imgur.com/JF7MCmx.png)
+![Imgur](https://i.imgur.com/rErG74z.png)
 
 ## Backend Technique
 ### Firebase
