@@ -6,7 +6,7 @@ import { H3,H1, Media_Query_SM,Button,Text } from "../components/constant";
 import { LeftArrow } from "../assets";
 import GoogleSign from "../store/thirdpary/GoogleSign";
 import { signIn, signUp, useAuth,resetPassword } from "../store/AuthFirebase";
-import { saveSignUpdData } from "../store/HandleDb";
+import { saveSignUpdData } from "../store/handledb/MemberDb";
 import AuthContext from "../store/AuthContext";
 
 const MemberDiv=styled.div`

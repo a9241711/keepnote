@@ -6,8 +6,9 @@ import { v4 } from "uuid";
 import { ArchiveImg,EditBoard } from "../../assets";
 import NoteColor from "./color/NoteColor";
 import NotificationIndex from "./notification/NotificationIndex";
-import Permission,{ PermissionEditArea } from "../../components/permission/Permssion";
-import { updateNoteStatus,saveNoteData } from "../../store/HandleDb";
+import Permission,{ PermissionEditArea } from "../../components/permission/Permission";
+import { updateNoteStatus } from "../../store/handledb/ArchiveDb";
+import { saveNoteData } from "../../store/handledb/NoteDb";
 
 
 

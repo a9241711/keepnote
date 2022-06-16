@@ -1,35 +1,21 @@
 
 import { useEffect, useState,useContext } from "react";
 import styled from "styled-components";
-import { queryForEmail, queryUserImgByEmail, savePermission } from "../../store/HandleDb";
+import { v4 } from "uuid";
 import { AddUser } from "../../assets";
 import { IconDiv,IconTipText,Media_Query_SM,Media_Query_SMD,LargerAnimate,Button,CloseButton,Text, Media_Query_MD, Media_Query_LG, ListPopModifyBg } from "../constant";
 import {UserEdit, UserPermission} from "../../header/User";
 import PermissionEdit from "./PermissionEdit"
 import PermissionList from "./PermissionList";
 import NoteContext from "../../note/context/NoteContext";
-import { v4 } from "uuid";
+import { queryForEmail, queryUserImgByEmail } from "../../store/handledb/MemberDb";
+import { savePermission } from "../../store/handledb/PermmisionDb";
 
-// const NoteListModifyBg = styled.div`//修改文字的Fixed背景顏色，觸控版關閉
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     height: 100vh;
-//     background-color: rgba(121, 122, 124, 0.6);
-//     z-index: 999;
-//     ${Media_Query_SMD}{
-//       /* display: none; */
-//     }
-//     ${Media_Query_SM}{
-//       /* display: none; */
-//     }
-// `;
+
 const PermissionIcon=styled(IconDiv)`
     background-image: url(${AddUser}) ;
     cursor: pointer;
 `
-
 const PermissionDiv=styled.div`
     background-color: transparent;
     border: none;
@@ -140,13 +126,12 @@ const EmailErrorText=styled(Text)`
 `
 
 const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataChanged})=>{//for List 
-    // const[permissionEmail,setPermissionEmail]=useState("");
     const[emailList,setEmailList]=useState();
     const[emailError,setEmailError]=useState([]);//處理從db來的錯誤訊息顯示
     const[emailErrorMes,setEmailErrorMes]=useState();//處理信箱格式檢查的錯誤顯示
     const[clickPermission,setClickPermission]=useState(false);
     const[isModify,setIsModify]=useState(false);
-    const [loading, setLoading] = useState(false);//防止使用者重複點擊
+    const[loading, setLoading] = useState(false);//防止使用者重複點擊
     const handleSummit=async()=>{
         setLoading(true);
         const res=await savePermission(uid,id,emailList);
@@ -192,19 +177,17 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
             <PermissionEditDiv>
                 <PermissionTitleDiv>
                     <PermissionTitleText>協作者</PermissionTitleText>
-                </PermissionTitleDiv>
-                <PermissionUserDiv>
+                </PermissionTitleDiv> 
                 {emailList.slice(0,1).map((item)=>{
                     const id=v4();
                     const{email,profileUrl}=item;
                     return(
-                        <>
-                        <UserPermission  key={id} id={id} email={email} profileUrl={profileUrl} />
+                        <PermissionUserDiv key={id} >
+                        <UserPermission   id={id} email={email} profileUrl={profileUrl} />
                         <TextEmail>{email} (擁有者)</TextEmail> 
-                        </>
+                        </PermissionUserDiv>
                     )
                 })}
-                </PermissionUserDiv> 
                 {emailList.slice(1).map((item)=>{
                     const id=v4();
                     const{email,profileUrl}=item;
@@ -213,7 +196,7 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
                     )
                 })}
                 <PermissionInputDiv>
-                    <PermissionEdit emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
+                    <PermissionEdit  emailList={emailList} setEmailList={setEmailList} setEmailErrorMes={setEmailErrorMes} setEmailError={setEmailError}/>
                     <EmailErrorText >{emailErrorMes}</EmailErrorText>
                 {emailError.length>0?
                 <>
@@ -229,8 +212,8 @@ const Permission=({uid,id,userEmail,permissionEmail,owner,targetEmail,setDataCha
                 </PermissionInputDiv>
             </PermissionEditDiv>
             <PermissionBtnDiv>
-                        <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
-                        <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
+                    <PermissionClose onClick={()=>  setClickPermission(!clickPermission) }>取消</PermissionClose>
+                    <PermissionBtn loading={loading.toString()} disabled={loading} onClick={handleSummit}>儲存</PermissionBtn>
             </PermissionBtnDiv>
         </PermissionDiv>
         </>
@@ -391,13 +374,11 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
                 permissionEmailCopy.unshift(userEmail);
                 const noRepeatValue=[...(new Set(permissionEmailCopy))];
                 await queryUserImgByEmail(noRepeatValue,setEmailList);
-                // setEmailList(noRepeatValue);
             }else{
                 const permissionEmailCopy=permissionEmail.slice(0);
                 permissionEmailCopy.unshift(targetEmail);
                 const noRepeatValue=[...(new Set(permissionEmailCopy))];
                 await queryUserImgByEmail(noRepeatValue,setEmailList);
-                // setEmailList(noRepeatValue);
             }
         }
         handleEmailList();
@@ -421,18 +402,16 @@ export const PermissionModify=({uid,userEmail,setDataChanged})=>{//for Modify ar
             <PermissionTitleDiv>
                 <PermissionTitleText>協作者</PermissionTitleText>
             </PermissionTitleDiv>
-             <PermissionUserDiv>
              {emailList.slice(0,1).map((item)=>{
                     const id=v4();
                     const{email,profileUrl}=item;
                     return(
-                        <>
-                        <UserPermission  key={id} id={id} email={email} profileUrl={profileUrl} />
+                        <PermissionUserDiv key={id}> 
+                        <UserPermission   id={id} email={email} profileUrl={profileUrl} />
                         <TextEmail>{email} (擁有者)</TextEmail> 
-                        </>
+                        </PermissionUserDiv>
                     )
                 })}
-            </PermissionUserDiv> 
             {emailList.slice(1).map((item)=>{
                     const id=v4();
                     const{email,profileUrl}=item;

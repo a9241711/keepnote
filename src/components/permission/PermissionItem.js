@@ -1,10 +1,10 @@
 import styled from "styled-components";
+import { v4 } from "uuid";
 import { UserS, } from "../../assets";
 import { IconDiv, IconTipText } from "../constant";
 import { useContext, useEffect,useState } from "react";
-import { v4 } from "uuid";
 import NoteContext from "../../note/context/NoteContext";
-import { queryUserImgForItemByEmail } from "../../store/HandleDb";
+import { queryUserImgForItemByEmail } from "../../store/handledb/MemberDb";
 
 const PermissionUserDiv=styled.div`
     /* width:100%; */

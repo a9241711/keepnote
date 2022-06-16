@@ -1,8 +1,8 @@
-import styled,{css} from "styled-components";
-import { IconDiv,IconTipText,Text,Media_Query_SM, Media_Query_LG, Media_Query_SMD,Media_Query_MD } from "../../components/constant";
-import { ArchiveImg,Bulb,BulbCheck } from "../../assets";
+import styled from "styled-components";
+import { IconDiv,Text,Media_Query_SM, Media_Query_LG, Media_Query_SMD,Media_Query_MD } from "../../components/constant";
+import { ArchiveImg,Bulb } from "../../assets";
 import { Link } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import HeaderLoadContext from "../HeaderLoadContext";
 
 const NavSideDiv=styled.div`

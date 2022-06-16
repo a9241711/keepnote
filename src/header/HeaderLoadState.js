@@ -1,5 +1,5 @@
-import { useReducer, useState } from "react"
-import HeaderLoadContext from "./HeaderLoadContext"
+import { useReducer, useState } from "react";
+import HeaderLoadContext from "./HeaderLoadContext";
 
 
 const handlePage=(state,action)=>{

@@ -7,8 +7,7 @@ import ArchiveItem from "./ArchiveItem";
 import ArchiveTool from "./components/ArchiveTools";
 import { ArchiveBgColor } from "../components/color/NoteBgColor";
 import HeaderLoadContext from "../../header/HeaderLoadContext";
-
-import { getAllArchiveLists } from "../../store/HandleDb";
+import { getAllArchiveLists } from "../../store/handledb/ArchiveDb";
 
 
 const ArchiveListsDiv=styled(Masonry)`

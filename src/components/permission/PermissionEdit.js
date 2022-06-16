@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { querySingleUserImg } from "../../store/HandleDb";
 import { AddUser,Check } from "../../assets";
 import { IconDiv,Media_Query_SM } from "../constant";
+import { querySingleUserImg } from "../../store/handledb/MemberDb";
 
 
 const PermissionInputingDiv=styled.div`
@@ -63,7 +63,7 @@ const PermissionEdit=({emailList,setEmailList,setEmailErrorMes,setEmailError,})=
     const handleCheckEmail=async(e)=>{
         e.preventDefault();
         const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
-        if(emailList.includes(permissionEmail)){
+        if(emailList.map(item=> item.email).includes(permissionEmail)){
             setEmailErrorMes("這個電子信箱地址已存在");
         }
         else if(permissionEmail.search(emailRule)=== -1){
@@ -71,7 +71,6 @@ const PermissionEdit=({emailList,setEmailList,setEmailErrorMes,setEmailError,})=
         }
         else{//電箱格式正確且無重複
             await querySingleUserImg(permissionEmail,setEmailList);
-            // setEmailList(pre=>[...pre,permissionEmail]);
             setPermissionEmail("");
         }
     }
@@ -87,7 +86,7 @@ const PermissionEdit=({emailList,setEmailList,setEmailErrorMes,setEmailError,})=
             </PermissionInputIconDiv>
             <PermissionInput tpye="text" onChange={(e)=>setPermissionEmail(e.target.value)} value={permissionEmail}></PermissionInput>
             <PermissionCheckIcon onClick={handleCheckEmail} permissionEmail={permissionEmail}></PermissionCheckIcon>
-         </PermissionInputingDiv>
+        </PermissionInputingDiv>
     )
 }
 

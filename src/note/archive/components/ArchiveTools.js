@@ -1,9 +1,9 @@
-import { updateNoteStatusBack } from "../../../store/HandleDb";
 import { useState } from "react";
 import ArchivePopDelete from "./ArchivePopDelete";
 import { IconDiv,IconTipText } from "../../../components/constant";
 import { DeleteCheck,ArchiveBack } from "../../../assets";
 import styled from "styled-components";
+import { updateNoteStatusBack } from "../../../store/handledb/ArchiveDb";
 
 const DeleteIcon=styled(IconDiv)`
   background-image: url(${DeleteCheck}) ;

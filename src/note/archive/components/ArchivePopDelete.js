@@ -1,8 +1,7 @@
 import { ListPopModifyBg } from "../../../components/constant";
-import { deleteDbNote } from "../../../store/HandleDb";
 import styled from "styled-components";
 import { Text,Media_Query_LG,Media_Query_SMD,Media_Query_SM,LargerAnimate,CloseButton,Button } from "../../../components/constant";
-
+import { deleteDbNote } from "../../../store/handledb/NoteDb";
 
 const ArchiveDiv=styled.div`
     background-color: transparent;
@@ -97,3 +96,4 @@ const ArchivePopDelete=({id,uid,setDataChanged,setAlertText,setAlert,alertText})
 }
 
 export default ArchivePopDelete
+

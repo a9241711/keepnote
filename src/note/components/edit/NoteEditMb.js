@@ -8,9 +8,9 @@ import { NotificationDeleteEdit } from "../notification/NotificationDelete";
 import { NoteModiEditBtnMb } from "../modify/NoteModiBtn";
 import { NotificationEditMb,NotificationElement } from "../notification/NotificationIndex";
 import { NoteColorPopMb,NoteColorElement } from "../color/NoteColor";
-import { PermissionEditArea } from "../../../components/permission/Permssion";
+import { PermissionEditArea } from "../../../components/permission/Permission";
 import { PermissionItemEdit } from "../../../components/permission/PermissionItem";
-import { saveNoteData } from "../../../store/HandleDb";
+import { saveNoteData } from "../../../store/handledb/NoteDb";
 
 
 

@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { useState,useRef, useEffect, useContext } from "react";
 import { IconDiv,IconTipText,scaleBottom, Media_Query_SM,Media_Query_SMD,Media_Query_MD,scaleRight } from "../../../components/constant";
 import { ColorPalette, LeftArrow } from "../../../assets";
-import { updateNoteData } from "../../../store/HandleDb";
 import NoteContext from "../../context/NoteContext";
+import { updateNoteData } from "../../../store/handledb/NoteDb";
 
 const ColorDiv=styled.div`
 

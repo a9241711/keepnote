@@ -74,7 +74,7 @@ const NotifIconDiv=styled(IconDiv)`
 `       
 const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{//前端，提醒訊息彈出視窗
     const{title,body,time}=popValue;
-    const {getSelectedItem,getColorUpdate,getNoteUpdateTitle,getNoteUpdateText}=useContext(NoteContext)
+    const{getSelectedItem,getColorUpdate,getNoteUpdateTitle,getNoteUpdateText}=useContext(NoteContext)
     const currentTime=new Date(parseInt(time)).toLocaleDateString()+" "  + new Date(parseInt(time)).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})
 
     const handlePopItem=()=>{
@@ -88,6 +88,7 @@ const NotificationPop=({setIsNotification,popValue,setList,setSelected,})=>{//�
         getNoteUpdateText(noteText);
         getSelectedItem(id, noteText, noteTitle, index,image,time,color); //找到陣列中的值
         setSelected(true); //找到陣列中的值
+        setIsNotification(false);//關閉彈出通知視窗
     }
     
     return(

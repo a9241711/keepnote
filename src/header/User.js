@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useState,useEffect } from 'react';
-import { queryUserImg } from '../store/HandleDb';
+import { queryUserImg } from '../store/handledb/MemberDb';
 
 
 const UserTipText=styled.div`
