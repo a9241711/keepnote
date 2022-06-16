@@ -20,7 +20,7 @@ function App() {
         <Route path="/login" element={<MemberSignIn />} />
         <Route path="/signup" element={<MemberSignUp/> }/>
         <Route element={<AuthRequired />}>
-        <Route path="/boarding" element={<BoardPage />} />
+        <Route path="/boarding/:id" element={<BoardPage />} />
         <Route path="/archive" element={<Archive />} />
         <Route path="/membership" element={<MemberShip />} />
         </Route>

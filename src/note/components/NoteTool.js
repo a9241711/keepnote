@@ -42,7 +42,7 @@ const NoteTool=({setIsArchive,setDataChanged,uid,userEmail,id,setList ,noteText,
     return(
       <>
       {image? null
-      :<Link  to={"/boarding"} state={{id:id,board:board,uid}}>
+      :<Link  to={`/boarding/${id}`} state={{id:id,board:board,uid}}>
       <BoardAdd ><IconTipText>新增畫板</IconTipText></BoardAdd>
       </Link>}
       <NotificationIndex  uid={uid} id={id} noteText={noteText} noteTitle={noteTitle}  setDataChanged={setDataChanged}/>
@@ -97,14 +97,14 @@ export const NoteEditTool=({noteTitle ,noteText,uid,userEmail,titleClick,setNote
     return(
         <>
         <NodeToolDiv titleClick={titleClick}>
-          <Link  to={"/boarding"} state={{id,uid}}>
+          <Link  to={`/boarding/${id}`} state={{id,uid}}>
             <BoardAdd onClick={handleSaveNoteToDb}><IconTipText>新增繪圖記事</IconTipText></BoardAdd>
           </Link>
           <NotificationIndex isFromEdit={isFromEdit} setNotification={setNotification}/>
           <NoteColor isFromEdit={isFromEdit}  setNoteColor={setNoteColor}/>
           <PermissionEditArea  uid={uid}userEmail={userEmail}setEmailList={setEmailList} emailList={emailList}/>
         </NodeToolDiv>
-          <Link to={"/boarding"} state={{id,uid}}>
+          <Link to={`/boarding/${id}`} state={{id,uid}}>
             <CanvasTools  titleClick={titleClick}  onClick={handleSaveNoteToDb}><IconTipText>新增繪圖記事</IconTipText></CanvasTools>
           </Link>
         </>

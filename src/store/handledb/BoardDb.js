@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection,updateDoc,doc, query, getDoc,where, getDocs,addDoc, setDoc, arrayUnion,Timestamp} from "firebase/firestore";
+import { collection,updateDoc,doc, query, getDoc,where, getDocs,addDoc, setDoc,deleteField,deleteDoc, arrayUnion,Timestamp} from "firebase/firestore";
 
 
 /**畫版資料 */
