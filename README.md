@@ -54,9 +54,9 @@ automatically sending notifications to users while time is up.
  
 ### 4️⃣ Share Note Permission
 分享權限給其他人，共同編輯記事，並結合Sendgrid發送邀請郵件。僅擁有者可刪除記事  
-Share permission, cooperate with others to co-editing the note and integrate with Sendgrid to deliver a permission email.  
+Share permission, cooperate with others to co-editing the note and integrate with Sendgrid to send the email to the shared user.  
 Only note owner allowed to delete.
-![Imgur](https://i.imgur.com/dwJUrPz.png)
+![Imgur](https://i.imgur.com/UXW6hgm.gif)
 
 ### 5️⃣ Keyword Search
 ![Imgur](https://i.imgur.com/Ic8jYxG.png)
