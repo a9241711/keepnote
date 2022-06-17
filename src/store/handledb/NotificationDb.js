@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection,updateDoc,doc, query,where, getDocs,addDoc, orderBy,deleteDoc,Timestamp} from "firebase/firestore";
+import { collection,updateDoc, query,where, getDocs,addDoc, orderBy,deleteDoc,Timestamp} from "firebase/firestore";
 import {getMessaging,getToken } from "firebase/messaging";
 
 //**Time Push notification 提醒*/
@@ -114,9 +114,10 @@ export const deleteNotification=async (uid,id)=>{
         deleteDoc(item.ref);
     });
     //更新noteList主資料區
-    const updateRef=doc(db, "user", uid,"notelist",id);
-    const time=Timestamp.now();
-    await updateDoc(updateRef, {time:time});
+    // const updateRef=doc(db, "user", uid,"notelist",id);
+    // console.log()
+    // const time=Timestamp.now();
+    // await updateDoc(updateRef, {time:time});
     return {success:true};
 }
 

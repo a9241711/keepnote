@@ -8,6 +8,7 @@ import HeadLoadState from "./header/HeaderLoadState";
 import MemberShip from "./components/membership/MemberShip";
 import Archive from "./pages/Archive";
 import BoardPage from "./pages/Board";
+import NoteModifyArea from "./note/components/modify/NoteModifyArea";
 
 function App() {
   return (
