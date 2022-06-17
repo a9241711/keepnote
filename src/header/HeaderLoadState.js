@@ -33,7 +33,6 @@ const HeadLoadState=(props)=>{
         })
     }
     const getNavClick=(click)=>{
-        console.log("click",click)
         disNavClickPatch({
             type:"CLICK",
             payload:click
