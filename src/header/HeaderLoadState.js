@@ -32,10 +32,11 @@ const HeadLoadState=(props)=>{
             type:"ARCHIVE"
         })
     }
-    const getNavClick=()=>{
+    const getNavClick=(click)=>{
+        console.log("click",click)
         disNavClickPatch({
             type:"CLICK",
-            payload:!navClick
+            payload:click
         })
     }
     return(

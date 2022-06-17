@@ -93,9 +93,7 @@ const LogoText=styled(H3)`
 const HeaderDiv = ({isLoggin}) => {
   const {isLoading,setIsLoading,setIsRefresh,navClick,getNavClick} =useContext(HeaderLoadContext);
 
-
   useEffect(()=>{
-
     setIsLoading(false);
   },[]);
   
@@ -103,7 +101,7 @@ const HeaderDiv = ({isLoggin}) => {
     <Header>
 
       <NavDiv>
-        {isLoggin?<NavIcon onClick={()=>getNavClick()}></NavIcon>:null}
+        {isLoggin?<NavIcon onClick={()=>getNavClick(!navClick)}></NavIcon>:null}
           <Link to={"/"} style={{ textDecoration: 'none' }}>
           <LogoDiv  >
           <LogoImg src={KeepLogo}></LogoImg>
@@ -140,17 +138,16 @@ const HeaderDiv = ({isLoggin}) => {
 export default HeaderDiv;
 
 export const HeaderArchiveDiv = ({isLoggin,}) => {//For Archive
-  const {isLoading,setIsLoading,setIsRefresh,getNavClick} =useContext(HeaderLoadContext);
-
+  const {isLoading,setIsLoading,setIsRefresh,getNavClick,navClick} =useContext(HeaderLoadContext);
+  
   useEffect(()=>{
-
     setIsLoading(false);
   },[]);
 
   return (
     <Header>
       <NavDiv>
-        {isLoggin?<NavIcon onClick={()=>getNavClick()}></NavIcon>:null}
+        {isLoggin?<NavIcon onClick={()=>getNavClick(!navClick)}></NavIcon>:null}
         <Link to={"/"} style={{ textDecoration: 'none' }}>
         <LogoDiv  >
         <LogoImg src={KeepLogo}></LogoImg>
