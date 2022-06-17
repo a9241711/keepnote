@@ -83,7 +83,7 @@ Integrate Firebase authentification allowing users to log in with a Google accou
 ### React (hook)
 - SPA with functional components
 ### Custom Hook
-useHistoryPosition for the UndoRedo feature for drawing board.
+useHistoryPosition for the undo-redo feature and element state on the drawing board.
 ### Components Structure
 ![Imgur](https://i.imgur.com/TbwwWpF.png)
 
