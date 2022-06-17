@@ -2,26 +2,8 @@
 self.addEventListener('notificationclick', function(event) {
   // console.log("ON notification Click")
   event.notification.close();
-  // This looks to see if the current is already open and
   const url = event.notification.data.click_action;
-  // console.log(url,"url",event,self.clients.openWindow(url))
-  self.clients.openWindow(url);
-  // event.waitUntil(
-  //     clients.matchAll({type: 'window'}).then( windowClients => {
-  //         // Check if there is already a window/tab open with the target URL
-  //         for (var i = 0; i < windowClients.length; i++) {
-  //             var client = windowClients[i];
-  //             console.log(windowClients[i]);
-  //             // If so, just focus it.
-  //             if (client.url === url && 'focus' in client) {
-  //                 return client.focus();
-  //             } else { // If not, then open the target URL in a new window/tab.
-  //               console.log("open window")
-  //               return self.clients.openWindow(url);
-  //             }
-  //           }
-  //     })
-  //   )
+  event.waitUntil(clients.openWindow(url));
 
 });
 
@@ -48,7 +30,7 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function(payload) {
-  console.log('Received background message ', payload);
+  // console.log('Received background message ', payload);
  // Customize notification here
   const notificationTitle = payload.data.title;
   const notificationOptions = {
