@@ -41,10 +41,9 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 ![Imgur](https://i.imgur.com/412lJ6m.png)
 
 ### 2️⃣ Drawing Board
-  
-提供多種畫板工具，讓使用者可以新增、修改畫版，下載圖片檔並儲存圖畫  
-Provide Multiple tools for users to create and redo the pattern drawn by themselves. 
-After finished, users can download the pattern as an image file and save the pattern on the website.
+結合Custom Hook,Canvas Api,Rough.js，提供多種畫板工具，讓使用者可以新增、修改畫版，下載圖片檔並儲存圖畫  
+Integrate Custom Hook, Canvas Api, Rough.js. Provide Multiple tools for users to create and redo the pattern drawn by themselves. 
+After finished, users can download the pattern as an image file and save the image on the website.
 ![Imgur](https://i.imgur.com/Offview.gif)
   
 ### 3️⃣ Note Notification
@@ -54,8 +53,9 @@ automatically sending notifications to users while time is up.
 ![Imgur](https://i.imgur.com/e1QmI6f.gif)
  
 ### 4️⃣ Share Note Permission
-分享權限給其他人，共同編輯記事，僅擁有者可刪除記事  
-Share permission and cooperate with other people to co-editing the note. Only note owner allowed to delete.
+分享權限給其他人，共同編輯記事，並結合Sendgrid發送邀請郵件。僅擁有者可刪除記事  
+Share permission, cooperate with others to co-editing the note and integrate with Sendgrid to deliver a permission email.  
+Only note owner allowed to delete.
 ![Imgur](https://i.imgur.com/dwJUrPz.png)
 
 ### 5️⃣ Keyword Search
