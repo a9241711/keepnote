@@ -50,7 +50,7 @@ After finished, users can download the pattern as an image file and save the ima
 桌機版訊息通知，結合firebase cloud message 和 cloud function，時間到彈出視窗提醒  
 Note Notifications for desktop computers. Integrated firebase cloud message and cloud function, 
 automatically sending notifications to users while time is up.
-![Imgur](https://i.imgur.com/e1QmI6f.gif)
+![Imgur](https://i.imgur.com/cKpnjo9.gif)
  
 ### 4️⃣ Share Note Permission
 分享權限給其他人，共同編輯記事，並結合Sendgrid發送邀請郵件。僅擁有者可刪除記事  
