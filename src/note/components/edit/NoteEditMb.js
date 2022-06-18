@@ -270,7 +270,7 @@ return(
             <NotificationDeleteEdit   notification={notification} setNotification={setNotification} />
           </NoteListModify>
           <NodeToolDiv style={{background:noteColor}}>
-            <Link  to={"/boarding"} state={{id:id,uid}}>
+            <Link  to={`/boarding/${id}`} state={{id:id,uid}}>
             <BoardAdd  onClick={handleSaveNoteToDb}></BoardAdd>
             </Link>
             <NotificationElement   setClickNotificate={setClickNotificate}/>
