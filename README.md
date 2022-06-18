@@ -38,6 +38,8 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 ## Features
 ### 1️⃣ Add Text and Background color
 ![Imgur](https://i.imgur.com/iazEOGS.gif)
+RWD支援行動載具  
+![Imgur](https://i.imgur.com/gTUbOJX.gif)
 
 
 ### 2️⃣ Drawing Board
