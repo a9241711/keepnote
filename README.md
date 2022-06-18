@@ -37,8 +37,8 @@ KeepNote是一個圖文記事網站。簡單、方便、即時性，手機、平
 
 ## Features
 ### 1️⃣ Add Text and Background color
-![Imgur](https://i.imgur.com/Tbp8WOY.gif)
-![Imgur](https://i.imgur.com/412lJ6m.png)
+![Imgur](https://i.imgur.com/iazEOGS.gif)
+
 
 ### 2️⃣ Drawing Board
 結合Custom Hook,Canvas Api,Rough.js，提供多種畫板工具，讓使用者可以新增、修改畫版，下載圖片檔並儲存圖畫  
