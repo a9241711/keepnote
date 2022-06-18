@@ -39,6 +39,7 @@ const PermissionDiv=styled.div`
     }
     ${Media_Query_SMD}{
         left: 0;
+        padding: 0;
     }
     ${Media_Query_MD}{
         left: 0;
@@ -321,6 +322,7 @@ const PermissionModifyDiv=styled.div`
     ${Media_Query_SMD}{
         align-items: center;
         justify-content: center;
+        padding: 0;
     }
     ${Media_Query_SM}{
         background-color: rgba(121,122,124,0.6);

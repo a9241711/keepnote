@@ -97,7 +97,7 @@ const NoteListModify = styled.div`//修改內容的Div
         display: flex;
         flex-direction: column;
         height: 100%;
-        max-width:unset;
+        max-width:720px;
         min-height: unset;
         max-height: unset;
         padding:unset;
