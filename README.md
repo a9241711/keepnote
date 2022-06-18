@@ -47,6 +47,8 @@ RWD支援行動載具
 Integrate Custom Hook, Canvas Api, Rough.js. Provide Multiple tools for users to create and redo the pattern drawn by themselves. 
 After finished, users can download the pattern as an image file and save the image on the website.
 ![Imgur](https://i.imgur.com/Offview.gif)
+Support Mobile devices used by using touch event.支援行動裝置使用  
+![Imgur](https://i.imgur.com/0WIZ09R.gif)
   
 ### 3️⃣ Note Notification
 桌機版訊息通知，結合firebase cloud message 和 cloud function，時間到彈出視窗提醒  
