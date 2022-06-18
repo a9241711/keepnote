@@ -55,7 +55,7 @@ const PermissionNotifiDiv=styled.div`//permission and notification shows div
     align-items: center;
     padding:0 10px;
     ${Media_Query_SM}{
-      padding:0 5px;
+      padding:0 3px;
     }
 `
 
