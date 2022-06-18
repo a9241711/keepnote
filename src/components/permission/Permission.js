@@ -34,7 +34,8 @@ const PermissionDiv=styled.div`
     flex-direction: column;
     animation: ${LargerAnimate} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     ${Media_Query_SM}{
-        max-width: 320px;
+        /* max-width: 320px; */
+        padding:0;
         left: 0;
     }
     ${Media_Query_SMD}{
