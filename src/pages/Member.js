@@ -1,5 +1,5 @@
 
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext,useEffect } from "react";
 import { useNavigate,Link } from "react-router-dom";
 import styled from "styled-components";
 import { H3,H1, Media_Query_SM,Button,Text } from "../components/constant";
@@ -151,7 +151,11 @@ const MemberSignIn = () => {//登入
         getErrorMessage(errorMessage);
       }
       setLoading(false);
-    }
+  }
+  useEffect(()=>{
+    emailRef.current.value="test@gmail.com";
+    passwordRef.current.value="123456";
+  },[])
 
   return (
     <>

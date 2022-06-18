@@ -8,6 +8,7 @@ import HeadLoadState from "./header/HeaderLoadState";
 import MemberShip from "./components/membership/MemberShip";
 import Archive from "./pages/Archive";
 import BoardPage from "./pages/Board";
+import NoteModifyArea from "./note/components/modify/NoteModifyArea";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Route path="/login" element={<MemberSignIn />} />
         <Route path="/signup" element={<MemberSignUp/> }/>
         <Route element={<AuthRequired />}>
-        <Route path="/boarding" element={<BoardPage />} />
+        <Route path="/boarding/:id" element={<BoardPage />} />
         <Route path="/archive" element={<Archive />} />
         <Route path="/membership" element={<MemberShip />} />
         </Route>

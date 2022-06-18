@@ -33,12 +33,12 @@ export const ListPopModifyBg = styled.div`//修改文字的Fixed背景顏色，�
     height: 100%;
     background-color: rgba(121, 122, 124, 0.6);
     z-index: 999;
-    ${Media_Query_SMD}{
+    /* ${Media_Query_SMD}{
       display: none;
     }
     ${Media_Query_SM}{
       display: none;
-    }
+    } */
 `;
 
 export const H1 = styled.h1`

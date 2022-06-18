@@ -34,11 +34,13 @@ const PermissionDiv=styled.div`
     flex-direction: column;
     animation: ${LargerAnimate} 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     ${Media_Query_SM}{
-        max-width: 320px;
+        /* max-width: 320px; */
+        padding:0;
         left: 0;
     }
     ${Media_Query_SMD}{
         left: 0;
+        padding: 0;
     }
     ${Media_Query_MD}{
         left: 0;
@@ -321,6 +323,7 @@ const PermissionModifyDiv=styled.div`
     ${Media_Query_SMD}{
         align-items: center;
         justify-content: center;
+        padding: 0;
     }
     ${Media_Query_SM}{
         background-color: rgba(121,122,124,0.6);

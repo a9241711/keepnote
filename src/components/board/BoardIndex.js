@@ -84,7 +84,7 @@ const BoardIndex =()=>{
         e.returnValue=true;//彈出訊息提醒，並重新導向，防止重新整理頁面導致資料遺失
         await saveBoardToDb();
         setTimeout(() => {
-          navigate("/boarding",{ replace: true },{state:{id,board,uid}})
+          navigate(`/boarding/${id}`,{ replace: true },{state:{id,board,uid}})
         }, 500);
       };
   

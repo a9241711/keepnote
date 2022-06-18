@@ -21,9 +21,7 @@ const NotofDiv=styled.div`
     background-color:rgba(0,0,0,0.03);
     box-sizing: border-box;
     position: relative;
-    /* margin:5px 10px; */
     border-radius: 20px;
-    /* margin-bottom: 20px; */
     &:hover ${NotifDelete}{
         display: block;
         cursor: pointer;
@@ -81,11 +79,11 @@ const NotificationDelete=({id, uid,whenToNotify,setDataChanged,})=>{//For List
     return(
         <>
         {notify? 
-            <NotofDiv>
+        <NotofDiv>
             <NotifIcon></NotifIcon>
             <NotifTime>{notify}</NotifTime>
             <NotifDelete onClick={handleDeleteNoti}></NotifDelete>
-            </NotofDiv>
+        </NotofDiv>
         :null
         }
         </>
@@ -149,7 +147,7 @@ export const NotificationDeleteEdit=({isFromEdit,notification,setNotification})=
     return(
         <>
         {notification!==1? 
-            <NotofDiv>
+        <NotofDiv>
             <NotifIcon></NotifIcon>
             <NotifTime>{notifFromEdit}</NotifTime>
             <NotifDelete onClick={()=> {setNotification(1);setNotifFromEdit("")}}></NotifDelete>
@@ -176,10 +174,10 @@ export const ArchiveNotification=({whenToNotify})=>{//for Archive page
     return(
         <>
         {notify? 
-            <NotofDiv>
+        <NotofDiv>
             <NotifIcon></NotifIcon>
             <NotifTime>{notify}</NotifTime>
-            </NotofDiv>
+        </NotofDiv>
         :null
         }
         </>

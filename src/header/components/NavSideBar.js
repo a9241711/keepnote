@@ -102,11 +102,11 @@ const NavSideBar=()=>{
     const{home,archive}=page;
     const handleClickHome=()=>{
         getHome();
-        getNavClick();
+        getNavClick(false);
     }
     const handleClickArchive=()=>{
         getArchive();
-        getNavClick();
+        getNavClick(false);
     }
  
     return(

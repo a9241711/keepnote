@@ -97,7 +97,7 @@ const NoteListModify = styled.div`//修改內容的Div
         display: flex;
         flex-direction: column;
         height: 100%;
-        max-width:unset;
+        max-width:720px;
         min-height: unset;
         max-height: unset;
         padding:unset;
@@ -236,7 +236,7 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange,use
           <NoteListModify  style={{background:updateColor}}  id={id}     >
             { image ?
             <BoardList image={image}>
-              <Link  to={"/boarding"} state={{id:id,board:board,uid}}>
+              <Link  to={`/boarding/${id}`} state={{id:id,board:board,uid}}>
               <BoardDiv >
               <BoardImg onClick={() => handleUpdateSubmmit()} src={image}></BoardImg>
               </BoardDiv>
@@ -254,7 +254,7 @@ const NoteModifyArea =({uid,setSelected,selected,setDataChanged,isDataChange,use
           </NoteListModify>
           <NodeToolDiv style={{background:updateColor}}>
             { image ? null
-            :<Link  to={"/boarding"} state={{id:id,board:board,uid}}>
+            :<Link  to={`/boarding/${id}`} state={{id:id,board:board,uid}}>
             <BoardAdd onClick={() => handleUpdateSubmmit()} ><IconTipText>新增畫板</IconTipText></BoardAdd>
             </Link>}
             <NotificationElement  clickNotificate={clickNotificate} setClickNotificate={setClickNotificate}/>

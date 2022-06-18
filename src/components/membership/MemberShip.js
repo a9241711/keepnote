@@ -73,9 +73,9 @@ const InforDiv=styled.div`
     margin: 20px 0;
 `
 const MailText=styled(Text)`
-    margin-bottom:10px;
+    line-height: unset;
 `
-const PasswordDiv=styled.div`
+const InnerWordDiv=styled.div`
     width: 100%;
     display: flex;
     justify-content: flex-start;
@@ -94,6 +94,7 @@ const PasswordInput=styled.input`
     box-sizing: border-box;
     background-color:transparent;
     overflow: hidden;
+    padding: 5px;
     ::placeholder {
     font-size: 12px;
     font-family: "Google Sans", Roboto, Arial, sans-serif;
@@ -180,23 +181,27 @@ const MemberShip=()=>{//個人資料修改頁
             <Text style={{color:"red"}}>{error}</Text>
             <H3>會員中心</H3>
             <InforDiv>
+                <InnerWordDiv>
                 <MailText>帳號：{email}</MailText>
-                <MailText >修改密碼：</MailText>
+                </InnerWordDiv>
+                <InnerWordDiv>
+                <MailText >修改密碼</MailText>
+                </InnerWordDiv>
                 {providerId==="google.com"?<MailText >此帳號為Google登入，無提供修改密碼服務</MailText>
                 :
                 <>
-                <PasswordDiv>
-                    <Text >舊密碼：</Text>
-                    <PasswordInput type="password" placeholder="輸入舊密碼" value={oldPassword} onChange={(e)=>setOldPassword(e.target.value)}></PasswordInput>
-                </PasswordDiv>
-                <PasswordDiv>
-                    <Text >新密碼：</Text>
-                    <PasswordInput type="password" placeholder="輸入密碼" value={password} onChange={(e)=>setPassword(e.target.value)}></PasswordInput>
-                </PasswordDiv>
-                <PasswordDiv>
-                    <Text >確認新密碼：</Text>
-                    <PasswordInput type="password" placeholder="輸入確認密碼" value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)}></PasswordInput>
-                </PasswordDiv>
+                <InnerWordDiv>
+                    <MailText >舊密碼：</MailText>
+                    <PasswordInput type="password" placeholder="請輸入舊密碼" value={oldPassword} onChange={(e)=>setOldPassword(e.target.value)}></PasswordInput>
+                </InnerWordDiv>
+                <InnerWordDiv>
+                    <MailText >新密碼：</MailText>
+                    <PasswordInput type="password" placeholder="請輸入新密碼" value={password} onChange={(e)=>setPassword(e.target.value)}></PasswordInput>
+                </InnerWordDiv>
+                <InnerWordDiv>
+                    <MailText >確認新密碼：</MailText>
+                    <PasswordInput type="password" placeholder="請再次輸入新密碼" value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)}></PasswordInput>
+                </InnerWordDiv>
                 <Text style={{color:"red"}}>{errorPassword}</Text>
                 <SubmmitDiv>
                     <SubmmitBtn onClick={handleChangePassword}>儲存密碼</SubmmitBtn>
