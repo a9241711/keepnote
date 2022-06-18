@@ -9,6 +9,7 @@ import MemberShip from "./components/membership/MemberShip";
 import Archive from "./pages/Archive";
 import BoardPage from "./pages/Board";
 import NoteModifyArea from "./note/components/modify/NoteModifyArea";
+import NotFound from "./components/404";
 
 function App() {
   return (
@@ -20,10 +21,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<MemberSignIn />} />
         <Route path="/signup" element={<MemberSignUp/> }/>
+
         <Route element={<AuthRequired />}>
         <Route path="/boarding/:id" element={<BoardPage />} />
         <Route path="/archive" element={<Archive />} />
         <Route path="/membership" element={<MemberShip />} />
+        <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>   
       </HeadLoadState>
