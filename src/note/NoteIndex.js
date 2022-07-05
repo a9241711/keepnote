@@ -4,7 +4,7 @@ import {Media_Query_LG, Media_Query_SM,Media_Query_MD,Media_Query_SMD } from "..
 import { KeepLogo } from "../assets";
 import NoteEdit from "./components/NoteEdit";
 import NoteList from "./components/NoteList";
-import NoteReducer from "./context/NoteReducer";
+import NoteLoadState from "./context/NoteReducer";
 import Loading from "./components/loading/Loading";
 import ArchivePop from "./archive/ArchivePop";
 import SearchContext from "../header/components/SearchContext";
@@ -76,7 +76,7 @@ const NotePage=({isLoggin})=>{
 
     return(
         <NoteContent>   
-            <NoteReducer> 
+            <NoteLoadState> 
             {/* 搜尋錯誤結果顯示 */}
             {errorData!==null
             ?<InitialDiv>                   
@@ -101,7 +101,7 @@ const NotePage=({isLoggin})=>{
             </>}
                 {/* 封存記事彈出視窗顯示 */}
                 {isArchive.show?<ArchivePop id={isArchive.id}  uid={uid} setIsArchive={setIsArchive} setDataChanged={setDataChanged}/> :null}
-                </NoteReducer>
+                </NoteLoadState>
         </NoteContent>
     )
 }

@@ -54,7 +54,7 @@ const noteHeight=(state,action)=>{
             return state
     }
 }
-const NoteReducer=(props)=>{
+const NoteLoadState=(props)=>{
     const notification={
         timer:"",currentToken:""
     };
@@ -135,5 +135,5 @@ const NoteReducer=(props)=>{
     )
 }
 
-export default NoteReducer
+export default NoteLoadState
 
